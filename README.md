@@ -53,13 +53,45 @@ This project simulates a production-style AI deployment workflow, progressing fr
 
 ## 📁 Project Structure
 
-text api-copilot/ ├── main.py ├── .env ├── .gitignore ├── requirements.txt │ ├── llm/ │   └── client.py │ ├── rag/ │   ├── ingest.py │   └── chunk.py │ └── data/     ├── razorpay_auth.txt     ├── razorpay_payments.txt     ├── razorpay_errors.txt     └── razorpay_webhooks.txt 
+api-copilot/
+├── main.py
+├── .env
+├── .gitignore
+├── requirements.txt
+│
+├── llm/
+│   └── client.py
+│
+├── rag/
+│   ├── ingest.py
+│   └── chunk.py
+│
+└── data/
+    ├── razorpay_auth.txt
+    ├── razorpay_payments.txt
+    ├── razorpay_errors.txt
+    └── razorpay_webhooks.txt
 
 ---
 
 ## 🧠 System Architecture (Day 2)
 
-text Real API Docs (Razorpay)         │         ▼ Document Ingestion Pipeline         │         ▼ Chunking Engine         │         ▼ Structured Retrieval-Ready Chunks         │         ▼ Embeddings (Next Phase)         │         ▼ Vector Database (Upcoming) 
+Real API Docs (Razorpay)
+        │
+        ▼
+Document Ingestion Pipeline
+        │
+        ▼
+Chunking Engine
+        │
+        ▼
+Structured Retrieval-Ready Chunks
+        │
+        ▼
+Embeddings (Next Phase)
+        │
+        ▼
+Vector Database (Upcoming)
 
 ---
 
