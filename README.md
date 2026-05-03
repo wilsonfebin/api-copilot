@@ -1,200 +1,229 @@
 # 🚀 API Copilot
 
-**AI-powered assistant for API integration, debugging, and developer productivity — built using LLMs and Retrieval-Augmented Generation (RAG).**
+AI-powered assistant for API integration, debugging, and developer productivity — built using LLMs and Retrieval-Augmented Generation (RAG).
 
 ---
 
 ## 🎯 Overview
 
-API Copilot is designed to help developers **understand, integrate, and troubleshoot APIs faster** by leveraging modern Generative AI capabilities.
+API Copilot is designed to help developers:
 
-Instead of manually searching through documentation, developers can:
+- Understand API documentation
+- Troubleshoot integration issues
+- Debug payment and authentication workflows
+- Retrieve contextual technical answers from real-world API knowledge bases
 
-* Ask natural language questions
-* Get context-aware answers grounded in documentation
-* Generate integration code
-* Debug API errors with intelligent suggestions
-
-This project simulates a **real-world AI deployment workflow**, moving from foundational LLM integration to a scalable RAG-based system.
+This project simulates a production-style AI deployment workflow, progressing from foundational LLM integration into a scalable RAG-powered developer assistant.
 
 ---
 
-## 🧠 Key Capabilities (Planned)
+## 🧠 Current Project Status
 
-* 📘 API documentation understanding
-* 💬 Conversational Q&A over docs (RAG)
-* 🧩 Code generation for integrations
-* 🐞 Error debugging assistant
-* 🔎 Source-grounded responses (citations)
+### ✅ Day 1 Complete
+- OpenAI LLM integration (gpt-4o-mini)
+- Embedding generation (text-embedding-3-small)
+- Secure API key configuration
+- Modular Python project structure
+
+---
+
+### ✅ Day 2 Complete
+- Multi-document ingestion pipeline
+- Chunking architecture with overlap
+- Real-world Razorpay API documentation dataset:
+  - Authentication
+  - Payments
+  - Errors
+  - Webhooks
+- Retrieval-ready preprocessing pipeline
+- Metadata-preserving document structure
 
 ---
 
 ## ⚙️ Tech Stack
 
-* **Language:** Python 3.11
-* **LLM:** OpenAI `gpt-4o-mini`
-* **Embeddings:** `text-embedding-3-small`
-* **Environment Management:** `python-dotenv`
-* **Version Control:** Git + GitHub
-
----
-
-## 🧱 Current Implementation (Day 1)
-
-Day 1 establishes the **core AI building blocks**:
-
-### ✅ Completed
-
-* LLM integration (chat-based interaction)
-* Embedding generation (semantic representation)
-* Modular project structure
-* Secure environment configuration
-
----
-
-## 🧠 Architecture (Day 1)
-
-```id="arc1"
-User Input
-   │
-   ▼
-LLM (gpt-4o-mini)
-   │
-   ├── Generates responses
-   │
-   ▼
-Embeddings (text-embedding-3-small)
-   │
-   └── Converts text → vector (for future retrieval)
-```
+- Language: Python 3.11  
+- LLM: OpenAI gpt-4o-mini  
+- Embeddings: text-embedding-3-small  
+- Environment Management: python-dotenv  
+- Version Control: Git + GitHub  
+- Token Utilities: tiktoken  
 
 ---
 
 ## 📁 Project Structure
 
-```id="str1"
-api-copilot/
-├── main.py                # Entry point for testing LLM + embeddings
-├── .env                   # API key (ignored)
-├── .gitignore             # Ignore sensitive/system files
-├── requirements.txt       # Dependencies
-└── llm/
-    └── client.py          # OpenAI API wrapper
-```
+text api-copilot/ ├── main.py ├── .env ├── .gitignore ├── requirements.txt │ ├── llm/ │   └── client.py │ ├── rag/ │   ├── ingest.py │   └── chunk.py │ └── data/     ├── razorpay_auth.txt     ├── razorpay_payments.txt     ├── razorpay_errors.txt     └── razorpay_webhooks.txt 
 
 ---
 
-## 🔐 Environment Setup
+## 🧠 System Architecture (Day 2)
 
-Create a `.env` file:
-
-```id="env1"
-OPENAI_API_KEY=your_api_key_here
-```
+text Real API Docs (Razorpay)         │         ▼ Document Ingestion Pipeline         │         ▼ Chunking Engine         │         ▼ Structured Retrieval-Ready Chunks         │         ▼ Embeddings (Next Phase)         │         ▼ Vector Database (Upcoming) 
 
 ---
 
-## 📦 Installation
+## 🔐 Security Practices
 
-```bash id="inst1"
-pip install -r requirements.txt
-```
-
----
-
-## ▶️ Run the Project
-
-```bash id="run1"
-python main.py
-```
+- API keys stored via .env
+- .gitignore protection for sensitive files
+- No hardcoded credentials
+- Real-world authentication and webhook security workflows included in dataset
 
 ---
 
-## 🧪 Sample Output
+## 🧪 Current Capabilities
 
-### 🔹 LLM Response
-
-**Query:** What is an API?
-
-**Response:**
-An API (Application Programming Interface) is a set of rules that allows different software systems to communicate with each other...
+### LLM
+- Developer Q&A
+- API concept explanation
 
 ---
 
-### 🔹 Embedding Output
-
-```id="emb1"
-Embedding length: 1536
-```
+### Embeddings
+- Semantic vector generation
+- RAG preparation
 
 ---
 
-## 🔒 Engineering Best Practices
+### Ingestion
+- Loads multiple structured documents
+- Supports modular scaling
 
-* ✅ No hardcoded API keys (environment-based config)
-* ✅ Modular code structure (separation of concerns)
-* ✅ Minimal dependency footprint
-* ✅ Git-based version control with clean commits
+---
+
+### Chunking
+- Chunk overlap for context preservation
+- Retrieval optimization
+- Large documentation support
+
+---
+
+## 📊 Current Dataset Scope
+
+### Razorpay Authentication
+- Basic Auth
+- Key management
+- Live/Test modes
+- Security practices
+
+---
+
+### Razorpay Payments
+- Capture workflows
+- Payment retrieval
+- Order-linked transactions
+- Operational best practices
+
+---
+
+### Razorpay Errors
+- Structured failure responses
+- Retry logic preparation
+- Customer troubleshooting
+- Monitoring signals
+
+---
+
+### Razorpay Webhooks
+- Event-driven architecture
+- Real-time notifications
+- Partner integrations
+- Signature validation
+
+---
+
+## 🚀 Sample Day 2 Output
+
+text Loaded File: razorpay_auth.txt Loaded File: razorpay_payments.txt Loaded File: razorpay_errors.txt Loaded File: razorpay_webhooks.txt  TOTAL DOCUMENTS: 4 TOTAL CHUNKS: 21 
+
+---
+
+## 🔒 Engineering Best Practices Applied
+
+- Modular architecture
+- Clean code separation
+- Real production documentation
+- Secure configuration
+- Scalable data model
+- Recruiter-grade project hygiene
 
 ---
 
 ## 🗺️ Roadmap
 
 ### Phase 1 — Foundation
+- [x] LLM integration
+- [x] Embedding generation
+- [x] Document ingestion
+- [x] Chunking pipeline
 
-* [x] LLM integration
-* [x] Embeddings generation
+---
 
-### Phase 2 — RAG System
+### Phase 2 — Core RAG
+- [ ] Chroma vector database
+- [ ] Chunk embeddings storage
+- [ ] Semantic retrieval engine
+- [ ] Source citation support
 
-* [ ] Document ingestion (PDF/Markdown)
-* [ ] Text chunking strategy
-* [ ] Vector database integration (Chroma/FAISS)
-* [ ] Context-aware retrieval
+---
 
 ### Phase 3 — Intelligence Layer
+- [ ] API debugging assistant
+- [ ] Code generation workflows
+- [ ] Intent routing
+- [ ] Prompt optimization
 
-* [ ] Intent routing (Q&A, code gen, debugging)
-* [ ] Prompt optimization
-* [ ] Hallucination reduction techniques
+---
 
 ### Phase 4 — Productization
-
-* [ ] UI (Streamlit/Gradio)
-* [ ] Logging & observability
-* [ ] Deployment-ready structure
-
----
-
-## 💡 Why This Project
-
-Modern software development is increasingly **API-driven**, yet integration remains time-consuming due to fragmented documentation and debugging challenges.
-
-API Copilot aims to:
-
-* Reduce integration time
-* Improve developer productivity
-* Demonstrate practical AI deployment patterns
+- [ ] Streamlit UI
+- [ ] Usage monitoring
+- [ ] Retry logic
+- [ ] Deployment readiness
 
 ---
 
-## 📌 Status
+## 💡 Why This Project Matters
 
-🟢 **Active Development — Day 1 Complete**
-🔜 Moving to **RAG pipeline implementation**
+Modern developers increasingly rely on:
+- APIs
+- Payment platforms
+- Event-driven systems
+
+API Copilot aims to bridge:
+### Documentation → Integration → Troubleshooting
+
+This creates practical value in:
+
+- Developer productivity
+- Customer support
+- Startup engineering
+- AI deployment systems
+
+---
+
+## 📌 Current Status
+
+🟢 Day 2 Complete  
+🔜 Next milestone: Vector database + semantic retrieval
 
 ---
 
 ## 👤 Author
 
-**Febin Wilson**
-Engineering leader transitioning into AI deployment and applied LLM systems.
+Febin Wilson  
+Engineering leader transitioning into AI deployment, applied LLM systems, and startup-focused technical architecture.
 
 ---
 
-## 🚀 Vision
+## 🚀 Long-Term Vision
 
-To build a **production-grade AI assistant** that bridges the gap between API documentation and real-world implementation—aligned with modern AI engineering and deployment roles.
+To build a production-grade AI developer platform capable of:
 
----
+- API retrieval
+- Integration guidance
+- Debugging
+- Deployment support
 
+aligned with modern AI deployment engineering and startup technical advisory roles
