@@ -1,6 +1,6 @@
 # 🚀 API Copilot
 
-AI-powered API Integration Assistant for developer support, troubleshooting, and contextual documentation retrieval — built using OpenAI, Chroma, and Retrieval-Augmented Generation (RAG).
+**AI-powered API Integration Assistant for developer support, troubleshooting, and contextual documentation retrieval — built using OpenAI, Chroma, and Retrieval-Augmented Generation (RAG).**
 
 ---
 
@@ -21,8 +21,8 @@ This project simulates a practical AI deployment engineering workflow, progressi
 ## 🧠 Current Project Status
 
 ### ✅ Day 1 — Foundation
-- OpenAI LLM integration (gpt-4o-mini)
-- Embedding generation (text-embedding-3-small)
+- OpenAI LLM integration (`gpt-4o-mini`)
+- Embedding generation (`text-embedding-3-small`)
 - Secure API key configuration
 - Modular Python architecture
 
@@ -60,31 +60,81 @@ This project simulates a practical AI deployment engineering workflow, progressi
 
 # ⚙️ Tech Stack
 
-- Language: Python 3.11  
-- LLM: OpenAI gpt-4o-mini  
-- Embeddings: text-embedding-3-small  
-- Vector DB: ChromaDB  
-- Environment Management: python-dotenv  
-- Version Control: Git + GitHub  
+- **Language:** Python 3.11  
+- **LLM:** OpenAI `gpt-4o-mini`  
+- **Embeddings:** `text-embedding-3-small`  
+- **Vector DB:** ChromaDB  
+- **Environment Management:** `python-dotenv`  
+- **Version Control:** Git + GitHub  
 
 ---
 
 # 📁 Project Structure
 
-text id="xg34tv" api-copilot/ ├── main.py ├── .env ├── .gitignore ├── requirements.txt │ ├── llm/ │   └── client.py │ ├── rag/ │   ├── ingest.py │   ├── chunk.py │   ├── embed.py │   ├── vector_store.py │   └── retrieve.py │ ├── chroma_db/ │ └── data/     ├── razorpay_auth.txt     ├── razorpay_payments.txt     ├── razorpay_errors.txt     └── razorpay_webhooks.txt 
+```text
+api-copilot/
+├── main.py
+├── .env
+├── .gitignore
+├── requirements.txt
+│
+├── llm/
+│   └── client.py
+│
+├── rag/
+│   ├── ingest.py
+│   ├── chunk.py
+│   ├── embed.py
+│   ├── vector_store.py
+│   └── retrieve.py
+│
+├── chroma_db/
+│
+└── data/
+    ├── razorpay_auth.txt
+    ├── razorpay_payments.txt
+    ├── razorpay_errors.txt
+    └── razorpay_webhooks.txt
+```
 
 ---
 
 # 🧠 Full System Architecture
 
-text id="w13j4h" Real API Docs    │    ▼ Document Ingestion    │    ▼ Chunking Pipeline    │    ▼ OpenAI Embeddings    │    ▼ Chroma Vector DB    │    ▼ Semantic Retrieval    │    ▼ Context Injection    │    ▼ OpenAI LLM    │    ▼ Grounded API Answers + Sources 
+```text
+Real API Docs
+   │
+   ▼
+Document Ingestion
+   │
+   ▼
+Chunking Pipeline
+   │
+   ▼
+OpenAI Embeddings
+   │
+   ▼
+Chroma Vector DB
+   │
+   ▼
+Semantic Retrieval
+   │
+   ▼
+Context Injection
+   │
+   ▼
+OpenAI LLM
+   │
+   ▼
+Grounded API Answers + Sources
+```
 
 ---
 
 # 🔐 Security Practices
 
-- .env for secret management
-- .gitignore for credential protection
+- `.env` for secret management
+- `.gitignore` for credential protection
 - Real-world API key workflows
 - Webhook secret validation
 - Production-style authentication coverage
@@ -129,22 +179,24 @@ text id="w13j4h" Real API Docs    │    ▼ Document Ingestion    │    ▼ Ch
 # 🧪 Example Supported Queries
 
 ### Authentication
-text id="7isbrn" How does Razorpay API authentication work? 
-
----
+```text
+How does Razorpay API authentication work?
+```
 
 ### Payments
-text id="u2x7k1" How do I capture an authorized payment? 
-
----
+```text
+How do I capture an authorized payment?
+```
 
 ### Errors
-text id="i8h2dw" What does invalid OTP mean in Razorpay? 
-
----
+```text
+What does invalid OTP mean in Razorpay?
+```
 
 ### Webhooks
-text id="k3mz4p" How do I validate Razorpay webhooks? 
+```text
+How do I validate Razorpay webhooks?
+```
 
 ---
 
@@ -155,15 +207,11 @@ text id="k3mz4p" How do I validate Razorpay webhooks?
 - Multi-document knowledge retrieval
 - Metadata-aware chunking
 
----
-
 ### Answer Generation:
 - Grounded technical responses
 - Reduced hallucination risk
 - Source attribution
 - Developer-grade explanations
-
----
 
 ### Business Value:
 - Developer productivity
@@ -187,7 +235,17 @@ text id="k3mz4p" How do I validate Razorpay webhooks?
 
 # 🚀 Sample Day 4 Output
 
-text id="bw2pj9" Question: How does Razorpay API authentication work?  Answer: Razorpay API authentication is based on Basic Authentication using Key ID and Key Secret...  Sources: - razorpay_auth.txt - razorpay_errors.txt 
+```text
+Question:
+How does Razorpay API authentication work?
+
+Answer:
+Razorpay API authentication is based on Basic Authentication using Key ID and Key Secret...
+
+Sources:
+- razorpay_auth.txt
+- razorpay_errors.txt
+```
 
 ---
 
@@ -202,16 +260,12 @@ text id="bw2pj9" Question: How does Razorpay API authentication work?  Answer: R
 - [x] Semantic retrieval
 - [x] Full RAG answering
 
----
-
 ## Phase 2 — Productization
 - [ ] Streamlit UI
 - [ ] Chat interface
 - [ ] Query history
 - [ ] Better citations
 - [ ] UX improvements
-
----
 
 ## Phase 3 — Production Hardening
 - [ ] Retry logic
@@ -245,7 +299,7 @@ By combining semantic retrieval with grounded answer generation, the platform re
 
 # 👤 Author
 
-Febin Wilson  
+**Febin Wilson**  
 Engineering leader transitioning into AI deployment, startup technical architecture, and applied LLM systems.
 
 ---
