@@ -13,8 +13,8 @@ def ask_llm(question: str):
             {"role": "system", "content": "You are a helpful assistant for developers."},
             {"role": "user", "content": question}
         ],
-        temperature=0.3,
-	max_tokens=300
+        temperature=0.2,
+	max_tokens=500
     )
     return response.choices[0].message.content
 

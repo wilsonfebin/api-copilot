@@ -1,261 +1,261 @@
 # 🚀 API Copilot
 
-AI-powered assistant for API integration, debugging, and developer productivity — built using LLMs and Retrieval-Augmented Generation (RAG).
+AI-powered API Integration Assistant for developer support, troubleshooting, and contextual documentation retrieval — built using OpenAI, Chroma, and Retrieval-Augmented Generation (RAG).
 
 ---
 
 ## 🎯 Overview
 
-API Copilot is designed to help developers:
+API Copilot is a production-style AI developer assistant that helps engineers:
 
 - Understand API documentation
-- Troubleshoot integration issues
-- Debug payment and authentication workflows
-- Retrieve contextual technical answers from real-world API knowledge bases
+- Debug authentication and payment issues
+- Retrieve contextual answers from real-world technical docs
+- Troubleshoot webhook and payment workflows
+- Accelerate API integrations with grounded AI responses
 
-This project simulates a production-style AI deployment workflow, progressing from foundational LLM integration into a scalable RAG-powered developer assistant.
+This project simulates a practical AI deployment engineering workflow, progressing from foundational LLM integration into a full semantic retrieval and RAG-powered support system.
 
 ---
 
 ## 🧠 Current Project Status
 
-### ✅ Day 1 Complete
+### ✅ Day 1 — Foundation
 - OpenAI LLM integration (gpt-4o-mini)
 - Embedding generation (text-embedding-3-small)
 - Secure API key configuration
-- Modular Python project structure
+- Modular Python architecture
 
 ---
 
-### ✅ Day 2 Complete
-- Multi-document ingestion pipeline
-- Chunking architecture with overlap
-- Real-world Razorpay API documentation dataset:
+### ✅ Day 2 — RAG Preparation
+- Multi-document ingestion
+- Chunking engine
+- Curated Razorpay production documentation:
   - Authentication
   - Payments
   - Errors
   - Webhooks
-- Retrieval-ready preprocessing pipeline
-- Metadata-preserving document structure
 
 ---
 
-## ⚙️ Tech Stack
+### ✅ Day 3 — Semantic Retrieval
+- OpenAI embedding pipeline
+- Chroma vector database
+- Persistent local vector storage
+- Semantic search
+- Metadata tracking
+
+---
+
+### ✅ Day 4 — Full RAG System
+- Query embedding
+- Semantic retrieval
+- Context injection
+- Grounded answer generation
+- Source attribution
+- Developer-focused API support assistant
+
+---
+
+# ⚙️ Tech Stack
 
 - Language: Python 3.11  
 - LLM: OpenAI gpt-4o-mini  
 - Embeddings: text-embedding-3-small  
+- Vector DB: ChromaDB  
 - Environment Management: python-dotenv  
 - Version Control: Git + GitHub  
-- Token Utilities: tiktoken  
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
-api-copilot/
-├── main.py
-├── .env
-├── .gitignore
-├── requirements.txt
-│
-├── llm/
-│   └── client.py
-│
-├── rag/
-│   ├── ingest.py
-│   └── chunk.py
-│
-└── data/
-    ├── razorpay_auth.txt
-    ├── razorpay_payments.txt
-    ├── razorpay_errors.txt
-    └── razorpay_webhooks.txt
+text id="xg34tv" api-copilot/ ├── main.py ├── .env ├── .gitignore ├── requirements.txt │ ├── llm/ │   └── client.py │ ├── rag/ │   ├── ingest.py │   ├── chunk.py │   ├── embed.py │   ├── vector_store.py │   └── retrieve.py │ ├── chroma_db/ │ └── data/     ├── razorpay_auth.txt     ├── razorpay_payments.txt     ├── razorpay_errors.txt     └── razorpay_webhooks.txt 
 
 ---
 
-## 🧠 System Architecture (Day 2)
+# 🧠 Full System Architecture
 
-Real API Docs (Razorpay)
-        │
-        ▼
-Document Ingestion Pipeline
-        │
-        ▼
-Chunking Engine
-        │
-        ▼
-Structured Retrieval-Ready Chunks
-        │
-        ▼
-Embeddings (Next Phase)
-        │
-        ▼
-Vector Database (Upcoming)
+text id="w13j4h" Real API Docs    │    ▼ Document Ingestion    │    ▼ Chunking Pipeline    │    ▼ OpenAI Embeddings    │    ▼ Chroma Vector DB    │    ▼ Semantic Retrieval    │    ▼ Context Injection    │    ▼ OpenAI LLM    │    ▼ Grounded API Answers + Sources 
 
 ---
 
-## 🔐 Security Practices
+# 🔐 Security Practices
 
-- API keys stored via .env
-- .gitignore protection for sensitive files
-- No hardcoded credentials
-- Real-world authentication and webhook security workflows included in dataset
-
----
-
-## 🧪 Current Capabilities
-
-### LLM
-- Developer Q&A
-- API concept explanation
+- .env for secret management
+- .gitignore for credential protection
+- Real-world API key workflows
+- Webhook secret validation
+- Production-style authentication coverage
 
 ---
 
-### Embeddings
-- Semantic vector generation
-- RAG preparation
+# 📚 Documentation Corpus
 
----
-
-### Ingestion
-- Loads multiple structured documents
-- Supports modular scaling
-
----
-
-### Chunking
-- Chunk overlap for context preservation
-- Retrieval optimization
-- Large documentation support
-
----
-
-## 📊 Current Dataset Scope
-
-### Razorpay Authentication
+## Razorpay Authentication
 - Basic Auth
-- Key management
-- Live/Test modes
-- Security practices
+- API key management
+- Test/Live environments
+- Security best practices
 
 ---
 
-### Razorpay Payments
-- Capture workflows
+## Razorpay Payments
+- Payment capture
 - Payment retrieval
-- Order-linked transactions
-- Operational best practices
+- Orders integration
+- Payment lifecycle management
 
 ---
 
-### Razorpay Errors
-- Structured failure responses
-- Retry logic preparation
+## Razorpay Errors
+- Structured API failure diagnostics
+- Retry scenarios
 - Customer troubleshooting
-- Monitoring signals
+- Monitoring workflows
 
 ---
 
-### Razorpay Webhooks
-- Event-driven architecture
-- Real-time notifications
-- Partner integrations
+## Razorpay Webhooks
+- Event subscriptions
 - Signature validation
+- Refunds
+- Partner onboarding
+- Event-driven architecture
 
 ---
 
-## 🚀 Sample Day 2 Output
+# 🧪 Example Supported Queries
 
-text Loaded File: razorpay_auth.txt Loaded File: razorpay_payments.txt Loaded File: razorpay_errors.txt Loaded File: razorpay_webhooks.txt  TOTAL DOCUMENTS: 4 TOTAL CHUNKS: 21 
+### Authentication
+text id="7isbrn" How does Razorpay API authentication work? 
 
 ---
 
-## 🔒 Engineering Best Practices Applied
+### Payments
+text id="u2x7k1" How do I capture an authorized payment? 
+
+---
+
+### Errors
+text id="i8h2dw" What does invalid OTP mean in Razorpay? 
+
+---
+
+### Webhooks
+text id="k3mz4p" How do I validate Razorpay webhooks? 
+
+---
+
+# 📊 Current Capabilities
+
+### Retrieval:
+- Semantic search
+- Multi-document knowledge retrieval
+- Metadata-aware chunking
+
+---
+
+### Answer Generation:
+- Grounded technical responses
+- Reduced hallucination risk
+- Source attribution
+- Developer-grade explanations
+
+---
+
+### Business Value:
+- Developer productivity
+- Faster integrations
+- API troubleshooting
+- Customer support enablement
+
+---
+
+# 🔒 Engineering Best Practices Applied
 
 - Modular architecture
 - Clean code separation
-- Real production documentation
-- Secure configuration
-- Scalable data model
-- Recruiter-grade project hygiene
+- Persistent storage
+- Source transparency
+- Low-temperature prompt design
+- Production-style system progression
+- Real-world documentation curation
 
 ---
 
-## 🗺️ Roadmap
+# 🚀 Sample Day 4 Output
 
-### Phase 1 — Foundation
+text id="bw2pj9" Question: How does Razorpay API authentication work?  Answer: Razorpay API authentication is based on Basic Authentication using Key ID and Key Secret...  Sources: - razorpay_auth.txt - razorpay_errors.txt 
+
+---
+
+# 🗺️ Roadmap
+
+## Phase 1 — Complete
 - [x] LLM integration
-- [x] Embedding generation
+- [x] Embeddings
 - [x] Document ingestion
-- [x] Chunking pipeline
+- [x] Chunking
+- [x] Chroma vector storage
+- [x] Semantic retrieval
+- [x] Full RAG answering
 
 ---
 
-### Phase 2 — Core RAG
-- [ ] Chroma vector database
-- [ ] Chunk embeddings storage
-- [ ] Semantic retrieval engine
-- [ ] Source citation support
-
----
-
-### Phase 3 — Intelligence Layer
-- [ ] API debugging assistant
-- [ ] Code generation workflows
-- [ ] Intent routing
-- [ ] Prompt optimization
-
----
-
-### Phase 4 — Productization
+## Phase 2 — Productization
 - [ ] Streamlit UI
-- [ ] Usage monitoring
-- [ ] Retry logic
-- [ ] Deployment readiness
+- [ ] Chat interface
+- [ ] Query history
+- [ ] Better citations
+- [ ] UX improvements
 
 ---
 
-## 💡 Why This Project Matters
+## Phase 3 — Production Hardening
+- [ ] Retry logic
+- [ ] Monitoring
+- [ ] Analytics
+- [ ] Deployment
+- [ ] Scaling infrastructure
 
-Modern developers increasingly rely on:
-- APIs
-- Payment platforms
-- Event-driven systems
+---
 
-API Copilot aims to bridge:
-### Documentation → Integration → Troubleshooting
+# 🌍 Practical Impact
 
-This creates practical value in:
+API Copilot demonstrates how modern AI systems can enhance:
 
 - Developer productivity
-- Customer support
-- Startup engineering
-- AI deployment systems
+- API troubleshooting
+- Technical documentation accessibility
+- Payment system integrations
+- Event-driven support workflows
+
+By combining semantic retrieval with grounded answer generation, the platform reduces time spent navigating fragmented documentation and improves technical execution efficiency.
 
 ---
 
-## 📌 Current Status
+# 📌 Current Status
 
-🟢 Day 2 Complete  
-🔜 Next milestone: Vector database + semantic retrieval
+## 🟢 Day 4 Complete  
+## 🔜 Day 5: UI + Productization
 
 ---
 
-## 👤 Author
+# 👤 Author
 
 Febin Wilson  
-Engineering leader transitioning into AI deployment, applied LLM systems, and startup-focused technical architecture.
+Engineering leader transitioning into AI deployment, startup technical architecture, and applied LLM systems.
 
 ---
 
-## 🚀 Long-Term Vision
+# 🚀 Long-Term Vision
 
-To build a production-grade AI developer platform capable of:
+To evolve API Copilot into a production-grade AI platform capable of:
 
-- API retrieval
+- API support
 - Integration guidance
 - Debugging
-- Deployment support
-
-aligned with modern AI deployment engineering and startup technical advisory roles
+- Developer productivity
+- Startup deployment advisor

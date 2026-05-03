@@ -1,29 +1,25 @@
-from rag.ingest import load_documents
-from rag.chunk import chunk_text
+from rag.retrieve import answer_query
 
 
 def main():
-    documents = load_documents("data")
+    print("=== API COPILOT (DAY 4 RAG) ===")
 
-    total_chunks = 0
+    user_query = input("\nAsk a question: ")
 
-    print("=== DOCUMENT INGESTION TEST ===")
+    result = answer_query(user_query)
 
-    for doc in documents:
-        chunks = chunk_text(doc["content"])
+    print("\n=== ANSWER ===\n")
+    print(result["answer"])
 
-        total_chunks += len(chunks)
+    print("\n=== SOURCES ===")
 
-        print(f"\nLoaded File: {doc['filename']}")
-        print(f"Total Chunks: {len(chunks)}")
+    unique_sources = set()
 
-        for i, chunk in enumerate(chunks[:2], start=1):
-            print(f"\n--- Chunk {i} Preview ---")
-            print(chunk[:300])
-            print()
+    for source in result["sources"]:
+        unique_sources.add(source["source"])
 
-    print(f"\n=== TOTAL DOCUMENTS: {len(documents)} ===")
-    print(f"=== TOTAL CHUNKS: {total_chunks} ===")
+    for source in unique_sources:
+        print("-", source)
 
 
 if __name__ == "__main__":
