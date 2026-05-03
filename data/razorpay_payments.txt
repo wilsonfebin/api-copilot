@@ -1,0 +1,192 @@
+# Razorpay Payments API
+
+## Overview
+
+Razorpay Payments APIs are used to:
+
+* Capture authorized payments
+* Fetch payment details
+* Retrieve payments linked to orders
+* Retrieve card details
+* Update payment information
+
+### Important:
+
+Payments APIs are used for:
+
+* Payment retrieval
+* Payment status updates (`authorized` → `captured`)
+
+### Not used for:
+
+* Direct payment collection
+
+For payment collection, Razorpay payment products and checkout integrations are required.
+
+---
+
+## Core Payment Lifecycle
+
+### Payment States:
+
+* `authorized` → Payment approved but not yet captured
+* `captured` → Payment successfully collected
+
+### Common Action:
+
+* Capture authorized payments to complete transactions
+
+---
+
+## Primary Endpoints
+
+### 1. Capture Payment
+
+```text
+POST /v1/payments/:id/capture
+```
+
+**Purpose:**
+Captures an authorized payment.
+
+---
+
+### 2. Fetch Payment by ID
+
+```text
+GET /v1/payments/:id
+```
+
+**Purpose:**
+Retrieve details of a specific payment.
+
+---
+
+### 3. Fetch All Payments
+
+```text
+GET /v1/payments
+```
+
+**Purpose:**
+Retrieve all payment records.
+
+---
+
+### 4. Fetch Payments for an Order
+
+```text
+GET /v1/orders/:id/payments
+```
+
+**Purpose:**
+Retrieve all payments associated with an order.
+
+---
+
+### 5. Fetch Card Details
+
+```text
+GET /v1/payments/:id/card
+```
+
+**Purpose:**
+Retrieve card details for a specific payment.
+
+---
+
+### 6. Update Payment
+
+```text
+PATCH /v1/payments/:id
+```
+
+**Purpose:**
+Modify editable payment details.
+
+---
+
+## Expanded Response Options
+
+Razorpay supports expanded responses for enriched payment data:
+
+### Supported Expansions:
+
+* `card`
+* `emi`
+* `offers`
+
+### Example:
+
+```text
+GET /v1/payments/:id/?expand[]=card
+```
+
+---
+
+## Key Operational Use Cases
+
+* Capture pending authorized payments
+* Audit payment transactions
+* Investigate failed or disputed payments
+* Fetch customer payment history
+* Analyze card or EMI details
+* Build payment dashboards
+
+---
+
+## Security & Integration Notes
+
+* All requests require Basic Authentication
+* Use Test API Keys for sandbox testing
+* Use Live API Keys for production
+* Validate payment states before capture
+* Log payment IDs for reconciliation and debugging
+* Handle API errors for:
+
+  * Unauthorized access
+  * Invalid payment IDs
+  * Capture failures
+  * Rate limits
+
+---
+
+## Best Practices
+
+* Always verify payment status before capture
+* Avoid duplicate captures
+* Use webhook integrations for payment events
+* Implement retry logic carefully
+* Secure payment identifiers and customer data
+* Monitor reconciliation workflows
+
+---
+
+## Related Systems
+
+Payments APIs integrate closely with:
+
+* Orders API
+* Webhooks
+* Refund APIs
+* Settlement systems
+
+---
+
+## Summary
+
+Razorpay Payments APIs provide:
+
+* Payment capture
+* Payment retrieval
+* Order-linked payment visibility
+* Card detail retrieval
+* Payment updates
+
+These APIs are essential for:
+
+* Payment lifecycle management
+* Transaction reconciliation
+* Operational payment monitoring
+* Developer integrations
+

@@ -1,0 +1,239 @@
+# Razorpay API Errors
+
+## Overview
+
+Razorpay APIs return either:
+
+### Successful Response
+
+* HTTP Status Code: `200`
+
+### Failure Response
+
+* JSON error response containing diagnostic parameters
+
+Failure responses help developers:
+
+* Map and analyze top failure reasons
+* Identify the source of failure:
+
+  * Customer
+  * Razorpay
+  * Gateway
+  * Bank
+  * Network
+* Identify the exact transaction step where failure occurred
+* Display meaningful next steps to customers
+* Programmatically handle payment failures
+
+---
+
+## Standard Error Response Structure
+
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST_ERROR",
+    "description": "Authentication failed due to incorrect otp",
+    "field": null,
+    "source": "customer",
+    "step": "payment_authentication",
+    "reason": "invalid_otp",
+    "metadata": {
+      "payment_id": "pay_EDNBKIP31Y4jl8",
+      "order_id": "order_DBJKIP31Y4jl8"
+    }
+  }
+}
+```
+
+---
+
+## Error Parameters
+
+### `error`
+
+* Type: `object`
+* Root error object
+
+---
+
+### `code`
+
+* Type: `string`
+* High-level error category
+
+### Example:
+
+* `BAD_REQUEST_ERROR`
+
+---
+
+### `description`
+
+* Type: `string`
+* Human-readable explanation of the failure
+
+### Example:
+
+* `Authentication failed due to incorrect otp`
+
+---
+
+### `field`
+
+* Type: `string` or `null`
+* Request parameter that caused the error
+
+---
+
+### `source`
+
+* Type: `string`
+* Origin point of the failure
+
+### Possible sources:
+
+* `customer`
+* `business`
+* `gateway`
+* `bank`
+* `network`
+* `internal`
+
+---
+
+### `step`
+
+* Type: `string`
+* Transaction stage where failure occurred
+
+### Example:
+
+* `payment_authentication`
+* `payment_processing`
+* `payment_capture`
+
+---
+
+### `reason`
+
+* Type: `string`
+* Exact machine-readable reason for failure
+* Can be handled programmatically
+
+### Example:
+
+* `invalid_otp`
+* `payment_declined`
+* `incorrect_cvv`
+
+---
+
+### `metadata`
+
+* Type: `object`
+* Additional request identifiers
+
+### Includes:
+
+* `payment_id`
+* `order_id`
+
+---
+
+## Sample Operational Interpretation
+
+### If:
+
+* `description`: Authentication failed due to incorrect OTP
+* `source`: customer
+* `step`: payment_authentication
+* `reason`: invalid_otp
+
+### Recommended Action:
+
+* Notify customer
+* Ask customer to retry with correct OTP
+* Preserve payment flow continuity
+
+---
+
+## Common Integration Use Cases
+
+* Customer-facing error messaging
+* Retry logic
+* Payment troubleshooting
+* Transaction analytics
+* Payment funnel analysis
+* Internal monitoring
+* Automated debugging
+
+---
+
+## Best Practices
+
+* Parse `reason` for programmatic workflows
+* Display `description` for customer communication
+* Use `source` to classify responsibility
+* Log:
+
+  * payment_id
+  * order_id
+  * code
+  * reason
+* Avoid exposing raw internal failures to customers
+* Build retry mechanisms for recoverable failures
+* Monitor recurring failure patterns
+
+---
+
+## Security & Reliability Considerations
+
+* Validate all request fields
+* Ensure proper API authentication
+* Handle:
+
+  * Invalid credentials
+  * OTP failures
+  * Bank declines
+  * Gateway issues
+  * Network failures
+* Maintain detailed logging
+* Use webhooks for reconciliation when required
+
+---
+
+## Related Systems
+
+Razorpay error workflows commonly interact with:
+
+* API Authentication
+* Payments APIs
+* Orders APIs
+* Webhooks
+* Monitoring systems
+* Customer support platforms
+
+---
+
+## Summary
+
+Razorpay API errors provide structured diagnostic information through:
+
+* `code`
+* `description`
+* `field`
+* `source`
+* `step`
+* `reason`
+* `metadata`
+
+These are essential for:
+
+* Robust API integrations
+* Payment debugging
+* Customer experience optimization
+* Production monitoring
+* Automated support systems
+

@@ -1,0 +1,201 @@
+# Razorpay Webhooks
+
+## Overview
+
+Razorpay Webhooks allow partners and merchants to receive real-time event notifications when specific transactions or onboarding events occur.
+
+Webhook payloads are sent to a configured endpoint URL whenever subscribed events are triggered.
+
+---
+
+## Core Use Cases
+
+Webhooks are used for:
+
+- Real-time payment status updates
+- Order payment confirmations
+- Refund tracking
+- Invoice status monitoring
+- Payment link lifecycle events
+- Fund account validation
+- Sub-merchant onboarding updates
+- Account status monitoring
+
+---
+
+## Webhook Setup Process
+
+### Dashboard Configuration:
+1. Log in to Razorpay Dashboard
+2. Navigate to:
+text Partner Dashboard → Settings → Webhooks 
+
+3. Configure:
+- Webhook URL (HTTPS recommended)
+- Secret key for signature validation
+- Alert email for failure notifications
+- Active events to subscribe
+
+4. Create webhook
+
+---
+
+## Security Requirements
+
+### Webhook Secret:
+- Used to validate webhook authenticity
+- Ensures payload originated from Razorpay
+
+### Best Practices:
+- Use HTTPS endpoints
+- Verify webhook signatures
+- Store secrets securely
+- Monitor failed webhook deliveries
+- Implement retry-safe handlers
+- Log event payloads for debugging
+
+---
+
+## Webhook Event Categories
+
+---
+
+## 1. Transaction Events
+
+### Payment Events:
+- payment.authorized
+- payment.failed
+- payment.captured
+- payment.dispute.created
+- payment.dispute.won
+- payment.dispute.lost
+- payment.dispute.closed
+- payment.downtime.started
+- payment.downtime.resolved
+
+---
+
+### Order Events:
+- order.paid
+
+---
+
+### Invoice Events:
+- invoice.paid
+- invoice.partially_paid
+- invoice.expired
+
+---
+
+### Fund Account Events:
+- fund_account.validation.completed
+- fund_account.validation.failed
+
+---
+
+### Refund Events:
+- refund.created
+- refund.processed
+- refund.failed
+- refund.speed_changed
+
+---
+
+### Payment Link Events:
+- payment_link.paid
+- payment_link.partially_paid
+- payment_link.expired
+- payment_link.cancelled
+
+---
+
+## 2. Sub-Merchant Onboarding Events
+
+### Payment Gateway Product Status:
+- product.payment_gateway.under_review
+- product.payment_gateway.needs_clarification
+- product.payment_gateway.activated
+- product.payment_gateway.rejected
+
+---
+
+### Payment Link Product Status:
+- product.payment_link.under_review
+- product.payment_link.needs_clarification
+- product.payment_link.activated
+- product.payment_link.rejected
+
+---
+
+### Account Events:
+- account.suspended
+
+---
+
+## Operational Recommendations
+
+- Process webhook payloads asynchronously
+- Validate every incoming request
+- Implement idempotency to avoid duplicate processing
+- Handle delivery failures gracefully
+- Maintain audit logs
+- Use alerting for webhook failures
+- Reconcile webhook data with API fetch operations
+
+---
+
+## Common Integration Scenarios
+
+- Payment success notifications
+- Failed payment workflows
+- Automated refund processing
+- Invoice payment reconciliation
+- Partner onboarding automation
+- Merchant product activation tracking
+- Customer communication triggers
+
+---
+
+## Reliability Considerations
+
+- Webhooks can fail due to:
+  - Endpoint downtime
+  - Signature mismatch
+  - Invalid SSL
+  - Slow processing
+- Always maintain retry-safe systems
+- Ensure endpoint uptime
+- Monitor webhook health continuously
+
+---
+
+## Related Systems
+
+Razorpay Webhooks integrate closely with:
+
+- Payments APIs
+- Orders APIs
+- Refund systems
+- Dashboard operations
+- Partner onboarding systems
+- Monitoring and support tools
+
+---
+
+## Summary
+
+Razorpay Webhooks provide:
+
+- Real-time event notifications
+- Transaction lifecycle tracking
+- Refund and dispute monitoring
+- Partner onboarding visibility
+- Operational automation
+
+These are essential for:
+
+- Production payment systems
+- Automation workflows
+- Event-driven architectures
+- Monitoring and reconciliation
+- Scalable API integrations

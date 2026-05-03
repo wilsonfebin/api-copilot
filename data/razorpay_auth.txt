@@ -1,0 +1,142 @@
+# Razorpay API Authentication
+
+## Overview
+
+All Razorpay APIs use **Basic Authentication**.
+
+Each API request requires:
+
+* **Key ID**
+* **Key Secret**
+
+---
+
+## Authorization Header Format
+
+```text
+Authorization: Basic base64(KEY_ID:KEY_SECRET)
+```
+
+### Important:
+
+The `Authorization` header must strictly follow this format.
+
+### Invalid Examples:
+
+* `BASIC base64token`
+* `basic base64token`
+* `Basic "base64token"`
+* `Basic $base64token`
+
+### Common Authentication Failure Causes:
+
+* Incorrect casing
+* Missing credentials
+* Improper base64 formatting
+* Invalid or expired keys
+
+---
+
+## API Key Modes
+
+### Test Mode
+
+* Used for integration testing
+* Simulates payment workflows
+* No real customer payments are processed
+
+### Live Mode
+
+* Used for production
+* Accepts real customer payments
+* Requires replacing test credentials with live credentials before launch
+
+---
+
+## Generate API Keys
+
+### Razorpay Dashboard:
+
+1. Log in to Dashboard
+2. Select **Test** or **Live** mode
+3. Navigate to:
+
+```text
+Account & Settings → API Keys → Generate Key
+```
+
+---
+
+## Security Best Practices
+
+* Download and securely store API keys immediately after generation
+* Only **Key ID** remains visible later
+* **Key Secret is shown only once**
+* Never expose or share Key Secret publicly
+* If credentials are compromised, regenerate immediately
+* Replace all old integrations after regeneration
+* Use:
+
+  * Test keys for testing
+  * Live keys for production
+
+---
+
+## Key Regeneration / Rolling Keys
+
+If keys are:
+
+* Lost
+* Exposed
+* Compromised
+
+You should:
+
+* Regenerate Test or Live keys
+* Deactivate immediately or within 24 hours
+* Update all systems using old keys
+
+---
+
+## Live Mode Requirements
+
+Before using live payouts/payments:
+
+* Complete KYC
+* Verify:
+
+  * Contact information
+  * Business details
+  * Bank account
+  * Legal documents
+
+---
+
+## RazorpayX Notes
+
+* API keys can also be generated from RazorpayX Dashboard
+* Live mode key generation requires OTP verification
+* Test mode does not require OTP
+
+---
+
+## Operational Recommendations
+
+* Rotate API keys periodically
+* Store credentials in environment variables
+* Use least-privilege security practices
+* Audit integrations regularly
+* Log authentication failures for debugging
+
+---
+
+## Summary
+
+Razorpay authentication relies on:
+
+* Basic Auth
+* Secure API key management
+* Proper test/live separation
+* Strict header formatting
+* Regular key rotation and security hygiene
+
