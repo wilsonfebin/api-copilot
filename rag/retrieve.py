@@ -2,7 +2,7 @@ from llm.client import get_embedding, ask_llm
 from rag.vector_store import query_chunks
 
 
-def answer_query(user_query, top_k=3):
+def answer_query(user_query, top_k=2):
     query_embedding = get_embedding(user_query)
 
     results = query_chunks(query_embedding, top_k=top_k)
@@ -23,7 +23,7 @@ Context:
 User Question:
 {user_query}
 
-Provide a clear, technical, developer-focused answer.
+Provide a clear, technical, developer-focused answer. Be concise, accurate, and prioritize actionable developer guidance. If the user specifies a response length, strictly follow it.
 """
 
     answer = ask_llm(prompt)
