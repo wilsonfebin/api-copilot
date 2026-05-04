@@ -2,85 +2,91 @@ def load_css():
     return """
     <style>
 
-    /* =========================
-       BASE THEME
-    ========================= */
-    .stApp {
-        background-color: #0b0f14;
-    }
-
-    /* =========================
-       CHAT MESSAGE CONTAINERS
-       (Subtle, invisible-quality)
-    ========================= */
-    div[data-testid="stChatMessage"] {
+    /* ================= ANSWER BOX ================= */
+    .answer-box {
+        background: rgba(17, 24, 39, 0.75);
+        border-radius: 12px;
+        padding: 16px;
         border: 1px solid rgba(255,255,255,0.05);
-        border-radius: 14px;
-        padding: 14px 16px;
-        margin-bottom: 14px;
-        background-color: rgba(255,255,255,0.02);
+        line-height: 1.55;
     }
 
-    /* User slightly elevated */
-    div[data-testid="stChatMessage"][data-author="user"] {
-        background-color: rgba(255,255,255,0.035);
+    .answer-box:hover {
+        border-color: rgba(255,255,255,0.12);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
     }
 
-    /* Assistant flatter */
-    div[data-testid="stChatMessage"][data-author="assistant"] {
-        background-color: rgba(255,255,255,0.02);
+    .answer-box h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
     }
 
-    /* =========================
-       TEXT READABILITY
-    ========================= */
-    div[data-testid="stMarkdownContainer"] {
-        line-height: 1.6;
-        font-size: 0.95rem;
+    .answer-box p,
+    .answer-box li {
+        font-size: 14.5px;
     }
 
-    /* =========================
-       HEADINGS (Fix icon alignment)
-    ========================= */
-    h2, h3 {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        line-height: 1.3;
-        margin-top: 10px;
-        margin-bottom: 6px;
-    }
-
-    /* =========================
-       CODE BLOCKS (Better contrast)
-    ========================= */
-    pre, code {
-        background-color: rgba(255,255,255,0.04) !important;
-        border-radius: 8px !important;
-        padding: 10px !important;
+    /* ================= INLINE CODE ================= */
+    .answer-box code {
+        background: rgba(31, 41, 55, 0.9);
         border: 1px solid rgba(255,255,255,0.06);
+        padding: 4px 6px;
+        border-radius: 6px;
+        font-size: 0.9em;
     }
 
-    /* Inline code */
-    code {
-        padding: 2px 6px !important;
-        font-size: 0.9rem;
+    /* ================= CODE BLOCK ================= */
+    pre {
+        background: #0f172a !important;
+        border-radius: 10px;
+        padding: 12px;
+        overflow-x: auto;
     }
 
-    /* =========================
-       INPUT BOX (Vertical centering)
-    ========================= */
-    textarea {
-        padding-top: 10px !important;
-        padding-bottom: 10px !important;
-        line-height: 1.4 !important;
+    /* ================= CHAT INPUT ================= */
+    [data-testid="stChatInput"] > div {
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        border-radius: 12px !important;
+        box-shadow: none !important;
     }
 
-    /* =========================
-       SMALL POLISH
-    ========================= */
-    hr {
-        border-color: rgba(255,255,255,0.06);
+    [data-testid="stChatInput"] > div:focus-within {
+        border: 1px solid #3b82f6 !important;
+        box-shadow: 0 0 0 1px #3b82f6 !important;
+    }
+
+    /* ================= CUSTOM METRICS ================= */
+    .metric-box {
+        padding: 6px 0;
+    }
+
+    .metric-label {
+        font-size: 12px;
+        opacity: 0.7;
+    }
+
+    .metric-value {
+        font-size: 16px;
+        font-weight: 500;
+        margin-top: 2px;
+    }
+
+    /* ================= SIDEBAR SPACING ================= */
+    section[data-testid="stSidebar"] .stButton {
+        margin-bottom: 8px;
+    }
+
+    /* ================= CAPTION ================= */
+    .stCaption {
+        margin-top: 8px;
+        opacity: 0.75;
+        font-size: 0.85rem;
+    }
+
+    /* ================= BUTTON HOVER ================= */
+    button:hover {
+        transform: scale(1.01);
+        transition: 0.1s ease;
     }
 
     </style>

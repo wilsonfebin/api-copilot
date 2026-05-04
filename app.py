@@ -5,19 +5,21 @@ import threading
 import requests
 import streamlit as st
 
-from rag.vector_store import get_vector_stats
 from utils.styles import load_css
-
 
 # ========================
 # CONFIG
 # ========================
 MAX_THREADS = 10
 THREAD_FILE = "data/threads.json"
-BACKEND_URL = "http://127.0.0.1:8000"
+BACKEND_URL = "http://backend:8000"
 
 st.set_page_config(page_title="API Copilot", page_icon="🚀", layout="wide")
 
+# ========================
+# LOAD CSS
+# ========================
+st.markdown(load_css(), unsafe_allow_html=True)
 
 # ========================
 # STORAGE
@@ -28,23 +30,17 @@ def load_threads():
     try:
         with open(THREAD_FILE, "r") as f:
             content = f.read().strip()
-            if not content:
-                return []
-            return json.loads(content)
+            return json.loads(content) if content else []
     except:
         return []
 
-
 def save_threads(threads):
     os.makedirs("data", exist_ok=True)
-    tmp = THREAD_FILE + ".tmp"
-    with open(tmp, "w") as f:
+    with open(THREAD_FILE, "w") as f:
         json.dump(threads, f, indent=2)
-    os.replace(tmp, THREAD_FILE)
-
 
 # ========================
-# BACKEND CALLS
+# BACKEND
 # ========================
 def call_backend(query):
     try:
@@ -57,149 +53,115 @@ def call_backend(query):
     except Exception as e:
         return {"error": str(e)}
 
-
 def get_health():
     try:
-        res = requests.get(f"{BACKEND_URL}/health", timeout=5)
-        return res.json()
+        return requests.get(f"{BACKEND_URL}/health", timeout=5).json()
     except:
         return None
 
+def get_metrics():
+    try:
+        return requests.get(f"{BACKEND_URL}/metrics", timeout=5).json()
+    except:
+        return {"documents": "-", "chunks": "-"}
+
+# ========================
+# HELPERS
+# ========================
+def clean_answer(answer: str):
+    lines = []
+    for l in answer.split("\n"):
+        if l.lower().startswith("## summary"):
+            continue
+        lines.append(l)
+    return "\n".join(lines)
+
+def metric(label, value):
+    st.markdown(f"""
+    <div class="metric-box">
+        <div class="metric-label">{label}</div>
+        <div class="metric-value">{value}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ========================
 # INIT
 # ========================
-st.markdown(load_css(), unsafe_allow_html=True)
-
-vector_stats = get_vector_stats()
-health = get_health()
-
 if "threads" not in st.session_state:
     st.session_state.threads = load_threads()
 
 if "active_thread" not in st.session_state:
     st.session_state.active_thread = None
 
-
-# ========================
-# HEALTH STATUS
-# ========================
-if health:
-    openai_status = "Healthy" if health["services"]["openai"] else "Missing"
-    vector_status = "Active" if health["services"]["vector_db"] else "Down"
-    rag_status = "Online" if health["services"]["rag"] else "Down"
-else:
-    openai_status = "Down"
-    vector_status = "Down"
-    rag_status = "Down"
-
-
-# ========================
-# HEADER
-# ========================
-st.title("🚀 API Copilot")
-st.subheader("API Integration Copilot")
-st.caption(
-    "RAG-powered assistant for debugging, integrating, and understanding APIs using indexed documentation."
-)
-
+health = get_health()
+metrics = get_metrics()
 
 # ========================
 # SIDEBAR
 # ========================
 with st.sidebar:
-
     st.header("System Overview")
     st.caption("API Copilot v0.7 Beta")
 
     st.markdown("### System Health")
 
     for label, status in [
-        ("OpenAI API", openai_status),
-        ("Vector DB", vector_status),
-        ("RAG Engine", rag_status)
+        ("OpenAI API", "Healthy" if health and health["services"]["openai"] else "Missing"),
+        ("Vector DB", "Active" if health and health["services"]["vector_db"] else "Down"),
+        ("RAG Engine", "Online" if health and health["services"]["rag"] else "Down"),
     ]:
-        c1, c2 = st.columns([2, 1])
+        c1, c2 = st.columns([2,1])
         c1.markdown(label)
-
-        if status in ["Healthy", "Active", "Online"]:
-            c2.markdown(f"🟢 {status}")
-        else:
-            c2.markdown(f"🔴 {status}")
-
-    st.markdown("")
+        c2.markdown(f"{'🟢' if status in ['Healthy','Active','Online'] else '🔴'} {status}")
 
     st.markdown("### System Metrics")
-    m1, m2 = st.columns(2)
-    m1.metric("Docs Indexed", vector_stats["documents"])
-    m2.metric("Chunks Created", vector_stats["chunks"])
 
-    st.markdown("")
+    col1, col2 = st.columns(2)
+    with col1:
+        metric("Docs Indexed", metrics["documents"])
+    with col2:
+        metric("Chunks Created", metrics["chunks"])
 
-    st.markdown("### Supported Modules")
-    st.markdown("""
-🔐 Authentication  
-💳 Payments  
-⚠️ Errors  
-🔔 Webhooks
-""")
-
-    st.markdown("")
-
-    # Conversations
     st.markdown("### Conversations")
 
     if st.session_state.threads:
-        for idx, thread in enumerate(st.session_state.threads):
+        for i, t in enumerate(st.session_state.threads):
+            c1, c2 = st.columns([5,1])
 
-            title = thread["title"]
-            title = title[:36] + "..." if len(title) > 36 else title
-
-            if idx == st.session_state.active_thread:
-                title = f"• {title}"
-
-            c1, c2 = st.columns([5, 1])
-
-            if c1.button(title, key=f"thread_{idx}", use_container_width=True):
-                t = st.session_state.threads.pop(idx)
-                st.session_state.threads.insert(0, t)
-                st.session_state.active_thread = 0
-                save_threads(st.session_state.threads)
+            if c1.button(t["title"][:30], key=f"t{i}", use_container_width=True):
+                st.session_state.active_thread = i
                 st.rerun()
 
-            if c2.button("🗑", key=f"del_{idx}"):
-                st.session_state.threads.pop(idx)
+            if c2.button("🗑", key=f"d{i}"):
+                st.session_state.threads.pop(i)
                 save_threads(st.session_state.threads)
                 st.session_state.active_thread = None
                 st.rerun()
     else:
         st.caption("No conversations yet.")
 
-    st.markdown("")
-
     c1, c2 = st.columns(2)
-    if c1.button("New Chat", use_container_width=True):
+    if c1.button("New Chat"):
         st.session_state.active_thread = None
         st.rerun()
-
-    if c2.button("Clear All", use_container_width=True):
+    if c2.button("Clear All"):
         st.session_state.threads = []
         save_threads([])
         st.session_state.active_thread = None
         st.rerun()
 
+# ========================
+# HEADER
+# ========================
+st.title("🚀 API Copilot")
+st.subheader("API Integration Copilot")
+st.caption("RAG-powered assistant for debugging and integrating APIs")
 
 # ========================
 # EMPTY STATE
 # ========================
 if st.session_state.active_thread is None:
-
-    st.markdown("### Ask a question")
-    st.caption("Start by asking anything about API integrations")
-
-    st.markdown("---")
-
-    st.markdown("#### Suggested Questions")
+    st.markdown("### Suggested Questions")
     st.markdown("""
 - How does Razorpay authentication work?
 - How do I capture payments?
@@ -208,107 +170,77 @@ if st.session_state.active_thread is None:
 - Explain Razorpay payments in 150 words.
 """)
 
-
 # ========================
 # CHAT DISPLAY
 # ========================
 if st.session_state.active_thread is not None:
+    msgs = st.session_state.threads[st.session_state.active_thread]["messages"]
 
-    messages = st.session_state.threads[
-        st.session_state.active_thread
-    ]["messages"]
-
-    for chat in messages:
-
+    for chat in msgs:
         with st.chat_message("user"):
             st.write(chat["question"])
 
         with st.chat_message("assistant"):
-            st.write(chat["answer"])
-            st.caption(
-                f"{chat['response_time']}s • "
-                f"{chat['tokens']} tokens • "
-                f"${chat['cost']:.5f}"
-            )
+            st.markdown(f"""
+            <div class="answer-box">
+                <h3>Summary</h3>
+                {clean_answer(chat["answer"])}
+            </div>
+            """, unsafe_allow_html=True)
 
+            st.caption(f"{chat['response_time']}s • {chat['tokens']} tokens • ${chat['cost']:.5f}")
 
 # ========================
 # INPUT
 # ========================
-st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+query = st.chat_input("Ask about authentication, payments, errors...")
 
-user_query = st.chat_input(
-    "Ask about authentication, payments, errors, or webhooks..."
-)
-
-
-# ========================
-# QUERY EXECUTION
-# ========================
-if user_query:
-
+if query:
     with st.chat_message("user"):
-        st.write(user_query)
+        st.write(query)
 
     with st.chat_message("assistant"):
-
         placeholder = st.empty()
+        result = {}
+
+        def run():
+            result["data"] = call_backend(query)
+
+        t = threading.Thread(target=run)
+        t.start()
+
         start = time.time()
-        result_container = {}
-
-        def run_query():
-            result_container["data"] = call_backend(user_query)
-
-        thread = threading.Thread(target=run_query)
-        thread.start()
-
-        while thread.is_alive():
-            elapsed = round(time.time() - start, 1)
-            placeholder.markdown(f"⏳ Thinking... {elapsed}s")
+        while t.is_alive():
+            placeholder.markdown(f"⏳ Thinking... {round(time.time()-start,2)}s")
             time.sleep(0.2)
 
-        thread.join()
-
-        result = result_container["data"]
-
-        if "error" in result:
-            placeholder.empty()
-            st.error("Backend error: " + result["error"])
-            st.stop()
-
+        t.join()
+        res = result["data"]
         placeholder.empty()
 
-        st.write(result["answer"])
+        st.markdown(f"""
+        <div class="answer-box">
+            <h3>Summary</h3>
+            {clean_answer(res["answer"])}
+        </div>
+        """, unsafe_allow_html=True)
 
-        st.caption(
-            f"{result['response_time']}s • "
-            f"{result['tokens']} tokens • "
-            f"${result['cost']:.5f}"
-        )
+        st.caption(f"{res['response_time']}s • {res['tokens']} tokens • ${res['cost']:.5f}")
 
     payload = {
-        "question": result["question"],
-        "answer": result["answer"],
-        "sources": result["sources"],
-        "response_time": result["response_time"],
-        "tokens": result["tokens"],
-        "cost": result["cost"]
+        "question": res["question"],
+        "answer": res["answer"],
+        "response_time": res["response_time"],
+        "tokens": res["tokens"],
+        "cost": res["cost"]
     }
 
-    if st.session_state.active_thread is None:
-        st.session_state.threads.insert(0, {
-            "title": user_query,
-            "messages": [payload]
-        })
-        st.session_state.active_thread = 0
-    else:
-        idx = st.session_state.active_thread
-        t = st.session_state.threads.pop(idx)
-        t["messages"].append(payload)
-        st.session_state.threads.insert(0, t)
-        st.session_state.active_thread = 0
+    st.session_state.threads.insert(0, {
+        "title": query,
+        "messages": [payload]
+    })
 
-    st.session_state.threads = st.session_state.threads[:MAX_THREADS]
-    save_threads(st.session_state.threads)
+    st.session_state.active_thread = 0
+    save_threads(st.session_state.threads[:MAX_THREADS])
 
     st.rerun()
