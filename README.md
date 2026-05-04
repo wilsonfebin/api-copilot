@@ -1,244 +1,179 @@
-API Copilot — Day 6 Updates
+# API Copilot
 
-Version: v0.6 Beta
-Focus: UX Refinement + Retrieval Intelligence + System Architecture
+API Copilot is a Retrieval-Augmented Generation (RAG) based assistant for understanding, debugging, and integrating APIs using indexed documentation.
 
-⸻
+---
 
-🚀 Overview
+## Overview
 
-Day 6 focused on transforming API Copilot into a more polished, production-style AI API assistant through:
+This project enables users to ask natural language questions about APIs and receive structured, context-aware responses powered by:
 
-* Premium UI/UX improvements
-* Dynamic system metrics
-* Intelligent answer compression
-* Improved retrieval transparency
-* Better conversation session architecture
-* Enhanced developer usability
+- Vector search over API documentation  
+- LLM-based response generation  
+- A decoupled backend service architecture  
 
-⸻
+---
 
-🧠 Backend Enhancements
+## Architecture
 
-1. Intelligent Response Compression (rag/retrieve.py)
+Streamlit (UI)     ↓ FastAPI (Backend)     ↓ RAG Service Layer     ↓ Vector Database (ChromaDB)
 
-Added:
+---
 
-- User word-count detection
-- Dynamic prompt constraints
-- Secondary LLM compression pass
-- Sentence-safe fallback trimming
+## Features
 
-Supported Examples:
+### Core
+- RAG-based question answering  
+- Context retrieval from indexed documents  
+- Structured responses (summary, steps, best practices)  
 
-reply in 150 words
-summarize in 200 words
-explain in 300 words
+### UI (Streamlit)
+- Chat-based interface  
+- Multi-thread conversations (persistent)  
+- Real-time response timing  
+- Token and cost estimation  
+- Suggested queries  
+- Subtle, developer-focused UI design  
 
-Improvements:
+### Backend (FastAPI)
+- /query endpoint for inference  
+- /health endpoint for system status  
+- Service-layer abstraction for RAG logic  
+- Clean API contract  
 
-- Better response precision
-- User-controlled output length
-- More reliable technical summaries
-- Improved answer consistency
+### System
+- Vector store using ChromaDB  
+- Token + cost estimation  
+- JSON-based thread persistence  
 
-⸻
+---
 
-2. Dynamic Vector Store Metrics (rag/vector_store.py)
+## Caching
 
-Added:
+- Implemented using functools.lru_cache  
+- Caches last 50 unique queries  
+- Reduces latency for repeated queries  
 
-def get_vector_stats():
-    return {
-        "documents": total_docs,
-        "chunks": total_chunks
-    }
+First query   → full RAG (~5–10s) Repeat query  → near-instant response
 
-Tracks:
+---
 
-- Indexed documents
-- Semantic chunks
+## Health Monitoring
 
-Improvements:
+Backend exposes:
 
-- Real-time sidebar metrics
-- Accurate database transparency
-- Removed hardcoded system values
+GET /health
 
-⸻
+Example response:
 
-🎨 Frontend / UX Enhancements (app.py)
+json {   "status": "ok",   "services": {     "openai": true,     "vector_db": true,     "rag": true   } } 
 
-⸻
+UI consumes this endpoint to reflect real system state.
 
-🥇 Header Improvements
+---
 
-Updated:
-
-- Better typography hierarchy
-- Cleaner spacing
-- Improved branding consistency
-- More professional visual structure
-
-⸻
-
-🥇 Sidebar Redesign
-
-Added Sections:
-
-System Overview
-System Health
-System Metrics
-Supported Modules
-Session Thread
-Controls
-
-System Health:
-
-OpenAI API
-Vector DB
-RAG Engine
-
-Metrics:
-
-Docs Indexed
-Chunks Indexed
-
-UX Improvements:
-
-- Better visual hierarchy
-- Compact layout
-- Reduced spacing inefficiencies
-- Dynamic operational visibility
-- Improved sidebar density
-
-⸻
-
-🥇 Chat Experience Enhancements
-
-Added:
-
-- ChatGPT-style conversation flow
-- First-query session thread model
-- Follow-up continuity
-- Improved response containers
-- Reduced chat input height
-- Better message spacing
-- Improved desktop responsiveness
-
-⸻
-
-🥇 Response Card Improvements
-
-Added:
-
-- Structured markdown rendering
-- Technical section hierarchy
-- Latency tracking
-- Token usage estimates
-- Cost estimation
-
-Example:
-
-4.55s · 165 tokens · $0.00009
-
-⸻
-
-🥇 Source Transparency Enhancements
-
-Updated:
-
-Single source → compact caption
-Multiple sources → expandable source section
-
-Example:
-
-📄 Source: razorpay_auth.txt
-
-Improvements:
-
-- Cleaner source display
-- Less redundancy
-- Better retrieval transparency
-- Improved response density
-
-⸻
-
-🧩 Updated Project Structure
+## Project Structure
 
 api-copilot/
-├── app.py
-├── main.py
-├── .env
-├── requirements.txt
 │
-├── llm/
-│   └── client.py
+├── app.py                      # Streamlit UI
+│
+├── backend/
+│   ├── main.py                # FastAPI entry point
+│   ├── routes/
+│   │   ├── query.py
+│   │   └── health.py
+│   ├── services/
+│   │   └── rag_service.py
 │
 ├── rag/
-│   ├── ingest.py
-│   ├── chunk.py
-│   ├── embed.py
-│   ├── vector_store.py
-│   └── retrieve.py
+│   ├── retrieve.py
+│   └── vector_store.py
 │
 ├── utils/
-│   └── metrics.py
+│   ├── styles.py
+│   ├── metrics.py
+│   └── storage.py
 │
-├── chroma_db/
 ├── data/
-│   ├── razorpay_auth.txt
-│   ├── razorpay_payments.txt
-│   ├── razorpay_errors.txt
-│   └── razorpay_webhooks.txt
+│   └── threads.json
+---
 
-⸻
+## Running the Project
 
-🔥 Key Day 6 Technical Outcomes
+### 1. Activate virtual environment
 
-Backend:
+source venv/bin/activate
 
-- Length-aware prompt engineering
-- LLM compression pipeline
-- Better retrieval control
-- Dynamic vector metrics
+---
 
-⸻
+### 2. Start backend
 
-Frontend:
+python -m uvicorn backend.main:app --reload
 
-- Premium sidebar redesign
-- Improved typography system
-- Better source UX
-- Token + cost telemetry
-- Session thread architecture
-- Enhanced developer usability
+Backend runs at:
 
-⸻
+http://127.0.0.1:8000
 
-📅 Next Planned Enhancements
+---
 
-- Multi-thread conversation architecture
-- Sidebar thread navigation
-- Persistent conversation history
-- Copy answer functionality
-- Improved conversation management
+### 3. Start UI
 
-⸻
+streamlit run app.py
 
-🏁 Summary
+---
 
-Day 6 significantly improved:
-✔ UI/UX maturity
-✔ Retrieval intelligence
-✔ Response precision
-✔ System transparency
-✔ Developer workflow
+## API Endpoints
 
-⸻
+### POST /query
 
-🚀 Status
+Request:
 
-API Copilot v0.6 Beta
-Enhanced SaaS UI
-Preparing for Day 7 architecture upgrades
+json {   "question": "How do webhooks work?" } 
+
+Response:
+
+json {   "question": "...",   "answer": "...",   "sources": ["..."],   "response_time": 6.2,   "tokens": 210,   "cost": 0.00012 } 
+
+---
+
+### GET /health
+
+Returns system health status.
+
+---
+
+## Design Decisions
+
+- Decoupled architecture  
+  UI does not directly call RAG logic; all inference goes through FastAPI  
+
+- Service layer abstraction  
+  RAG logic is isolated in rag_service.py  
+
+- In-memory caching  
+  Reduces repeated query latency without external dependencies  
+
+- Minimal state persistence  
+  Threads stored locally using JSON  
+
+- Backend-driven system status  
+  UI reflects actual backend health via /health  
+
+---
+
+## Notes
+
+- Cache is in-memory and resets on restart  
+- Cache key is exact query string match  
+- No external database used for conversations  
+- System is designed for clarity and extensibility  
+
+---
+
+## Next Steps
+
+- Containerization (Docker)  
+- Logging and monitoring  
+- Improved cache strategy (TTL / distributed)  
+- API hardening (timeouts, retries)
