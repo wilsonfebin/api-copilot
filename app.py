@@ -2,10 +2,10 @@ import os
 import time
 import json
 import threading
+import requests
 import streamlit as st
-from rag.retrieve import answer_query
+
 from rag.vector_store import get_vector_stats
-from utils.metrics import estimate_tokens, estimate_cost
 from utils.styles import load_css
 
 
@@ -14,12 +14,13 @@ from utils.styles import load_css
 # ========================
 MAX_THREADS = 10
 THREAD_FILE = "data/threads.json"
+BACKEND_URL = "http://127.0.0.1:8000"
 
 st.set_page_config(page_title="API Copilot", page_icon="🚀", layout="wide")
 
 
 # ========================
-# STORAGE (fail-safe)
+# STORAGE
 # ========================
 def load_threads():
     if not os.path.exists(THREAD_FILE):
@@ -43,11 +44,26 @@ def save_threads(threads):
 
 
 # ========================
-# HELPERS
+# BACKEND CALLS
 # ========================
-@st.cache_data(show_spinner=False)
-def cached_query(query):
-    return answer_query(query, top_k=2)
+def call_backend(query):
+    try:
+        res = requests.post(
+            f"{BACKEND_URL}/query",
+            json={"question": query},
+            timeout=30
+        )
+        return res.json()
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def get_health():
+    try:
+        res = requests.get(f"{BACKEND_URL}/health", timeout=5)
+        return res.json()
+    except:
+        return None
 
 
 # ========================
@@ -56,13 +72,26 @@ def cached_query(query):
 st.markdown(load_css(), unsafe_allow_html=True)
 
 vector_stats = get_vector_stats()
-api_status = "Healthy" if os.getenv("OPENAI_API_KEY") else "Missing Key"
+health = get_health()
 
 if "threads" not in st.session_state:
     st.session_state.threads = load_threads()
 
 if "active_thread" not in st.session_state:
     st.session_state.active_thread = None
+
+
+# ========================
+# HEALTH STATUS
+# ========================
+if health:
+    openai_status = "Healthy" if health["services"]["openai"] else "Missing"
+    vector_status = "Active" if health["services"]["vector_db"] else "Down"
+    rag_status = "Online" if health["services"]["rag"] else "Down"
+else:
+    openai_status = "Down"
+    vector_status = "Down"
+    rag_status = "Down"
 
 
 # ========================
@@ -84,14 +113,19 @@ with st.sidebar:
     st.caption("API Copilot v0.7 Beta")
 
     st.markdown("### System Health")
+
     for label, status in [
-        ("OpenAI API", api_status),
-        ("Vector DB", "Active"),
-        ("RAG Engine", "Online")
+        ("OpenAI API", openai_status),
+        ("Vector DB", vector_status),
+        ("RAG Engine", rag_status)
     ]:
         c1, c2 = st.columns([2, 1])
         c1.markdown(label)
-        c2.markdown(f"🟢 {status}")
+
+        if status in ["Healthy", "Active", "Online"]:
+            c2.markdown(f"🟢 {status}")
+        else:
+            c2.markdown(f"🔴 {status}")
 
     st.markdown("")
 
@@ -112,7 +146,7 @@ with st.sidebar:
 
     st.markdown("")
 
-    # ---- Conversations
+    # Conversations
     st.markdown("### Conversations")
 
     if st.session_state.threads:
@@ -191,10 +225,9 @@ if st.session_state.active_thread is not None:
 
         with st.chat_message("assistant"):
             st.write(chat["answer"])
-
             st.caption(
-                f"{chat['response_time']}s · "
-                f"{chat['tokens']} tokens · "
+                f"{chat['response_time']}s • "
+                f"{chat['tokens']} tokens • "
                 f"${chat['cost']:.5f}"
             )
 
@@ -202,6 +235,8 @@ if st.session_state.active_thread is not None:
 # ========================
 # INPUT
 # ========================
+st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+
 user_query = st.chat_input(
     "Ask about authentication, payments, errors, or webhooks..."
 )
@@ -219,11 +254,10 @@ if user_query:
 
         placeholder = st.empty()
         start = time.time()
-
         result_container = {}
 
         def run_query():
-            result_container["data"] = cached_query(user_query)
+            result_container["data"] = call_backend(user_query)
 
         thread = threading.Thread(target=run_query)
         thread.start()
@@ -236,33 +270,31 @@ if user_query:
         thread.join()
 
         result = result_container["data"]
-        elapsed = round(time.time() - start, 2)
+
+        if "error" in result:
+            placeholder.empty()
+            st.error("Backend error: " + result["error"])
+            st.stop()
 
         placeholder.empty()
 
-        answer = result["answer"]
-
-        in_tokens = estimate_tokens(user_query)
-        out_tokens = estimate_tokens(answer)
-
-        payload = {
-            "question": user_query,
-            "answer": answer,
-            "sources": list(set([s["source"] for s in result["sources"]])),
-            "response_time": elapsed,
-            "tokens": in_tokens + out_tokens,
-            "cost": estimate_cost(in_tokens, out_tokens)
-        }
-
-        st.write(answer)
+        st.write(result["answer"])
 
         st.caption(
-            f"{elapsed}s · "
-            f"{payload['tokens']} tokens · "
-            f"${payload['cost']:.5f}"
+            f"{result['response_time']}s • "
+            f"{result['tokens']} tokens • "
+            f"${result['cost']:.5f}"
         )
 
-    # ---- Save thread
+    payload = {
+        "question": result["question"],
+        "answer": result["answer"],
+        "sources": result["sources"],
+        "response_time": result["response_time"],
+        "tokens": result["tokens"],
+        "cost": result["cost"]
+    }
+
     if st.session_state.active_thread is None:
         st.session_state.threads.insert(0, {
             "title": user_query,

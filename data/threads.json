@@ -4,13 +4,13 @@
     "messages": [
       {
         "question": "How does Razorpay authentication work?",
-        "answer": "## Summary\nRazorpay authentication utilizes **Basic Authentication** requiring a combination of **Key ID** and **Key Secret** for each API request. The credentials must be formatted correctly in the `Authorization` header.\n\n## Technical Steps\n1. **Prepare Credentials**: Obtain your **Key ID** and **Key Secret** from your Razorpay account.\n2. **Base64 Encode**: Format your credentials as `KEY_ID:KEY_SECRET` and encode this string in Base64.\n3. **Set Authorization Header**: Include the encoded string in the `Authorization` header of your API request:\n   ```text\n   Authorization: Basic base64(KEY_ID:KEY_SECRET)\n   ```\n4. **Choose Mode**: Decide between **Test Mode** for integration testing or **Live Mode** for production.\n\n## Best Practices\n- Ensure the `Authorization` header follows the exact format without any variations.\n- Regularly rotate your API keys and manage them securely.\n- Log authentication failures to troubleshoot issues effectively.\n- Use environment variables to store your keys and adhere to least-privilege security practices.",
+        "answer": "## Summary\nRazorpay authentication utilizes **Basic Authentication** requiring a **Key ID** and **Key Secret** for each API request. The credentials must be encoded in base64 and included in the `Authorization` header.\n\n## Technical Steps\n1. **Prepare Credentials**: Obtain your **Key ID** and **Key Secret** from your Razorpay account.\n2. **Base64 Encode**: Format your credentials as `KEY_ID:KEY_SECRET` and encode this string in base64.\n3. **Set Authorization Header**: Include the following in your API request headers:\n   ```text\n   Authorization: Basic base64(KEY_ID:KEY_SECRET)\n   ```\n4. **Choose Mode**: Decide between **Test Mode** for integration testing or **Live Mode** for production.\n\n## Best Practices\n- Ensure proper casing in the `Authorization` header.\n- Regularly rotate your API keys to enhance security.\n- Log authentication failures for troubleshooting.\n- Use environment variables to manage keys securely.\n- Follow least-privilege security practices in your application.",
         "sources": [
           "razorpay_auth.txt"
         ],
-        "response_time": 6.76,
-        "tokens": 228,
-        "cost": 0.000134
+        "response_time": 0.0,
+        "tokens": 220,
+        "cost": 0.000129
       }
     ]
   }
