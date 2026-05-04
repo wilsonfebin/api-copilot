@@ -17,7 +17,7 @@ API Copilot enables users to query API documentation and receive contextual, int
 ---
 
 ## 🏗️ Architecture
-
+~~~
 Streamlit UI (Frontend)
         ↓
 FastAPI Backend
@@ -27,7 +27,7 @@ RAG Pipeline
 ChromaDB (Vector Store)
         ↓
 OpenAI LLM
-
+~~~
 ### Design Principles
 - Separation of concerns (UI / API / RAG)
 - Stateless backend (except cache)
