@@ -160,7 +160,7 @@ Supports environment variable overrides.
 ---
 
 ## 📁 Project Structure
-.
+~~~
 ├── app.py                  # Streamlit UI
 ├── backend/               # FastAPI backend
 │   ├── main.py
@@ -176,7 +176,7 @@ Supports environment variable overrides.
 ├── requirements_backend.txt
 ├── requirements_ui.txt
 └── README.md
-
+~~~
 ---
 
 ## 🚀 Running Locally
