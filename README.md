@@ -1,179 +1,224 @@
-# API Copilot
+# 🚀 API Copilot — RAG-powered API Assistant
 
-API Copilot is a Retrieval-Augmented Generation (RAG) based assistant for understanding, debugging, and integrating APIs using indexed documentation.
-
----
-
-## Overview
-
-This project enables users to ask natural language questions about APIs and receive structured, context-aware responses powered by:
-
-- Vector search over API documentation  
-- LLM-based response generation  
-- A decoupled backend service architecture  
+A full-stack AI application that answers API-related questions using Retrieval-Augmented Generation (RAG), with cost tracking, caching, and a hardened backend.
 
 ---
 
-## Architecture
+## 🧠 Overview
 
-Streamlit (UI)     ↓ FastAPI (Backend)     ↓ RAG Service Layer     ↓ Vector Database (ChromaDB)
+API Copilot enables users to query API documentation and receive contextual, intelligent answers powered by LLMs and vector search.
 
----
-
-## Features
-
-### Core
-- RAG-based question answering  
-- Context retrieval from indexed documents  
-- Structured responses (summary, steps, best practices)  
-
-### UI (Streamlit)
-- Chat-based interface  
-- Multi-thread conversations (persistent)  
-- Real-time response timing  
-- Token and cost estimation  
-- Suggested queries  
-- Subtle, developer-focused UI design  
-
-### Backend (FastAPI)
-- /query endpoint for inference  
-- /health endpoint for system status  
-- Service-layer abstraction for RAG logic  
-- Clean API contract  
-
-### System
-- Vector store using ChromaDB  
-- Token + cost estimation  
-- JSON-based thread persistence  
+### Key capabilities:
+- Context-aware answers using RAG
+- Token, cost, and latency tracking
+- Chat-based multi-thread UI
+- Dockerized full-stack system
 
 ---
 
-## Caching
+## 🏗️ Architecture
 
-- Implemented using functools.lru_cache  
-- Caches last 50 unique queries  
-- Reduces latency for repeated queries  
+Streamlit UI (Frontend)
+        ↓
+FastAPI Backend
+        ↓
+RAG Pipeline
+        ↓
+ChromaDB (Vector Store)
+        ↓
+OpenAI LLM
 
-First query   → full RAG (~5–10s) Repeat query  → near-instant response
-
----
-
-## Health Monitoring
-
-Backend exposes:
-
-GET /health
-
-Example response:
-
-json {   "status": "ok",   "services": {     "openai": true,     "vector_db": true,     "rag": true   } } 
-
-UI consumes this endpoint to reflect real system state.
+### Design Principles
+- Separation of concerns (UI / API / RAG)
+- Stateless backend (except cache)
+- Modular and extensible
+- Config-driven behavior
 
 ---
 
-## Project Structure
+## ⚙️ Tech Stack
 
-api-copilot/
-│
-├── app.py                      # Streamlit UI
-│
-├── backend/
-│   ├── main.py                # FastAPI entry point
+### Backend
+- FastAPI
+- Uvicorn
+- Python 3.11
+
+### Frontend
+- Streamlit
+
+### AI / RAG
+- OpenAI API
+- ChromaDB
+
+### Infrastructure
+- Docker
+- Docker Compose
+
+---
+
+## 🧠 RAG Pipeline
+
+User Query → Retrieve (Top-K) → Context Injection → LLM → Answer
+
+### Features
+- Configurable Top-K retrieval
+- Context-aware generation
+- Source extraction
+- Deterministic outputs (low temperature)
+- Token & cost estimation
+
+---
+
+## ⚡ Performance Optimizations
+
+### Caching
+- LRU cache for repeated queries
+- Instant responses for identical inputs
+- Reduced API usage cost
+
+### Latency Tracking
+- Per-query response time
+- Displayed in UI and logs
+
+---
+
+## 🔐 API Hardening
+
+- Rate limiting (per-IP, window-based, /query endpoint)
+- Retry logic for transient failures
+- Timeout enforcement for long-running requests
+- Concurrency control using semaphore
+- Graceful error handling
+
+---
+
+## 📊 Logging & Observability
+
+### Logs include:
+- Request logs (method, path, latency)
+- Query lifecycle (start/end)
+- RAG execution details
+- Error logging
+- Rate limit tracking
+
+### Outputs:
+- Console (stdout)
+- File logs (logs/app.log)
+- Docker volume persistence
+
+---
+
+## 🎛️ Configuration
+
+Centralized configuration for:
+
+- Rate limits
+- Retry and timeout settings
+- Cache size
+- Retrieval parameters (top_k)
+- LLM parameters (tokens, temperature)
+- Concurrency limits
+
+Supports environment variable overrides.
+
+---
+
+## 🎨 UI / UX
+
+### Chat Interface
+- Conversational UI (user + assistant)
+- Structured answer containers
+- Token, cost, and latency display
+
+### Sidebar Features
+- System health indicators (OpenAI, Vector DB, RAG)
+- Metrics (documents, chunks)
+- Conversation history
+- Active thread selection
+- Delete / clear actions
+- New chat creation
+
+### Conversation System
+- Multi-thread support
+- Persistent storage (JSON)
+- Recency-based ordering
+
+---
+
+## 🐳 Docker Setup
+
+### Services
+- api-backend (FastAPI)
+- api-ui (Streamlit)
+
+### Features
+- Multi-container orchestration
+- Shared network
+- Volume mounts (logs, DB, data)
+- Hot reload for development
+
+---
+
+## 📁 Project Structure
+.
+├── app.py                  # Streamlit UI
+├── backend/               # FastAPI backend
+│   ├── main.py
 │   ├── routes/
-│   │   ├── query.py
-│   │   └── health.py
 │   ├── services/
-│   │   └── rag_service.py
-│
-├── rag/
-│   ├── retrieve.py
-│   └── vector_store.py
-│
-├── utils/
-│   ├── styles.py
-│   ├── metrics.py
-│   └── storage.py
-│
-├── data/
-│   └── threads.json
----
-
-## Running the Project
-
-### 1. Activate virtual environment
-
-source venv/bin/activate
+│   └── utils/
+├── rag/                   # Retrieval + generation logic
+├── utils/                 # UI styles, metrics
+├── data/                  # Conversation storage
+├── chroma_db/             # Vector DB persistence
+├── docker-compose.yml
+├── requirements.txt
+├── requirements_backend.txt
+├── requirements_ui.txt
+└── README.md
 
 ---
 
-### 2. Start backend
+## 🚀 Running Locally
 
-python -m uvicorn backend.main:app --reload
+### Without Docker
 
-Backend runs at:
-
-http://127.0.0.1:8000
+bash # Backend uvicorn backend.main:app --reload  # UI streamlit run app.py 
 
 ---
 
-### 3. Start UI
+### With Docker
 
-streamlit run app.py
+bash docker compose up --build 
 
----
-
-## API Endpoints
-
-### POST /query
-
-Request:
-
-json {   "question": "How do webhooks work?" } 
-
-Response:
-
-json {   "question": "...",   "answer": "...",   "sources": ["..."],   "response_time": 6.2,   "tokens": 210,   "cost": 0.00012 } 
+Access:
+- UI → http://localhost:8501
+- Backend → http://localhost:8000
 
 ---
 
-### GET /health
+## 🔑 Environment Variables
 
-Returns system health status.
+Create .env or configure:
 
----
-
-## Design Decisions
-
-- Decoupled architecture  
-  UI does not directly call RAG logic; all inference goes through FastAPI  
-
-- Service layer abstraction  
-  RAG logic is isolated in rag_service.py  
-
-- In-memory caching  
-  Reduces repeated query latency without external dependencies  
-
-- Minimal state persistence  
-  Threads stored locally using JSON  
-
-- Backend-driven system status  
-  UI reflects actual backend health via /health  
+OPENAI_API_KEY=your_api_key
 
 ---
 
-## Notes
+## ⚖️ Scope & Design Choices
 
-- Cache is in-memory and resets on restart  
-- Cache key is exact query string match  
-- No external database used for conversations  
-- System is designed for clarity and extensibility  
+- Minimal, focused architecture
+- No unnecessary infra (Kubernetes, Redis, etc.)
+- Designed for clarity, performance, and extensibility
 
 ---
 
-## Next Steps
+## 🏁 Summary
 
-- Containerization (Docker)  
-- Logging and monitoring  
-- Improved cache strategy (TTL / distributed)  
-- API hardening (timeouts, retries)
+A full-stack, Dockerized RAG-based API assistant with:
+
+- Intelligent retrieval + generation
+- Performance optimizations (caching)
+- Hardened backend (rate limiting, retry, timeout, concurrency)
+- Structured logging and observability
+- Clean, chat-based UI
