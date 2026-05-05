@@ -17,7 +17,7 @@ API Copilot enables users to query API documentation and receive contextual, int
 ---
 
 ## 🏗️ Architecture
-
+~~~
 Streamlit UI (Frontend)
         ↓
 FastAPI Backend
@@ -27,7 +27,7 @@ RAG Pipeline
 ChromaDB (Vector Store)
         ↓
 OpenAI LLM
-
+~~~
 ### Design Principles
 - Separation of concerns (UI / API / RAG)
 - Stateless backend (except cache)
@@ -160,7 +160,7 @@ Supports environment variable overrides.
 ---
 
 ## 📁 Project Structure
-.
+~~~
 ├── app.py                  # Streamlit UI
 ├── backend/               # FastAPI backend
 │   ├── main.py
@@ -176,7 +176,7 @@ Supports environment variable overrides.
 ├── requirements_backend.txt
 ├── requirements_ui.txt
 └── README.md
-
+~~~
 ---
 
 ## 🚀 Running Locally
