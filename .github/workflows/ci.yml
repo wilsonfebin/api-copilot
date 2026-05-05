@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Checkout
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2) Setup Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # 3) Install dependencies (UI + backend)
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt || true
+          if [ -f requirements_backend.txt ]; then pip install -r requirements_backend.txt; fi
+          if [ -f requirements_ui.txt ]; then pip install -r requirements_ui.txt; fi
+
+      # 4) Basic syntax check
+      - name: Python compile check
+        run: python -m compileall .
+
+      # 5) Optional lint (lightweight)
+      - name: Lint (optional)
+        run: |
+          pip install flake8
+          flake8 . --max-line-length=120 || true
+
+      # 6) Build Docker images (strong signal)
+      - name: Build backend image
+        run: |
+          if [ -f backend/Dockerfile ]; then
+            docker build -t api-copilot-backend -f backend/Dockerfile .
+          fi
+
+      - name: Build UI image
+        run: |
+          if [ -f Dockerfile.ui ]; then
+            docker build -t api-copilot-ui -f Dockerfile.ui .
+          fi
