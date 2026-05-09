@@ -1,9 +1,9 @@
-openai==2.33.0
-python-dotenv==1.2.2
-chromadb==1.5.8
+openai
+python-dotenv
+chromadb
 fastapi
-uvicorn
-pydantic
 streamlit
 tiktoken
-python-dotenv
+requests
+numpy
+pandas
