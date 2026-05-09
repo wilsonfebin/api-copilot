@@ -60,16 +60,16 @@ def load_css():
         padding: 6px 0;
     }
 
-    .metric-label {
-        font-size: 12px;
-        opacity: 0.7;
+    [data-testid="stMetricLabel"] {
+        font-size: 16px !important;
+        font-weight: 700 !important;
     }
 
-    .metric-value {
-        font-size: 16px;
-        font-weight: 500;
-        margin-top: 2px;
-    }
+    [data-testid="stMetricValue"] {
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        margin-top: 2px !important;
+    } 
 
     /* ================= SIDEBAR SPACING ================= */
     section[data-testid="stSidebar"] .stButton {

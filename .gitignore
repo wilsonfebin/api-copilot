@@ -11,7 +11,7 @@ venv/
 
 # Logs
 *.log
-
+.streamlit/secrets.toml
 # OS files
 .DS_Store
 
