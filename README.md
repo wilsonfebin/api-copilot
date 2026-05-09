@@ -1,224 +1,217 @@
-# 🚀 API Copilot — RAG-powered API Assistant
+```md
+# 🚀 API Copilot
 
-A full-stack AI application that answers API-related questions using Retrieval-Augmented Generation (RAG), with cost tracking, caching, and a hardened backend.
+AI-powered API Integration Assistant built using Retrieval-Augmented Generation (RAG), OpenAI, ChromaDB, and Streamlit.
 
----
-
-## 🧠 Overview
-
-API Copilot enables users to query API documentation and receive contextual, intelligent answers powered by LLMs and vector search.
-
-### Key capabilities:
-- Context-aware answers using RAG
-- Token, cost, and latency tracking
-- Chat-based multi-thread UI
-- Dockerized full-stack system
+Live Demo: https://api-copilot.streamlit.app/
 
 ---
 
-## 🏗️ Architecture
-~~~
-Streamlit UI (Frontend)
-        ↓
-FastAPI Backend
-        ↓
-RAG Pipeline
-        ↓
-ChromaDB (Vector Store)
-        ↓
-OpenAI LLM
-~~~
-### Design Principles
-- Separation of concerns (UI / API / RAG)
-- Stateless backend (except cache)
-- Modular and extensible
-- Config-driven behavior
+## Overview
+
+API Copilot helps developers:
+
+- Understand API authentication flows
+- Debug integration issues
+- Retrieve implementation guidance
+- Explain payment/webhook workflows
+- Generate concise API troubleshooting responses
+
+The system uses a RAG pipeline over indexed API documentation to provide grounded, developer-focused answers.
 
 ---
 
-## ⚙️ Tech Stack
+## Features
 
-### Backend
-- FastAPI
-- Uvicorn
-- Python 3.11
+### AI-Powered API Assistance
+- OpenAI-based response generation
+- Context-aware API explanations
+- Technical troubleshooting guidance
 
-### Frontend
-- Streamlit
+### Retrieval-Augmented Generation (RAG)
+- ChromaDB vector database
+- Semantic chunk retrieval
+- Context injection before LLM generation
 
-### AI / RAG
-- OpenAI API
-- ChromaDB
+### Streamlit UI
+- Chat-style interface
+- Conversation threads
+- Source references
+- Suggested API questions
+- Real-time response metrics
 
-### Infrastructure
-- Docker
-- Docker Compose
-
----
-
-## 🧠 RAG Pipeline
-
-User Query → Retrieve (Top-K) → Context Injection → LLM → Answer
-
-### Features
-- Configurable Top-K retrieval
-- Context-aware generation
-- Source extraction
-- Deterministic outputs (low temperature)
-- Token & cost estimation
+### Deployment & Infra
+- Streamlit Cloud deployment
+- Docker-compatible architecture
+- GitHub Actions CI pipeline
+- Environment-based secret management
 
 ---
 
-## ⚡ Performance Optimizations
+## Architecture
 
-### Caching
-- LRU cache for repeated queries
-- Instant responses for identical inputs
-- Reduced API usage cost
-
-### Latency Tracking
-- Per-query response time
-- Displayed in UI and logs
-
----
-
-## 🔐 API Hardening
-
-- Rate limiting (per-IP, window-based, /query endpoint)
-- Retry logic for transient failures
-- Timeout enforcement for long-running requests
-- Concurrency control using semaphore
-- Graceful error handling
+```text
+User Query
+    ↓
+Streamlit Frontend
+    ↓
+RAG Retrieval Layer
+    ↓
+ChromaDB Vector Search
+    ↓
+OpenAI Response Generation
+    ↓
+Formatted AI Response
+```
 
 ---
 
-## 📊 Logging & Observability
+## Tech Stack
 
-### Logs include:
-- Request logs (method, path, latency)
-- Query lifecycle (start/end)
-- RAG execution details
-- Error logging
-- Rate limit tracking
-
-### Outputs:
-- Console (stdout)
-- File logs (logs/app.log)
-- Docker volume persistence
-
----
-
-## 🎛️ Configuration
-
-Centralized configuration for:
-
-- Rate limits
-- Retry and timeout settings
-- Cache size
-- Retrieval parameters (top_k)
-- LLM parameters (tokens, temperature)
-- Concurrency limits
-
-Supports environment variable overrides.
+| Layer                 | Technology                    |
+|-----------------------|-------------------------------|
+| Frontend              | Streamlit                     |
+| LLM                   | OpenAI GPT                    |
+| Vector DB             | ChromaDB                      |
+| Embeddings            | OpenAI Embeddings             |
+| Backend               | Python                        |
+| CI/CD                 | GitHub Actions                |
+| Deployment            | Streamlit Community Cloud     |
+| Containerization      | Docker                        |
 
 ---
 
-## 🎨 UI / UX
+## Live Demo
 
-### Chat Interface
-- Conversational UI (user + assistant)
-- Structured answer containers
-- Token, cost, and latency display
-
-### Sidebar Features
-- System health indicators (OpenAI, Vector DB, RAG)
-- Metrics (documents, chunks)
-- Conversation history
-- Active thread selection
-- Delete / clear actions
-- New chat creation
-
-### Conversation System
-- Multi-thread support
-- Persistent storage (JSON)
-- Recency-based ordering
+https://api-copilot.streamlit.app/
 
 ---
 
-## 🐳 Docker Setup
+## Screenshots
 
-### Services
-- api-backend (FastAPI)
-- api-ui (Streamlit)
+### Landing Page
 
-### Features
-- Multi-container orchestration
-- Shared network
-- Volume mounts (logs, DB, data)
-- Hot reload for development
+![alt text](assets/landing-page.png)
+
+### Query + Sources
+
+![alt text](assets/query-sources.png)
+
 
 ---
 
-## 📁 Project Structure
-~~~
-├── app.py                  # Streamlit UI
-├── backend/               # FastAPI backend
-│   ├── main.py
-│   ├── routes/
-│   ├── services/
-│   └── utils/
-├── rag/                   # Retrieval + generation logic
-├── utils/                 # UI styles, metrics
-├── data/                  # Conversation storage
-├── chroma_db/             # Vector DB persistence
-├── docker-compose.yml
+## Local Development
+
+### Clone Repository
+
+```bash
+git clone https://github.com/wilsonfebin/api-copilot.git
+cd api-copilot
+```
+
+### Create Virtual Environment
+
+```bash
+python3.11 -m venv venv
+source venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Configure Secrets
+
+Create:
+
+```text
+.streamlit/secrets.toml
+```
+
+Add:
+
+```toml
+OPENAI_API_KEY="your-api-key"
+```
+
+### Run Application
+
+```bash
+streamlit run app.py
+```
+
+---
+
+## Docker Support
+
+The project also supports Docker-based deployment architecture for local containerized execution.
+
+---
+
+## CI Pipeline
+
+GitHub Actions pipeline includes:
+
+- Dependency installation
+- Python environment setup
+- Linting and validation
+- Deployment readiness checks
+
+---
+
+## Repository Structure
+
+```text
+api-copilot/
+│
+├── app.py
+├── backend/
+├── rag/
+├── llm/
+├── data/
+├── utils/
+├── chroma_db/
 ├── requirements.txt
-├── requirements_backend.txt
-├── requirements_ui.txt
-└── README.md
-~~~
----
-
-## 🚀 Running Locally
-
-### Without Docker
-
-bash # Backend uvicorn backend.main:app --reload  # UI streamlit run app.py 
+├── Dockerfile
+└── .github/workflows/
+```
 
 ---
 
-### With Docker
+## Current Capabilities
 
-bash docker compose up --build 
-
-Access:
-- UI → http://localhost:8501
-- Backend → http://localhost:8000
-
----
-
-## 🔑 Environment Variables
-
-Create .env or configure:
-
-OPENAI_API_KEY=your_api_key
+- API authentication guidance
+- Payment integration assistance
+- Error troubleshooting
+- Webhook explanation support
+- Context-grounded AI responses
 
 ---
 
-## ⚖️ Scope & Design Choices
+## Future Enhancements
 
-- Minimal, focused architecture
-- No unnecessary infra (Kubernetes, Redis, etc.)
-- Designed for clarity, performance, and extensibility
+- Streaming responses
+- Multi-document ingestion
+- Authentication layer
+- Kubernetes deployment
+- Redis caching
+- Observability & tracing
+- Multi-model support
 
 ---
 
-## 🏁 Summary
+## Author
 
-A full-stack, Dockerized RAG-based API assistant with:
+Febin Wilson
 
-- Intelligent retrieval + generation
-- Performance optimizations (caching)
-- Hardened backend (rate limiting, retry, timeout, concurrency)
-- Structured logging and observability
-- Clean, chat-based UI
+GitHub:
+https://github.com/wilsonfebin
+
+---
+
+## License
+
+MIT License
+```
