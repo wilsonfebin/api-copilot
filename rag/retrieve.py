@@ -1,29 +1,51 @@
 import re
+
 from llm.client import get_embedding, ask_llm
 from rag.vector_store import query_chunks
 
+from backend.utils.logger import logger
 
+
+# ========================
+# INTENT SOURCE MAP
+# ========================
+INTENT_SOURCE_MAP = {
+    "AUTH": "razorpay_auth.txt",
+    "PAYMENTS": "razorpay_payments.txt",
+    "ERRORS": "razorpay_errors.txt",
+    "WEBHOOKS": "razorpay_webhooks.txt",
+}
+
+
+# ========================
+# WORD LIMIT EXTRACTION
+# ========================
 def extract_word_limit(user_query):
-    """
-    Detect requested word count from user query.
-    Examples:
-    - 'reply in 150 words'
-    - 'explain in 200 words'
-    """
-    match = re.search(r'(\d+)\s*words?', user_query.lower())
+
+    match = re.search(
+        r"(\\d+)\\s*words?",
+        user_query.lower()
+    )
+
     if match:
         return int(match.group(1))
+
     return None
 
 
-def build_prompt(context, user_query, word_limit=None):
-    """
-    Build primary answer generation prompt.
-    """
+# ========================
+# PROMPT BUILDER
+# ========================
+def build_prompt(
+    context,
+    user_query,
+    word_limit=None,
+):
 
     length_instruction = ""
 
     if word_limit:
+
         length_instruction = f"""
 Your response MUST NOT exceed {word_limit} words.
 Ensure the response is complete, coherent, technically accurate,
@@ -59,10 +81,13 @@ Response Requirements:
 """
 
 
-def build_compression_prompt(answer, word_limit):
-    """
-    Secondary compression pass if initial answer exceeds limit.
-    """
+# ========================
+# COMPRESSION PROMPT
+# ========================
+def build_compression_prompt(
+    answer,
+    word_limit
+):
 
     return f"""
 You are an expert technical editor.
@@ -87,84 +112,167 @@ Original Response:
 """
 
 
+# ========================
+# WORD COUNT
+# ========================
 def count_words(text):
     return len(text.split())
 
 
-def answer_query(user_query, top_k=3):
-    """
-    Full RAG pipeline:
-    - Retrieve relevant chunks
-    - Generate answer
-    - Intelligently compress if user requested length
-    """
+# ========================
+# MAIN RAG PIPELINE
+# ========================
+def answer_query(
+    user_query,
+    top_k=2,
+    intent="GENERAL",
+):
 
-    # Detect word limit
-    word_limit = extract_word_limit(user_query)
+    # ========================
+    # WORD LIMIT
+    # ========================
+    word_limit = extract_word_limit(
+        user_query
+    )
 
-    # Embed query
-    query_embedding = get_embedding(user_query)
+    # ========================
+    # EMBEDDING
+    # ========================
+    query_embedding = get_embedding(
+        user_query
+    )
 
-    # Retrieve chunks
-    results = query_chunks(query_embedding, top_k=top_k)
+    # ========================
+    # SOURCE FILTER
+    # ========================
+    source_filter = INTENT_SOURCE_MAP.get(
+        intent
+    )
+
+    logger.info(
+        f"RETRIEVAL START | "
+        f"intent={intent} | "
+        f"source_filter={source_filter}"
+    )
+
+    # ========================
+    # VECTOR RETRIEVAL
+    # ========================
+    results = query_chunks(
+        query_embedding,
+        top_k=top_k,
+        source_filter=source_filter
+    )
 
     documents = results["documents"][0]
     metadatas = results["metadatas"][0]
 
-    # Build context
+    retrieved_sources = [
+        meta["source"]
+        for meta in metadatas
+    ]
+
+    logger.info(
+        f"RETRIEVAL SOURCES | "
+        f"{retrieved_sources}"
+    )
+
+    # ========================
+    # CONTEXT BUILDING
+    # ========================
     context = "\n\n".join(documents)
 
-    # Generate initial answer
+    # ========================
+    # PROMPT GENERATION
+    # ========================
     primary_prompt = build_prompt(
         context=context,
         user_query=user_query,
-        word_limit=word_limit
+        word_limit=word_limit,
     )
 
     answer = ask_llm(primary_prompt)
 
-    # Intelligent compression pass
-    if word_limit and count_words(answer) > word_limit:
+    # ========================
+    # COMPRESSION PASS
+    # ========================
+    if (
+        word_limit
+        and count_words(answer) > word_limit
+    ):
 
-        compression_prompt = build_compression_prompt(
-            answer=answer,
-            word_limit=word_limit
+        compression_prompt = (
+            build_compression_prompt(
+                answer=answer,
+                word_limit=word_limit,
+            )
         )
 
-        compressed_answer = ask_llm(compression_prompt)
+        compressed_answer = ask_llm(
+            compression_prompt
+        )
 
-        # Use compressed version only if valid
-        if count_words(compressed_answer) <= word_limit:
+        if (
+            count_words(compressed_answer)
+            <= word_limit
+        ):
             answer = compressed_answer
 
-    # Final safeguard: sentence-aware fallback
-    if word_limit and count_words(answer) > word_limit:
-        sentences = re.split(r'(?<=[.!?]) +', answer)
+    # ========================
+    # FINAL SAFEGUARD
+    # ========================
+    if (
+        word_limit
+        and count_words(answer) > word_limit
+    ):
+
+        sentences = re.split(
+            r'(?<=[.!?]) +',
+            answer
+        )
 
         trimmed = []
+
         current_word_count = 0
 
         for sentence in sentences:
-            sentence_word_count = count_words(sentence)
 
-            if current_word_count + sentence_word_count <= word_limit:
+            sentence_word_count = (
+                count_words(sentence)
+            )
+
+            if (
+                current_word_count
+                + sentence_word_count
+                <= word_limit
+            ):
+
                 trimmed.append(sentence)
-                current_word_count += sentence_word_count
+
+                current_word_count += (
+                    sentence_word_count
+                )
+
             else:
                 break
 
         answer = " ".join(trimmed)
 
-    # Sources
+    # ========================
+    # SOURCES
+    # ========================
     sources = [
         {
             "source": metadata["source"],
-            "content": document
+            "content": document,
         }
-        for document, metadata in zip(documents, metadatas)
+        for document, metadata in zip(
+            documents,
+            metadatas,
+        )
     ]
 
     return {
         "answer": answer,
-        "sources": sources
+        "sources": sources,
     }

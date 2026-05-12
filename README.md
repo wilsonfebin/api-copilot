@@ -1,224 +1,237 @@
-# 🚀 API Copilot — RAG-powered API Assistant
+API Copilot — Agentic RAG Platform
 
-A full-stack AI application that answers API-related questions using Retrieval-Augmented Generation (RAG), with cost tracking, caching, and a hardened backend.
+AI-powered API Integration Copilot built using FastAPI, Streamlit, OpenAI APIs, ChromaDB, and Dockerized microservices.
 
----
+The platform combines Retrieval-Augmented Generation (RAG), agentic retrieval workflows, intent-aware routing, vector search, and structured observability to provide grounded, developer-focused API assistance.
 
-## 🧠 Overview
+⸻
 
-API Copilot enables users to query API documentation and receive contextual, intelligent answers powered by LLMs and vector search.
+🚀 Features
 
-### Key capabilities:
-- Context-aware answers using RAG
-- Token, cost, and latency tracking
-- Chat-based multi-thread UI
-- Dockerized full-stack system
+Core AI Features
 
----
+* Retrieval-Augmented Generation (RAG)
+* Semantic vector search using embeddings
+* Intent-based retrieval routing
+* Agentic workflow orchestration
+* Metadata-filtered document retrieval
+* Source-grounded LLM responses
+* Context-aware answer generation
+* Word-limit aware response compression
 
-## 🏗️ Architecture
-~~~
-Streamlit UI (Frontend)
-        ↓
-FastAPI Backend
-        ↓
-RAG Pipeline
-        ↓
-ChromaDB (Vector Store)
-        ↓
-OpenAI LLM
-~~~
-### Design Principles
-- Separation of concerns (UI / API / RAG)
-- Stateless backend (except cache)
-- Modular and extensible
-- Config-driven behavior
+⸻
 
----
+Agentic Workflow Features
 
-## ⚙️ Tech Stack
+* Query intent classification
+* Retrieval tool selection
+* Source-filtered vector retrieval
+* Workflow orchestration layer
+* Retrieval tracing and observability
+* Structured agent logging
 
-### Backend
-- FastAPI
-- Uvicorn
-- Python 3.11
+Supported intents:
 
-### Frontend
-- Streamlit
+* AUTH
+* PAYMENTS
+* ERRORS
+* WEBHOOKS
+* GENERAL
 
-### AI / RAG
-- OpenAI API
-- ChromaDB
+⸻
 
-### Infrastructure
-- Docker
-- Docker Compose
+Platform Features
 
----
+* Dockerized frontend/backend architecture
+* FastAPI backend services
+* Streamlit interactive UI
+* Conversation persistence
+* Source visibility
+* Frontend/backend latency tracking
+* Token and cost monitoring
+* Health monitoring APIs
+* Metrics APIs
+* Structured logging
 
-## 🧠 RAG Pipeline
+⸻
 
-User Query → Retrieve (Top-K) → Context Injection → LLM → Answer
+🏗 Architecture
 
-### Features
-- Configurable Top-K retrieval
-- Context-aware generation
-- Source extraction
-- Deterministic outputs (low temperature)
-- Token & cost estimation
+                    ┌────────────────────┐
+                    │   Streamlit UI     │
+                    │    (Frontend)      │
+                    └─────────┬──────────┘
+                              │ HTTP
+                              ▼
+                    ┌────────────────────┐
+                    │     FastAPI        │
+                    │      Backend       │
+                    └─────────┬──────────┘
+                              │
+                              ▼
+                  ┌────────────────────────┐
+                  │ Agentic Workflow Layer │
+                  │                        │
+                  │ • Intent Router        │
+                  │ • Tool Registry        │
+                  │ • Workflow Engine      │
+                  └─────────┬──────────────┘
+                            │
+                            ▼
+                  ┌────────────────────────┐
+                  │      RAG Pipeline      │
+                  │                        │
+                  │ • Embeddings           │
+                  │ • Retrieval            │
+                  │ • Prompting            │
+                  │ • Compression          │
+                  └─────────┬──────────────┘
+                            │
+          ┌─────────────────┴─────────────────┐
+          ▼                                   ▼
+┌────────────────────┐             ┌────────────────────┐
+│     ChromaDB       │             │     OpenAI API     │
+│    Vector Store    │             │   LLM + Embedding  │
+└────────────────────┘             └────────────────────┘
 
----
+🧠 Agentic Workflow
 
-## ⚡ Performance Optimizations
+The platform uses a modular agentic retrieval workflow instead of a simple chatbot pipeline.
 
-### Caching
-- LRU cache for repeated queries
-- Instant responses for identical inputs
-- Reduced API usage cost
+Flow
 
-### Latency Tracking
-- Per-query response time
-- Displayed in UI and logs
+User Query
+→ Intent Classification
+→ Tool Selection
+→ Metadata-based Retrieval Filtering
+→ Context Retrieval
+→ LLM Response Generation
+→ Structured Logging & Metrics
 
----
+📂 Project Structure
 
-## 🔐 API Hardening
-
-- Rate limiting (per-IP, window-based, /query endpoint)
-- Retry logic for transient failures
-- Timeout enforcement for long-running requests
-- Concurrency control using semaphore
-- Graceful error handling
-
----
-
-## 📊 Logging & Observability
-
-### Logs include:
-- Request logs (method, path, latency)
-- Query lifecycle (start/end)
-- RAG execution details
-- Error logging
-- Rate limit tracking
-
-### Outputs:
-- Console (stdout)
-- File logs (logs/app.log)
-- Docker volume persistence
-
----
-
-## 🎛️ Configuration
-
-Centralized configuration for:
-
-- Rate limits
-- Retry and timeout settings
-- Cache size
-- Retrieval parameters (top_k)
-- LLM parameters (tokens, temperature)
-- Concurrency limits
-
-Supports environment variable overrides.
-
----
-
-## 🎨 UI / UX
-
-### Chat Interface
-- Conversational UI (user + assistant)
-- Structured answer containers
-- Token, cost, and latency display
-
-### Sidebar Features
-- System health indicators (OpenAI, Vector DB, RAG)
-- Metrics (documents, chunks)
-- Conversation history
-- Active thread selection
-- Delete / clear actions
-- New chat creation
-
-### Conversation System
-- Multi-thread support
-- Persistent storage (JSON)
-- Recency-based ordering
-
----
-
-## 🐳 Docker Setup
-
-### Services
-- api-backend (FastAPI)
-- api-ui (Streamlit)
-
-### Features
-- Multi-container orchestration
-- Shared network
-- Volume mounts (logs, DB, data)
-- Hot reload for development
-
----
-
-## 📁 Project Structure
-~~~
-├── app.py                  # Streamlit UI
-├── backend/               # FastAPI backend
-│   ├── main.py
+api-copilot/
+│
+├── app.py                         # Streamlit frontend
+│
+├── backend/
+│   ├── main.py                    # FastAPI entrypoint
+│   │
+│   ├── agents/
+│   │   ├── intent_router.py       # Query intent classification
+│   │   ├── tool_registry.py       # Retrieval tool mapping
+│   │   └── workflow.py            # Agent orchestration layer
+│   │
 │   ├── routes/
+│   │   ├── query.py               # Main query endpoint
+│   │   ├── health.py              # Health API
+│   │   └── metrics.py             # Metrics API
+│   │
 │   ├── services/
-│   └── utils/
-├── rag/                   # Retrieval + generation logic
-├── utils/                 # UI styles, metrics
-├── data/                  # Conversation storage
-├── chroma_db/             # Vector DB persistence
+│   │   └── rag_service.py         # Core RAG service layer
+│   │
+│   ├── utils/
+│   │   └── logger.py              # Structured logging
+│   │
+│   └── config.py                  # Backend config
+│
+├── rag/
+│   ├── ingest.py                  # Document ingestion
+│   ├── chunk.py                   # Text chunking
+│   ├── embed.py                   # Embedding generation
+│   ├── retrieve.py                # Retrieval pipeline
+│   └── vector_store.py            # ChromaDB integration
+│
+├── llm/
+│   └── client.py                  # OpenAI client wrapper
+│
+├── utils/
+│   ├── metrics.py                 # Token & cost estimation
+│   ├── styles.py                  # Streamlit styling
+│   └── storage.py                 # Persistence helpers
+│
+├── data/
+│   ├── razorpay_auth.txt
+│   ├── razorpay_payments.txt
+│   ├── razorpay_errors.txt
+│   └── razorpay_webhooks.txt
+│
+├── chroma_db/                     # Persistent vector DB
+│
+├── logs/
+│   └── app.log
+│
 ├── docker-compose.yml
-├── requirements.txt
+├── Dockerfile.ui
 ├── requirements_backend.txt
 ├── requirements_ui.txt
 └── README.md
-~~~
----
 
-## 🚀 Running Locally
+⚙️ Tech Stack
 
-### Without Docker
+Frontend: Streamlit
+Backend: FastAPI
+LLM: OpenAI GPT APIs
+Embeddings: OpenAI Embeddings
+Vector Database: ChromaDB
+Architecture: Retrieval-Augmented Generation (RAG)
+Agentic Layer: Intent Routing + Retrieval Orchestration
+Observability: Structured Logging + Latency Metrics
+Deployment: Docker + Docker Compose
+Language: Python
 
-bash # Backend uvicorn backend.main:app --reload  # UI streamlit run app.py 
 
----
+🔍 Observability & Metrics
 
-### With Docker
+The platform includes structured observability for debugging and tracing LLM workflows.
 
-bash docker compose up --build 
+Tracked Metrics
 
-Access:
-- UI → http://localhost:8501
-- Backend → http://localhost:8000
+* Backend latency
+* Frontend latency
+* Token usage
+* Cost estimation
+* Retrieval sources
+* Intent routing
+* Workflow state
+* Request tracing
 
----
+⸻
 
-## 🔑 Environment Variables
+📊 Example Workflow Logs
 
-Create .env or configure:
+api-backend  | 2026-05-12 07:37:18,446 | INFO | RATE STATUS | 172.18.0.3 | 0/20
+api-backend  | 2026-05-12 07:37:18,450 | INFO | QUERY START | How does Razorpay authentication work?
+api-backend  | 2026-05-12 07:37:18,450 | INFO | AGENT ROUTER | intent=Intent.AUTH | tool={'collection': 'auth'}
+api-backend  | 2026-05-12 07:37:18,451 | INFO | RAG START | intent=Intent.AUTH | question=How does Razorpay authentication work?
+api-backend  | 2026-05-12 07:37:20,942 | INFO | RETRIEVAL START | intent=Intent.AUTH | source_filter=None
+api-backend  | 2026-05-12 07:37:20,966 | INFO | RETRIEVAL SOURCES | ['razorpay_auth.txt', 'razorpay_auth.txt']
+api-backend  | 2026-05-12 07:37:30,780 | INFO | RAG DONE | intent=Intent.AUTH | 6.93s | tokens=246
+api-backend  | 2026-05-12 07:37:30,782 | INFO | QUERY DONE | 6.93s | tokens=246 | cost=0.000144
 
-OPENAI_API_KEY=your_api_key
+🚀 Future Enhancements
 
----
+* LangGraph orchestration
+* Hybrid search (BM25 + vector)
+* Redis caching
+* Streaming responses
+* OpenTelemetry tracing
+* Evaluation pipelines
+* Hallucination scoring
+* Kubernetes deployment
+* RBAC and guardrails
+* Multi-step agent workflows
 
-## ⚖️ Scope & Design Choices
+📌 Key Engineering Concepts Implemented
 
-- Minimal, focused architecture
-- No unnecessary infra (Kubernetes, Redis, etc.)
-- Designed for clarity, performance, and extensibility
+* Retrieval-Augmented Generation (RAG)
+* Agentic retrieval orchestration
+* Intent-aware routing
+* Vector similarity search
+* Metadata-based filtering
+* Source-grounded responses
+* Structured observability
+* Frontend/backend separation
+* Dockerized microservices
+* Modular backend architecture
 
----
-
-## 🏁 Summary
-
-A full-stack, Dockerized RAG-based API assistant with:
-
-- Intelligent retrieval + generation
-- Performance optimizations (caching)
-- Hardened backend (rate limiting, retry, timeout, concurrency)
-- Structured logging and observability
-- Clean, chat-based UI

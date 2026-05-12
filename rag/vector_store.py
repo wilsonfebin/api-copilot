@@ -5,7 +5,10 @@ CHROMA_PATH = "./chroma_db"
 
 
 def get_collection():
-    client = chromadb.PersistentClient(path=CHROMA_PATH)
+
+    client = chromadb.PersistentClient(
+        path=CHROMA_PATH
+    )
 
     collection = client.get_or_create_collection(
         name="api_docs"
@@ -15,11 +18,23 @@ def get_collection():
 
 
 def store_embeddings(chunks):
+
     collection = get_collection()
 
-    ids = [f"chunk_{i}" for i in range(len(chunks))]
-    documents = [chunk["text"] for chunk in chunks]
-    embeddings = [chunk["embedding"] for chunk in chunks]
+    ids = [
+        f"chunk_{i}"
+        for i in range(len(chunks))
+    ]
+
+    documents = [
+        chunk["text"]
+        for chunk in chunks
+    ]
+
+    embeddings = [
+        chunk["embedding"]
+        for chunk in chunks
+    ]
 
     metadatas = [
         {
@@ -28,13 +43,23 @@ def store_embeddings(chunks):
         for chunk in chunks
     ]
 
-    # Reset collection before fresh ingestion
+    # ========================
+    # RESET COLLECTION
+    # ========================
     existing = collection.count()
-    if existing > 0:
-        existing_data = collection.get()
-        if existing_data["ids"]:
-            collection.delete(ids=existing_data["ids"])
 
+    if existing > 0:
+
+        existing_data = collection.get()
+
+        if existing_data["ids"]:
+            collection.delete(
+                ids=existing_data["ids"]
+            )
+
+    # ========================
+    # STORE EMBEDDINGS
+    # ========================
     collection.add(
         ids=ids,
         documents=documents,
@@ -43,18 +68,43 @@ def store_embeddings(chunks):
     )
 
 
-def query_chunks(query_embedding, top_k=3):
+# ========================
+# QUERY CHUNKS
+# ========================
+def query_chunks(
+    query_embedding,
+    top_k=2,
+    source_filter=None,
+):
+
     collection = get_collection()
 
+    query_params = {
+        "query_embeddings": [query_embedding],
+        "n_results": top_k,
+    }
+
+    # ========================
+    # SOURCE FILTERING
+    # ========================
+    if source_filter:
+
+        query_params["where"] = {
+            "source": source_filter
+        }
+
     results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=top_k
+        **query_params
     )
 
     return results
 
 
+# ========================
+# VECTOR STATS
+# ========================
 def get_vector_stats():
+
     collection = get_collection()
 
     total_chunks = collection.count()
@@ -64,9 +114,17 @@ def get_vector_stats():
     unique_sources = set()
 
     if collection_data["metadatas"]:
+
         for metadata in collection_data["metadatas"]:
-            if metadata and "source" in metadata:
-                unique_sources.add(metadata["source"])
+
+            if (
+                metadata
+                and "source" in metadata
+            ):
+
+                unique_sources.add(
+                    metadata["source"]
+                )
 
     return {
         "documents": len(unique_sources),

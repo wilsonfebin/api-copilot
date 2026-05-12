@@ -1,31 +1,14 @@
 [
   {
-    "title": "What causes invalid OTP?",
+    "title": "How does Razorpay authentication work?",
     "messages": [
       {
-        "question": "What causes invalid OTP?",
-        "answer": "## Summary\nAn invalid OTP (One-Time Password) can occur due to user input errors, such as entering the wrong code, or issues with the OTP generation or delivery process.\n\n## Technical Steps\n1. **Capture Error Details**: When an invalid OTP error occurs, log the following details:\n   - `payment_id`\n   - `order_id`\n   - `code` (e.g., `BAD_REQUEST_ERROR`)\n   - `reason` (e.g., `invalid_otp`)\n\n2. **Notify Customer**: Inform the customer that the OTP they entered is incorrect.\n\n3. **Retry Logic**: Implement a mechanism to allow the customer to retry entering the OTP.\n\n4. **Preserve Payment Flow**: Ensure that the payment process can continue seamlessly after the customer retries.\n\n## Best Practices\n- **Parse `reason`**: Use the `reason` field to trigger specific workflows for handling OTP errors.\n- **Display `description`**: Provide a user-friendly message based on the `description` field (e.g., \"Authentication failed due to incorrect OTP\").\n- **Avoid Raw Failures**: Do not expose internal error messages to customers; instead, provide clear, actionable feedback.\n- **Monitor Patterns**: Keep track of recurring invalid OTP errors to identify potential issues with OTP generation or delivery.",
-        "sources": [
-          "razorpay_errors.txt"
-        ],
-        "response_time": 6.13,
-        "tokens": 273,
-        "cost": 0.000162
-      }
-    ]
-  },
-  {
-    "title": "How do webhooks work?",
-    "messages": [
-      {
-        "question": "How do webhooks work?",
-        "answer": "## Summary\nRazorpay Webhooks enable real-time notifications for specific events related to transactions and onboarding. When an event occurs, a payload is sent to a configured endpoint URL, allowing developers to handle these events programmatically.\n\n## Technical Steps\n1. **Log in to Razorpay Dashboard**:\n   - Access your Razorpay account.\n\n2. **Navigate to Webhook Settings**:\n   - Go to: Partner Dashboard \u2192 Settings \u2192 Webhooks.\n\n3. **Configure Webhook**:\n   - Set the **Webhook URL** (HTTPS recommended).\n   - Enter a **Secret key** for signature validation.\n   - Provide an **Alert email** for failure notifications.\n   - Select **Active events** to subscribe to.\n\n4. **Create Webhook**:\n   - Finalize the configuration by creating the webhook.\n\n5. **Handle Incoming Payloads**:\n   - Implement logic on your server to process incoming webhook payloads based on the subscribed events.\n\n## Best Practices\n- **Use HTTPS**: Always use secure endpoints to protect data in transit.\n- **Verify Signatures**: Validate the authenticity of incoming webhooks using the secret key.\n- **Store Secrets Securely**: Keep your webhook secret key safe to prevent unauthorized access.\n- **Monitor Failures**: Set up alerts for failed webhook deliveries to ensure reliability.\n- **Implement Retry Logic**: Design your handlers to be retry-safe in case of transient failures.\n- **Log Payloads**: Maintain logs of event payloads for debugging and auditing purposes.",
-        "sources": [
-          "razorpay_webhooks.txt"
-        ],
-        "response_time": 7.53,
-        "tokens": 314,
-        "cost": 0.000186
+        "question": "How does Razorpay authentication work?",
+        "answer": "## Summary\nRazorpay authentication utilizes **Basic Authentication** requiring a combination of **Key ID** and **Key Secret** for each API request. The credentials must be encoded in base64 and included in the `Authorization` header.\n\n## Technical Steps\n1. **Prepare Credentials**: Obtain your **Key ID** and **Key Secret** from the Razorpay dashboard.\n2. **Base64 Encode**: Format the credentials as `KEY_ID:KEY_SECRET` and encode this string in base64.\n3. **Set Authorization Header**: Include the encoded string in the `Authorization` header as follows:\n   ```text\n   Authorization: Basic base64(KEY_ID:KEY_SECRET)\n   ```\n4. **Make API Request**: Send your API request with the properly formatted header.\n\n## Best Practices\n- Ensure the `Authorization` header strictly follows the specified format.\n- Use **Test Mode** for integration testing to avoid processing real payments.\n- Switch to **Live Mode** only when ready for production.\n- Regularly rotate your API keys and manage them securely.\n- Log authentication failures to assist in debugging issues.\n- Follow least-privilege security practices for API key management.",
+        "response_time": 6.93,
+        "frontend_time": 12.35,
+        "tokens": 246,
+        "cost": 0.000144
       }
     ]
   }
