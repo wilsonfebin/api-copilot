@@ -169,6 +169,7 @@ api-copilot/
 
 ⚙️ Tech Stack
 
+```
 Frontend: Streamlit
 Backend: FastAPI
 LLM: OpenAI GPT APIs
@@ -180,6 +181,7 @@ Observability: Structured Logging + Latency Metrics
 Deployment: Docker + Docker Compose
 Language: Python
 
+```
 
 🔍 Observability & Metrics
 
