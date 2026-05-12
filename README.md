@@ -57,6 +57,7 @@ Platform Features
 
 🏗 Architecture
 
+```text
                     ┌────────────────────┐
                     │   Streamlit UI     │
                     │    (Frontend)      │
@@ -80,11 +81,6 @@ Platform Features
                             ▼
                   ┌────────────────────────┐
                   │      RAG Pipeline      │
-                  │                        │
-                  │ • Embeddings           │
-                  │ • Retrieval            │
-                  │ • Prompting            │
-                  │ • Compression          │
                   └─────────┬──────────────┘
                             │
           ┌─────────────────┴─────────────────┐
@@ -93,6 +89,7 @@ Platform Features
 │     ChromaDB       │             │     OpenAI API     │
 │    Vector Store    │             │   LLM + Embedding  │
 └────────────────────┘             └────────────────────┘
+```
 
 🧠 Agentic Workflow
 
@@ -109,6 +106,8 @@ User Query
 → Structured Logging & Metrics
 
 📂 Project Structure
+
+```text
 
 api-copilot/
 │
@@ -166,6 +165,7 @@ api-copilot/
 ├── requirements_backend.txt
 ├── requirements_ui.txt
 └── README.md
+```
 
 ⚙️ Tech Stack
 
@@ -200,14 +200,17 @@ Tracked Metrics
 
 📊 Example Workflow Logs
 
-api-backend  | 2026-05-12 07:37:18,446 | INFO | RATE STATUS | 172.18.0.3 | 0/20
-api-backend  | 2026-05-12 07:37:18,450 | INFO | QUERY START | How does Razorpay authentication work?
-api-backend  | 2026-05-12 07:37:18,450 | INFO | AGENT ROUTER | intent=Intent.AUTH | tool={'collection': 'auth'}
-api-backend  | 2026-05-12 07:37:18,451 | INFO | RAG START | intent=Intent.AUTH | question=How does Razorpay authentication work?
-api-backend  | 2026-05-12 07:37:20,942 | INFO | RETRIEVAL START | intent=Intent.AUTH | source_filter=None
-api-backend  | 2026-05-12 07:37:20,966 | INFO | RETRIEVAL SOURCES | ['razorpay_auth.txt', 'razorpay_auth.txt']
-api-backend  | 2026-05-12 07:37:30,780 | INFO | RAG DONE | intent=Intent.AUTH | 6.93s | tokens=246
-api-backend  | 2026-05-12 07:37:30,782 | INFO | QUERY DONE | 6.93s | tokens=246 | cost=0.000144
+```text
+
+INFO | RATE STATUS | 172.18.0.3 | 0/20
+INFO | QUERY START | How does Razorpay authentication work?
+INFO | AGENT ROUTER | intent=Intent.AUTH | tool={'collection': 'auth'}
+INFO | RAG START | intent=Intent.AUTH | question=How does Razorpay authentication work?
+INFO | RETRIEVAL START | intent=Intent.AUTH | source_filter=None
+INFO | RETRIEVAL SOURCES | ['razorpay_auth.txt', 'razorpay_auth.txt']
+INFO | RAG DONE | intent=Intent.AUTH | 6.93s | tokens=246
+INFO | QUERY DONE | 6.93s | tokens=246 | cost=0.000144
+```
 
 🚀 Future Enhancements
 
@@ -235,3 +238,8 @@ api-backend  | 2026-05-12 07:37:30,782 | INFO | QUERY DONE | 6.93s | tokens=246 
 * Dockerized microservices
 * Modular backend architecture
 
+👨‍💻 Author 
+
+Febin Wilson
+
+Built as an enterprise-style AI engineering platform project focused on practical GenAI architecture, observability, retrieval systems, and modular orchestration workflows.
