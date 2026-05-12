@@ -212,6 +212,7 @@ INFO | RETRIEVAL START | intent=Intent.AUTH | source_filter=None
 INFO | RETRIEVAL SOURCES | ['razorpay_auth.txt', 'razorpay_auth.txt']
 INFO | RAG DONE | intent=Intent.AUTH | 6.93s | tokens=246
 INFO | QUERY DONE | 6.93s | tokens=246 | cost=0.000144
+INFO | POST /query | 200 | 12.339s
 ```
 
 🚀 Future Enhancements
