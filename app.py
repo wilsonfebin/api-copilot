@@ -1,14 +1,14 @@
 import os
 import time
 import json
-import queue
 import threading
 from datetime import datetime
-import requests
 import streamlit as st
 
+from backend.agents.workflow import run_agentic_flow
+from backend.services.rag_service import run_query
+from rag.vector_store import get_vector_stats
 from utils.styles import load_css
-import streamlit as st
 
 
 # ========================
@@ -16,7 +16,6 @@ import streamlit as st
 # ========================
 MAX_THREADS = 10
 THREAD_FILE = "data/threads.json"
-BACKEND_URL = st.secrets["BACKEND_URL"]
 
 st.set_page_config(
     page_title="API Copilot",
@@ -97,18 +96,20 @@ def call_backend(query):
 
         frontend_start = time.time()
 
-        res = requests.post(
-            f"{BACKEND_URL}/query",
-            json={"question": query},
-            timeout=30
+        agent_state = run_agentic_flow(
+            query
+        )
+
+        data = run_query(
+            question=query,
+            intent=agent_state["intent"],
+            tool=agent_state["tool"]
         )
 
         frontend_elapsed = round(
             time.time() - frontend_start,
             2
         )
-
-        data = res.json()
 
         # ========================
         # FRONTEND LATENCY
@@ -126,79 +127,23 @@ def call_backend(query):
         }
 
 
-def stream_backend(query):
-
-    frontend_start = time.time()
-
-    with requests.post(
-        f"{BACKEND_URL}/query/stream",
-        json={"question": query},
-        stream=True,
-        timeout=60
-    ) as res:
-
-        res.raise_for_status()
-
-        event = "message"
-
-        for line in res.iter_lines(
-            chunk_size=1,
-            decode_unicode=True
-        ):
-
-            if line is None:
-                continue
-
-            if line.startswith("event: "):
-
-                event = line.replace(
-                    "event: ",
-                    "",
-                    1
-                )
-
-                continue
-
-            if line.startswith("data: "):
-
-                data = json.loads(
-                    line.replace(
-                        "data: ",
-                        "",
-                        1
-                    )
-                )
-
-                data["event"] = event
-                data["frontend_elapsed"] = round(
-                    time.time() - frontend_start,
-                    2
-                )
-
-                yield data
-
-                event = "message"
-
-
 def get_health():
 
-    try:
-        return requests.get(
-            f"{BACKEND_URL}/health",
-            timeout=5
-        ).json()
-
-    except:
-        return None
+    return {
+        "services": {
+            "openai": bool(
+                os.getenv("OPENAI_API_KEY")
+            ),
+            "vector_db": True,
+            "rag": True,
+        }
+    }
 
 
 def get_metrics():
 
     try:
-        return requests.get(
-            f"{BACKEND_URL}/metrics",
-            timeout=5
-        ).json()
+        return get_vector_stats()
 
     except:
         return {
@@ -482,131 +427,51 @@ if query:
 
         placeholder = st.empty()
 
+        result = {}
         start = time.time()
-        answer = ""
         res = None
-        status_text = "Thinking"
-        events = queue.Queue()
 
-        def consume_stream():
+        def run():
 
-            try:
+            result["data"] = call_backend(
+                query
+            )
 
-                for event in stream_backend(query):
-                    events.put(event)
-
-            except Exception as exc:
-
-                events.put({
-                    "event": "exception",
-                    "error": str(exc)
-                })
-
-            finally:
-
-                events.put({
-                    "event": "stream_complete"
-                })
-
-        stream_thread = threading.Thread(
-            target=consume_stream,
+        worker_thread = threading.Thread(
+            target=run,
             daemon=True
         )
 
-        stream_thread.start()
+        worker_thread.start()
 
-        try:
-
-            while True:
-
-                try:
-
-                    event = events.get(
-                        timeout=0.1
-                    )
-
-                except queue.Empty:
-
-                    if answer:
-
-                        placeholder.markdown(
-                            render_answer_html(answer),
-                            unsafe_allow_html=True
-                        )
-
-                    else:
-
-                        placeholder.markdown(
-                            f"⏳ {status_text}... "
-                            f"{round(time.time()-start,2)}s"
-                        )
-
-                    continue
-
-                if event["event"] == "status":
-
-                    status_text = event["message"]
-
-                    if not answer:
-
-                        placeholder.markdown(
-                            f"⏳ {status_text}... "
-                            f"{event['frontend_elapsed']}s"
-                        )
-
-                elif event["event"] == "chunk":
-
-                    answer += event["text"]
-
-                    placeholder.markdown(
-                        render_answer_html(answer),
-                        unsafe_allow_html=True
-                    )
-
-                elif event["event"] == "done":
-
-                    res = event
-                    res["frontend_time"] = event[
-                        "frontend_elapsed"
-                    ]
-
-                elif event["event"] == "error":
-
-                    res = {
-                        "error": event.get(
-                            "error",
-                            "Streaming request failed"
-                        )
-                    }
-
-                elif event["event"] == "exception":
-
-                    raise RuntimeError(
-                        event.get(
-                            "error",
-                            "Streaming request failed"
-                        )
-                    )
-
-                elif event["event"] == "stream_complete":
-
-                    break
-
-        except Exception:
-
-            res = call_backend(query)
-
-            answer = res.get(
-                "answer",
-                ""
-            )
+        while worker_thread.is_alive():
 
             placeholder.markdown(
-                render_answer_html(answer),
-                unsafe_allow_html=True
+                f"⏳ Thinking... "
+                f"{round(time.time()-start,2)}s"
             )
 
+            time.sleep(0.2)
+
+        worker_thread.join()
+
+        res = result.get(
+            "data",
+            {
+                "error": "Something went wrong"
+            }
+        )
+
+        placeholder.empty()
+
         if res and "error" not in res:
+
+            placeholder.markdown(
+                render_answer_html(
+                    res["answer"]
+                ),
+                unsafe_allow_html=True
+            )
 
             st.caption(
                 f"Backend: {res['response_time']}s • "
