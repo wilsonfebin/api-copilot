@@ -36,22 +36,29 @@ def extract_word_limit(user_query):
 # ========================
 # PROMPT BUILDER
 # ========================
-def build_prompt(
-    context,
-    user_query,
-    word_limit=None,
-):
+def build_length_instruction(word_limit):
 
-    length_instruction = ""
+    if not word_limit:
+        return ""
 
-    if word_limit:
-
-        length_instruction = f"""
+    return f"""
 Your response MUST NOT exceed {word_limit} words.
 Ensure the response is complete, coherent, technically accurate,
 and fits naturally within the requested word count.
 Compress aggressively when necessary.
 """
+
+
+def build_base_prompt(
+    context,
+    user_query,
+    word_limit=None,
+    intent_guidance="",
+):
+
+    length_instruction = build_length_instruction(
+        word_limit
+    )
 
     return f"""
 You are an expert API integration assistant.
@@ -69,9 +76,13 @@ User Question:
 
 {length_instruction}
 
+Intent-Specific Guidance:
+{intent_guidance}
+
 Response Requirements:
 - Be concise, technical, and developer-focused
 - Prioritize actionable implementation guidance
+- Directly address the user's intent before adding supporting details
 - Use clear markdown formatting
 - Structure answers with:
   ## Summary
@@ -79,6 +90,128 @@ Response Requirements:
   ## Best Practices
 - Avoid unnecessary verbosity
 """
+
+
+def build_prompt(
+    context,
+    user_query,
+    word_limit=None,
+):
+
+    return build_base_prompt(
+        context=context,
+        user_query=user_query,
+        word_limit=word_limit,
+        intent_guidance="""
+Answer as a general API integration assistant.
+Focus on the most relevant implementation details from the retrieved context.
+""",
+    )
+
+
+def build_auth_prompt(
+    context,
+    user_query,
+    word_limit=None,
+):
+
+    return build_base_prompt(
+        context=context,
+        user_query=user_query,
+        word_limit=word_limit,
+        intent_guidance="""
+Focus on authentication concepts:
+- Credentials and API keys
+- Required authorization headers
+- Request authentication flow
+- Credential handling and security practices
+- Common authentication implementation mistakes
+""",
+    )
+
+
+def build_payments_prompt(
+    context,
+    user_query,
+    word_limit=None,
+):
+
+    return build_base_prompt(
+        context=context,
+        user_query=user_query,
+        word_limit=word_limit,
+        intent_guidance="""
+Focus on payment implementation:
+- Payment creation and capture flow
+- Relevant payment APIs and lifecycle states
+- Reconciliation and transaction tracking
+- Refunds, orders, invoices, or capture behavior when relevant
+- Operational best practices for payment integrations
+""",
+    )
+
+
+def build_errors_prompt(
+    context,
+    user_query,
+    word_limit=None,
+):
+
+    return build_base_prompt(
+        context=context,
+        user_query=user_query,
+        word_limit=word_limit,
+        intent_guidance="""
+Focus on debugging and remediation:
+- Likely root causes
+- What to inspect in request payloads, credentials, OTPs, callbacks, or logs
+- Concrete debugging steps
+- Remediation actions
+- How to prevent recurrence in production integrations
+""",
+    )
+
+
+def build_webhooks_prompt(
+    context,
+    user_query,
+    word_limit=None,
+):
+
+    return build_base_prompt(
+        context=context,
+        user_query=user_query,
+        word_limit=word_limit,
+        intent_guidance="""
+Focus on webhook implementation:
+- Event delivery flow
+- Signature validation and endpoint security
+- Retry behavior and idempotency
+- Event handling, persistence, and reconciliation
+- Production validation and monitoring practices
+""",
+    )
+
+
+PROMPT_BUILDERS = {
+    "AUTH": build_auth_prompt,
+    "PAYMENTS": build_payments_prompt,
+    "ERRORS": build_errors_prompt,
+    "WEBHOOKS": build_webhooks_prompt,
+}
+
+
+def get_prompt_builder(intent):
+
+    intent = str(intent)
+
+    if intent.startswith("Intent."):
+        intent = intent.split(".", 1)[1]
+
+    return PROMPT_BUILDERS.get(
+        intent,
+        build_prompt
+    )
 
 
 # ========================
@@ -185,7 +318,11 @@ def answer_query(
     # ========================
     # PROMPT GENERATION
     # ========================
-    primary_prompt = build_prompt(
+    prompt_builder = get_prompt_builder(
+        intent
+    )
+
+    primary_prompt = prompt_builder(
         context=context,
         user_query=user_query,
         word_limit=word_limit,
