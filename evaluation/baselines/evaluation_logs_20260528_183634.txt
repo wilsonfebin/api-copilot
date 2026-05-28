@@ -1,0 +1,91 @@
+2026-05-28 18:33:50,547 | INFO | EVALUATION START | model=gpt-4o-mini | threshold=0.7
+2026-05-28 18:33:53,332 | INFO | RAG START | intent=AUTH | question=How does Razorpay authentication work?
+2026-05-28 18:33:53,365 | INFO | LANGGRAPH NODE | IntentNode
+2026-05-28 18:33:53,366 | INFO | GRAPH STATE | intent=AUTH
+2026-05-28 18:33:53,366 | INFO | NODE TIME | IntentNode | 0.001s
+2026-05-28 18:33:53,369 | INFO | LANGGRAPH NODE | ToolNode
+2026-05-28 18:33:53,369 | INFO | MCP ROUTER | intent=AUTH | tool=retrieval
+2026-05-28 18:33:53,370 | INFO | MCP TOOL | RetrievalTool
+2026-05-28 18:33:53,370 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'AUTH', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
+2026-05-28 18:33:53,370 | INFO | NODE TIME | ToolNode | 0.001s
+2026-05-28 18:33:53,371 | INFO | LANGGRAPH NODE | RetrievalNode
+2026-05-28 18:33:54,547 | INFO | RETRIEVAL START | intent=AUTH | source_filter=razorpay_auth.txt
+2026-05-28 18:33:55,177 | INFO | RETRIEVAL SOURCES | ['razorpay_auth.txt', 'razorpay_auth.txt']
+2026-05-28 18:33:55,178 | INFO | GRAPH STATE | sources=['razorpay_auth.txt', 'razorpay_auth.txt']
+2026-05-28 18:33:55,178 | INFO | NODE TIME | RetrievalNode | 1.807s
+2026-05-28 18:33:55,180 | INFO | LANGGRAPH NODE | PromptNode
+2026-05-28 18:33:55,180 | INFO | NODE TIME | PromptNode | 0.0s
+2026-05-28 18:33:55,181 | INFO | LANGGRAPH NODE | ResponseNode
+2026-05-28 18:34:01,211 | INFO | NODE TIME | ResponseNode | 6.029s
+2026-05-28 18:34:01,726 | INFO | LANGGRAPH NODE | ValidationNode
+2026-05-28 18:34:01,762 | INFO | GUARDRAIL CHECK | passed=True
+2026-05-28 18:34:01,762 | INFO | NODE TIME | ValidationNode | 0.037s
+2026-05-28 18:34:04,992 | INFO | RAG DONE | intent=AUTH | 8.43s | tokens=268
+2026-05-28 18:34:33,173 | INFO | RAG START | intent=PAYMENTS | question=How do I capture payments?
+2026-05-28 18:34:33,196 | INFO | LANGGRAPH NODE | IntentNode
+2026-05-28 18:34:33,196 | INFO | GRAPH STATE | intent=PAYMENTS
+2026-05-28 18:34:33,197 | INFO | NODE TIME | IntentNode | 0.0s
+2026-05-28 18:34:33,198 | INFO | LANGGRAPH NODE | ToolNode
+2026-05-28 18:34:33,198 | INFO | MCP ROUTER | intent=PAYMENTS | tool=retrieval
+2026-05-28 18:34:33,198 | INFO | MCP TOOL | RetrievalTool
+2026-05-28 18:34:33,198 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'PAYMENTS', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
+2026-05-28 18:34:33,198 | INFO | NODE TIME | ToolNode | 0.001s
+2026-05-28 18:34:33,199 | INFO | LANGGRAPH NODE | RetrievalNode
+2026-05-28 18:34:33,689 | INFO | RETRIEVAL START | intent=PAYMENTS | source_filter=razorpay_payments.txt
+2026-05-28 18:34:33,775 | INFO | RETRIEVAL SOURCES | ['razorpay_payments.txt', 'razorpay_payments.txt']
+2026-05-28 18:34:33,775 | INFO | GRAPH STATE | sources=['razorpay_payments.txt', 'razorpay_payments.txt']
+2026-05-28 18:34:33,775 | INFO | NODE TIME | RetrievalNode | 0.576s
+2026-05-28 18:34:33,780 | INFO | LANGGRAPH NODE | PromptNode
+2026-05-28 18:34:33,780 | INFO | NODE TIME | PromptNode | 0.0s
+2026-05-28 18:34:33,780 | INFO | LANGGRAPH NODE | ResponseNode
+2026-05-28 18:34:38,936 | INFO | NODE TIME | ResponseNode | 5.156s
+2026-05-28 18:34:38,944 | INFO | LANGGRAPH NODE | ValidationNode
+2026-05-28 18:34:38,945 | INFO | GUARDRAIL CHECK | passed=True
+2026-05-28 18:34:38,945 | INFO | NODE TIME | ValidationNode | 0.001s
+2026-05-28 18:34:38,957 | INFO | RAG DONE | intent=PAYMENTS | 5.77s | tokens=253
+2026-05-28 18:35:07,697 | INFO | RAG START | intent=ERRORS | question=What causes invalid OTP errors?
+2026-05-28 18:35:07,706 | INFO | LANGGRAPH NODE | IntentNode
+2026-05-28 18:35:07,706 | INFO | GRAPH STATE | intent=ERRORS
+2026-05-28 18:35:07,706 | INFO | NODE TIME | IntentNode | 0.0s
+2026-05-28 18:35:07,707 | INFO | LANGGRAPH NODE | ToolNode
+2026-05-28 18:35:07,707 | INFO | MCP ROUTER | intent=ERRORS | tool=retrieval
+2026-05-28 18:35:07,707 | INFO | MCP TOOL | RetrievalTool
+2026-05-28 18:35:07,707 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'ERRORS', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
+2026-05-28 18:35:07,707 | INFO | NODE TIME | ToolNode | 0.0s
+2026-05-28 18:35:07,707 | INFO | LANGGRAPH NODE | RetrievalNode
+2026-05-28 18:35:08,015 | INFO | RETRIEVAL START | intent=ERRORS | source_filter=razorpay_errors.txt
+2026-05-28 18:35:08,089 | INFO | RETRIEVAL SOURCES | ['razorpay_errors.txt', 'razorpay_errors.txt']
+2026-05-28 18:35:08,089 | INFO | GRAPH STATE | sources=['razorpay_errors.txt', 'razorpay_errors.txt']
+2026-05-28 18:35:08,089 | INFO | NODE TIME | RetrievalNode | 0.382s
+2026-05-28 18:35:08,089 | INFO | LANGGRAPH NODE | PromptNode
+2026-05-28 18:35:08,089 | INFO | NODE TIME | PromptNode | 0.0s
+2026-05-28 18:35:08,090 | INFO | LANGGRAPH NODE | ResponseNode
+2026-05-28 18:35:17,306 | INFO | NODE TIME | ResponseNode | 9.216s
+2026-05-28 18:35:17,311 | INFO | LANGGRAPH NODE | ValidationNode
+2026-05-28 18:35:17,312 | INFO | GUARDRAIL CHECK | passed=True
+2026-05-28 18:35:17,312 | INFO | NODE TIME | ValidationNode | 0.002s
+2026-05-28 18:35:17,329 | INFO | RAG DONE | intent=ERRORS | 9.62s | tokens=328
+2026-05-28 18:36:00,875 | INFO | RAG START | intent=WEBHOOKS | question=How do Razorpay webhooks work?
+2026-05-28 18:36:00,881 | INFO | LANGGRAPH NODE | IntentNode
+2026-05-28 18:36:00,881 | INFO | GRAPH STATE | intent=WEBHOOKS
+2026-05-28 18:36:00,881 | INFO | NODE TIME | IntentNode | 0.0s
+2026-05-28 18:36:00,881 | INFO | LANGGRAPH NODE | ToolNode
+2026-05-28 18:36:00,882 | INFO | MCP ROUTER | intent=WEBHOOKS | tool=retrieval
+2026-05-28 18:36:00,882 | INFO | MCP TOOL | RetrievalTool
+2026-05-28 18:36:00,882 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'WEBHOOKS', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
+2026-05-28 18:36:00,882 | INFO | NODE TIME | ToolNode | 0.001s
+2026-05-28 18:36:00,882 | INFO | LANGGRAPH NODE | RetrievalNode
+2026-05-28 18:36:01,174 | INFO | RETRIEVAL START | intent=WEBHOOKS | source_filter=razorpay_webhooks.txt
+2026-05-28 18:36:01,241 | INFO | RETRIEVAL SOURCES | ['razorpay_webhooks.txt', 'razorpay_webhooks.txt']
+2026-05-28 18:36:01,241 | INFO | GRAPH STATE | sources=['razorpay_webhooks.txt', 'razorpay_webhooks.txt']
+2026-05-28 18:36:01,241 | INFO | NODE TIME | RetrievalNode | 0.359s
+2026-05-28 18:36:01,242 | INFO | LANGGRAPH NODE | PromptNode
+2026-05-28 18:36:01,242 | INFO | NODE TIME | PromptNode | 0.0s
+2026-05-28 18:36:01,242 | INFO | LANGGRAPH NODE | ResponseNode
+2026-05-28 18:36:09,260 | INFO | NODE TIME | ResponseNode | 8.017s
+2026-05-28 18:36:09,265 | INFO | LANGGRAPH NODE | ValidationNode
+2026-05-28 18:36:09,276 | INFO | GUARDRAIL CHECK | passed=True
+2026-05-28 18:36:09,276 | INFO | NODE TIME | ValidationNode | 0.011s
+2026-05-28 18:36:09,315 | INFO | RAG DONE | intent=WEBHOOKS | 8.4s | tokens=319
+2026-05-28 18:36:34,687 | INFO | EVALUATION DONE | cases=4
+2026-05-28 18:36:34,689 | INFO | BASELINE SAVED | evaluation/baselines/evaluation_baseline_20260528_183634.json

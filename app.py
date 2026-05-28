@@ -178,6 +178,30 @@ def get_latest_baseline():
         return None, None
 
 
+def get_latest_evaluation_log():
+
+    log_files = sorted(
+        BASELINE_DIR.glob(
+            "evaluation_logs_*.txt"
+        )
+    )
+
+    if not log_files:
+        return None, None
+
+    latest = log_files[-1]
+
+    try:
+
+        with open(latest, "r") as f:
+            content = f.read()
+
+        return latest, content
+
+    except:
+        return None, None
+
+
 # ========================
 # HELPERS
 # ========================
@@ -263,6 +287,57 @@ def render_baseline_download(question, key):
         )
 
 
+def render_top_download_buttons():
+
+    spacer_left, content, spacer_right = st.columns(
+        [1, 2, 1]
+    )
+
+    with content:
+
+        metric_col, log_col = st.columns(2)
+
+        with metric_col:
+
+            st.download_button(
+                "⬇️ DeepEval Evaluation Metrics",
+                data=(
+                    baseline_content
+                    or ""
+                ),
+                file_name=(
+                    baseline_path.name
+                    if baseline_path
+                    else "latest_evaluation_metrics.json"
+                ),
+                mime="application/json",
+                type="primary",
+                use_container_width=True,
+                disabled=not baseline_content,
+                key="download_top_metrics"
+            )
+
+        with log_col:
+
+            st.download_button(
+                "⬇️ DeepEval Evaluation logs",
+                data=(
+                    evaluation_log_content
+                    or ""
+                ),
+                file_name=(
+                    evaluation_log_path.name
+                    if evaluation_log_path
+                    else "evaluation_logs.txt"
+                ),
+                mime="text/plain",
+                type="primary",
+                use_container_width=True,
+                disabled=not evaluation_log_content,
+                key="download_top_logs"
+            )
+
+
 def timestamp():
 
     return datetime.now().isoformat(
@@ -284,6 +359,9 @@ if "active_thread" not in st.session_state:
 health = get_health()
 metrics = get_metrics()
 baseline_path, baseline_content = get_latest_baseline()
+evaluation_log_path, evaluation_log_content = (
+    get_latest_evaluation_log()
+)
 
 # ========================
 # SIDEBAR
@@ -291,7 +369,7 @@ baseline_path, baseline_content = get_latest_baseline()
 with st.sidebar:
 
     st.header("System Overview")
-    st.caption("API Copilot v0.7 Beta")
+    st.caption("API Copilot v2 Beta")
 
     st.markdown("### System Health")
 
@@ -434,7 +512,7 @@ mcp_suggestions = [
 with left:
 
     st.markdown(
-        "### Suggested Questions"
+        "### 💬 Suggested Queries"
     )
 
     for q in suggestions:
@@ -451,7 +529,7 @@ with left:
 with right:
 
     st.markdown(
-        "### 🛠 MCP Tool Demo"
+        "### 🛠 MCP Tool Suggested Queries"
     )
 
     for q in mcp_suggestions:
@@ -464,6 +542,9 @@ with right:
 
             st.session_state.user_query = q
             st.rerun()
+
+
+render_top_download_buttons()
 
 
 # ========================

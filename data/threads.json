@@ -1,39 +1,24 @@
 [
   {
     "title": "How many documents and chunks are indexed?",
-    "created_at": "2026-05-28T22:59:00",
-    "updated_at": "2026-05-28T22:59:07",
+    "created_at": "2026-05-29T02:32:46",
+    "updated_at": "2026-05-29T02:33:09",
     "messages": [
       {
         "question": "How many documents and chunks are indexed?",
-        "answer": "The indexed data is as follows:\n\n- **Documents**: 4\n- **Chunks**: 21\n- **Collection Status**: Active",
-        "response_time": 2.94,
-        "frontend_time": 2.97,
-        "tokens": 38,
-        "cost": 1.9e-05
+        "answer": "The indexed data is as follows:\n\n- **Documents:** 4\n- **Chunks:** 21\n- **Collection Status:** Active",
+        "response_time": 2.89,
+        "frontend_time": 2.93,
+        "tokens": 35,
+        "cost": 1.7e-05
       },
       {
-        "question": "Show latest evaluation metrics",
-        "answer": "### Latest Evaluation Metrics\n\n- **Model**: gpt-4o-mini\n- **Timestamp**: 2026-05-28 18:36:34\n- **Threshold**: 0.7\n\n#### Summary\n- **Answer Relevancy Metric**\n  - Average Score: 0.8796\n  - Passed: 4\n  - Total: 4\n\n- **Faithfulness Metric**\n  - Average Score: 1.0\n  - Passed: 4\n  - Total: 4\n\n#### Latest Baseline\n- File: [evaluation_baseline_20260528_183634.json](evaluation/baselines/evaluation_baseline_20260528_183634.json)",
-        "response_time": 3.61,
-        "frontend_time": 3.63,
-        "tokens": 154,
-        "cost": 9.1e-05
-      }
-    ]
-  },
-  {
-    "title": "How does Razorpay authentication work?",
-    "created_at": "2026-05-28T18:23:54",
-    "updated_at": "2026-05-28T18:23:54",
-    "messages": [
-      {
-        "question": "How does Razorpay authentication work?",
-        "answer": "## Summary\nRazorpay authentication utilizes **Basic Authentication** requiring a **Key ID** and **Key Secret** for each API request. The authorization header must be formatted correctly to ensure successful authentication.\n\n## Technical Steps\n1. **Generate API Keys**: Obtain your Key ID and Key Secret from the Razorpay dashboard.\n2. **Format the Authorization Header**:\n   - Use the format: `Authorization: Basic base64(KEY_ID:KEY_SECRET)`\n   - Ensure that `KEY_ID` and `KEY_SECRET` are concatenated with a colon (`:`) and then encoded in base64.\n3. **Include the Header in API Requests**: Add the formatted authorization header to your API requests.\n\n## Best Practices\n- **Secure Key Management**: Store your API keys securely and avoid hardcoding them in your application.\n- **Use Environment Variables**: Load keys from environment variables to enhance security.\n- **Regularly Rotate Keys**: Implement a key rotation policy to minimize security risks.\n- **Log Authentication Failures**: Keep logs of authentication attempts to aid in debugging issues.\n- **Test Mode vs. Live Mode**: Use Test Mode for integration testing and Live Mode for production to avoid processing real payments during development.\n\nBy following these guidelines, you can effectively implement Razorpay authentication in your application.",
-        "response_time": 6.34,
-        "frontend_time": 7.43,
-        "tokens": 272,
-        "cost": 0.00016
+        "question": "Explain Razorpay payments in 150 words.",
+        "answer": "## Summary\nRazorpay Payments APIs facilitate the management of payment lifecycles, enabling developers to capture authorized payments, retrieve payment details, and link payments to orders. The core states of payments include `authorized` (payment approved but not captured) and `captured` (payment successfully collected).\n\n## Technical Steps\n1. **Capture Payment**: Use the endpoint `POST /v1/payments/:id/capture` to capture authorized payments.\n2. **Verify Payment Status**: Always check the payment status before attempting to capture.\n3. **Log Payment IDs**: Maintain logs of payment IDs for reconciliation and debugging purposes.\n\n## Best Practices\n- Implement error handling for unauthorized access, invalid payment IDs, capture failures, and rate limits.\n- Avoid duplicate captures by verifying payment status.\n- Utilize webhook integrations for real-time payment event notifications.\n- Securely manage payment identifiers and customer data.\n- Monitor reconciliation workflows to ensure accuracy in transaction tracking.",
+        "response_time": 5.71,
+        "frontend_time": 5.79,
+        "tokens": 201,
+        "cost": 0.000117
       }
     ]
   }
