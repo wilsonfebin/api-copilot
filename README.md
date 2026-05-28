@@ -1,248 +1,448 @@
-API Copilot — Agentic RAG Platform
+# 🚀 API Copilot — Agentic RAG & MCP Platform
 
-AI-powered API Integration Copilot built using FastAPI, Streamlit, OpenAI APIs, ChromaDB, and Dockerized microservices.
+> Production-grade AI-powered API Integration Copilot built using FastAPI, Streamlit, OpenAI APIs, ChromaDB, LangGraph, MCP, DeepEval, and Dockerized microservices.
 
-The platform combines Retrieval-Augmented Generation (RAG), agentic retrieval workflows, intent-aware routing, vector search, and structured observability to provide grounded, developer-focused API assistance.
+---
 
-⸻
+# 📸 Screenshots
 
-🚀 Features
+## 🖥 Main UI
 
-Core AI Features
+```markdown
+![Main UI](screenshots/main-ui.png)
+```
+---
 
-* Retrieval-Augmented Generation (RAG)
-* Semantic vector search using embeddings
-* Intent-based retrieval routing
-* Agentic workflow orchestration
-* Metadata-filtered document retrieval
-* Source-grounded LLM responses
-* Context-aware answer generation
-* Word-limit aware response compression
+## 🛠 Query Response
 
-⸻
+```markdown
+![Query Response](screenshots/query-response.png)
+```
+---
 
-Agentic Workflow Features
+## 📊 Evaluation Metrics
 
-* Query intent classification
-* Retrieval tool selection
-* Source-filtered vector retrieval
-* Workflow orchestration layer
-* Retrieval tracing and observability
-* Structured agent logging
+```markdown
+![Evaluation Metrics](screenshots/evaluation.png)
+```
+---
+
+# ✨ Features
+
+## 🧠 Core AI Features
+
+- Retrieval-Augmented Generation (RAG)
+- Semantic vector search using embeddings
+- Intent-aware prompt specialization
+- Metadata-filtered retrieval
+- Context-grounded response generation
+- Source-aware answer generation
+- Context compression
+- Persistent conversation memory
+- Multi-turn follow-up handling
+
+---
+
+# 🤖 Agentic AI Features
+
+- LangGraph workflow orchestration
+- Intent classification
+- MCP tool routing
+- Retrieval tool orchestration
+- Structured workflow state management
+- Multi-node execution pipeline
+- Guardrail validation layer
+- Workflow tracing and observability
 
 Supported intents:
 
-* AUTH
-* PAYMENTS
-* ERRORS
-* WEBHOOKS
-* GENERAL
+- AUTH
+- PAYMENTS
+- ERRORS
+- WEBHOOKS
+- GENERAL
+- MCP_SYSTEM
 
-⸻
+---
 
-Platform Features
+# 🛠 MCP Features
 
-* Dockerized frontend/backend architecture
-* FastAPI backend services
-* Streamlit interactive UI
-* Conversation persistence
-* Source visibility
-* Frontend/backend latency tracking
-* Token and cost monitoring
-* Health monitoring APIs
-* Metrics APIs
-* Structured logging
+The platform includes an internal MCP-style tool orchestration layer.
 
-⸻
+Supported MCP tools:
 
-🏗 Architecture
+- RetrievalTool
+- HealthTool
+- MetricsTool
+- DiagnosticsTool
+- EvaluationTool
+- ThreadMemoryTool
+
+Capabilities:
+
+- Tool routing
+- Tool execution logging
+- System diagnostics
+- Vector DB inspection
+- Evaluation metrics retrieval
+- Conversation memory access
+- Health monitoring
+- Runtime diagnostics
+
+---
+
+# 📊 Evaluation & Guardrails
+
+Evaluation-driven optimization using DeepEval.
+
+Implemented metrics:
+
+- Answer Relevancy
+- Faithfulness
+- Retrieval grounding validation
+- Evaluation baseline persistence
+
+Current benchmark:
 
 ```text
-                    ┌────────────────────┐
-                    │   Streamlit UI     │
-                    │    (Frontend)      │
-                    └─────────┬──────────┘
-                              │ HTTP
-                              ▼
-                    ┌────────────────────┐
-                    │     FastAPI        │
-                    │      Backend       │
-                    └─────────┬──────────┘
-                              │
-                              ▼
-                  ┌────────────────────────┐
-                  │ Agentic Workflow Layer │
-                  │                        │
-                  │ • Intent Router        │
-                  │ • Tool Registry        │
-                  │ • Workflow Engine      │
-                  └─────────┬──────────────┘
-                            │
-                            ▼
-                  ┌────────────────────────┐
-                  │      RAG Pipeline      │
-                  └─────────┬──────────────┘
-                            │
-          ┌─────────────────┴─────────────────┐
-          ▼                                   ▼
-┌────────────────────┐             ┌────────────────────┐
-│     ChromaDB       │             │     OpenAI API     │
-│    Vector Store    │             │   LLM + Embedding  │
-└────────────────────┘             └────────────────────┘
+Answer Relevancy: 0.88–1.00
+Faithfulness: 1.00
 ```
 
-🧠 Agentic Workflow
+Guardrails include:
 
-The platform uses a modular agentic retrieval workflow instead of a simple chatbot pipeline.
+- Response validation
+- Structured output checks
+- Retrieval grounding enforcement
+- Workflow validation nodes
+- Hallucination prevention layer
 
-Flow
+---
 
-User Query
-→ Intent Classification
-→ Tool Selection
-→ Metadata-based Retrieval Filtering
-→ Context Retrieval
-→ LLM Response Generation
-→ Structured Logging & Metrics
+# 🖥 Platform Features
 
-📂 Project Structure
+- Dockerized frontend/backend architecture
+- FastAPI backend services
+- Streamlit interactive UI
+- Persistent thread memory
+- MCP demo interface
+- Evaluation downloads
+- Structured observability
+- Health monitoring APIs
+- Metrics APIs
+- Cost tracking
+- Token monitoring
+- Source visibility
+- Thread continuity
+
+---
+
+# 🏗 Architecture
 
 ```text
+                           ┌────────────────────┐
+                           │   Streamlit UI     │
+                           │    Frontend        │
+                           └─────────┬──────────┘
+                                     │
+                                     ▼
+                        ┌────────────────────────┐
+                        │      FastAPI API       │
+                        │    SSE + REST Layer    │
+                        └─────────┬──────────────┘
+                                  │
+                                  ▼
+                    ┌──────────────────────────────┐
+                    │       LangGraph Engine       │
+                    │                              │
+                    │  • IntentNode               │
+                    │  • ToolNode                 │
+                    │  • RetrievalNode            │
+                    │  • PromptNode               │
+                    │  • ResponseNode             │
+                    │  • ValidationNode           │
+                    └─────────────┬────────────────┘
+                                  │
+                ┌─────────────────┴─────────────────┐
+                ▼                                   ▼
+      ┌────────────────────┐             ┌────────────────────┐
+      │    MCP Router      │             │    RAG Pipeline    │
+      │                    │             │                    │
+      │ • RetrievalTool    │             │ • Vector Search    │
+      │ • MetricsTool      │             │ • Metadata Filter  │
+      │ • HealthTool       │             │ • Context Build    │
+      │ • DiagnosticsTool  │             │ • Prompt Assembly  │
+      └─────────┬──────────┘             └─────────┬──────────┘
+                │                                  │
+                ▼                                  ▼
+      ┌────────────────────┐             ┌────────────────────┐
+      │      ChromaDB      │             │     OpenAI API     │
+      │    Vector Store    │             │  LLM + Embeddings  │
+      └────────────────────┘             └────────────────────┘
+```
 
+---
+
+# 🔄 LangGraph Workflow
+
+```text
+User Query
+→ IntentNode
+→ MCP ToolNode
+→ RetrievalNode
+→ PromptNode
+→ ResponseNode
+→ ValidationNode
+→ Evaluation Logging
+```
+
+---
+
+# 🧩 MCP Demo Queries
+
+The platform exposes MCP-style operational tooling directly through the UI.
+
+Example MCP queries:
+
+```text
+How many documents and chunks are indexed?
+Show latest evaluation metrics
+Is the vector database healthy?
+What did we discuss earlier?
+Show system diagnostics
+```
+
+These queries bypass normal RAG retrieval and invoke internal MCP tools directly.
+
+---
+
+# 📂 Project Structure
+
+```text
 api-copilot/
 │
-├── app.py                         # Streamlit frontend
+├── app.py
 │
 ├── backend/
-│   ├── main.py                    # FastAPI entrypoint
+│   ├── main.py
 │   │
-│   ├── agents/
-│   │   ├── intent_router.py       # Query intent classification
-│   │   ├── tool_registry.py       # Retrieval tool mapping
-│   │   └── workflow.py            # Agent orchestration layer
+│   ├── langgraph/
+│   │   ├── graph.py
+│   │   ├── nodes.py
+│   │   └── state.py
+│   │
+│   ├── mcp/
+│   │   ├── router.py
+│   │   ├── registry.py
+│   │   └── tools/
+│   │       ├── retrieval_tool.py
+│   │       ├── health_tool.py
+│   │       ├── metrics_tool.py
+│   │       ├── diagnostics_tool.py
+│   │       ├── evaluation_tool.py
+│   │       └── memory_tool.py
 │   │
 │   ├── routes/
-│   │   ├── query.py               # Main query endpoint
-│   │   ├── health.py              # Health API
-│   │   └── metrics.py             # Metrics API
+│   │   ├── query.py
+│   │   ├── health.py
+│   │   ├── metrics.py
+│   │   └── stream.py
 │   │
 │   ├── services/
-│   │   └── rag_service.py         # Core RAG service layer
+│   │   └── rag_service.py
 │   │
-│   ├── utils/
-│   │   └── logger.py              # Structured logging
+│   ├── guardrails/
+│   │   └── validator.py
 │   │
-│   └── config.py                  # Backend config
+│   └── utils/
+│       └── logger.py
+│
+├── evaluation/
+│   ├── run_evaluation.py
+│   ├── test_cases.py
+│   └── baselines/
 │
 ├── rag/
-│   ├── ingest.py                  # Document ingestion
-│   ├── chunk.py                   # Text chunking
-│   ├── embed.py                   # Embedding generation
-│   ├── retrieve.py                # Retrieval pipeline
-│   └── vector_store.py            # ChromaDB integration
+│   ├── ingest.py
+│   ├── chunk.py
+│   ├── embed.py
+│   ├── retrieve.py
+│   └── vector_store.py
 │
-├── llm/
-│   └── client.py                  # OpenAI client wrapper
-│
-├── utils/
-│   ├── metrics.py                 # Token & cost estimation
-│   ├── styles.py                  # Streamlit styling
-│   └── storage.py                 # Persistence helpers
-│
-├── data/
-│   ├── razorpay_auth.txt
-│   ├── razorpay_payments.txt
-│   ├── razorpay_errors.txt
-│   └── razorpay_webhooks.txt
-│
-├── chroma_db/                     # Persistent vector DB
-│
+├── chroma_db/
 ├── logs/
-│   └── app.log
-│
+├── data/
 ├── docker-compose.yml
+├── Dockerfile.backend
 ├── Dockerfile.ui
-├── requirements_backend.txt
-├── requirements_ui.txt
 └── README.md
 ```
 
-⚙️ Tech Stack
+---
 
-```
-Frontend: Streamlit
-Backend: FastAPI
-LLM: OpenAI GPT APIs
-Embeddings: OpenAI Embeddings
-Vector Database: ChromaDB
-Architecture: Retrieval-Augmented Generation (RAG)
-Agentic Layer: Intent Routing + Retrieval Orchestration
-Observability: Structured Logging + Latency Metrics
-Deployment: Docker + Docker Compose
-Language: Python
-
-```
-
-🔍 Observability & Metrics
-
-The platform includes structured observability for debugging and tracing LLM workflows.
-
-Tracked Metrics
-
-* Backend latency
-* Frontend latency
-* Token usage
-* Cost estimation
-* Retrieval sources
-* Intent routing
-* Workflow state
-* Request tracing
-
-⸻
-
-📊 Example Workflow Logs
+# ⚙️ Tech Stack
 
 ```text
-
-INFO | RATE STATUS | 172.18.0.3 | 0/20
-INFO | QUERY START | How does Razorpay authentication work?
-INFO | AGENT ROUTER | intent=Intent.AUTH | tool={'collection': 'auth'}
-INFO | RAG START | intent=Intent.AUTH | question=How does Razorpay authentication work?
-INFO | RETRIEVAL START | intent=Intent.AUTH | source_filter=None
-INFO | RETRIEVAL SOURCES | ['razorpay_auth.txt', 'razorpay_auth.txt']
-INFO | RAG DONE | intent=Intent.AUTH | 6.93s | tokens=246
-INFO | QUERY DONE | 6.93s | tokens=246 | cost=0.000144
-INFO | POST /query | 200 | 12.339s
+Frontend        : Streamlit
+Backend         : FastAPI
+LLM             : OpenAI GPT APIs
+Embeddings      : OpenAI Embeddings
+Vector Database : ChromaDB
+Orchestration   : LangGraph
+Protocol Layer  : MCP-style Tool Routing
+Evaluation      : DeepEval
+Guardrails      : Validation Layer
+Observability   : Structured Logging
+Deployment      : Docker + Docker Compose
+Language        : Python
 ```
 
-🚀 Future Enhancements
+---
 
-* LangGraph orchestration
-* Hybrid search (BM25 + vector)
-* Redis caching
-* Streaming responses
-* OpenTelemetry tracing
-* Evaluation pipelines
-* Hallucination scoring
-* Kubernetes deployment
-* RBAC and guardrails
-* Multi-step agent workflows
+# 📈 Observability & Metrics
 
-📌 Key Engineering Concepts Implemented
+Tracked metrics:
 
-* Retrieval-Augmented Generation (RAG)
-* Agentic retrieval orchestration
-* Intent-aware routing
-* Vector similarity search
-* Metadata-based filtering
-* Source-grounded responses
-* Structured observability
-* Frontend/backend separation
-* Dockerized microservices
-* Modular backend architecture
+- Backend latency
+- Frontend latency
+- Token usage
+- Cost estimation
+- Retrieval sources
+- LangGraph node timings
+- MCP tool execution
+- Guardrail validation
+- Workflow tracing
+- Request diagnostics
+- Evaluation baselines
 
-👨‍💻 Author 
+---
 
-Febin Wilson
+# 📜 Example Workflow Logs
 
-Built as an enterprise-style AI engineering platform project focused on practical GenAI architecture, observability, retrieval systems, and modular orchestration workflows.
+```text
+INFO | LANGGRAPH NODE | IntentNode
+INFO | GRAPH STATE | intent=AUTH
+INFO | MCP ROUTER | intent=AUTH | tool=retrieval
+INFO | MCP TOOL | RetrievalTool
+INFO | RETRIEVAL SOURCES | ['razorpay_auth.txt']
+INFO | NODE TIME | RetrievalNode | 0.41s
+INFO | LANGGRAPH NODE | ValidationNode
+INFO | GUARDRAIL CHECK | passed=True
+INFO | RAG DONE | intent=AUTH | 5.18s | tokens=303
+INFO | BASELINE SAVED | evaluation_baseline_20260528.json
+```
+
+---
+
+# 🧪 Evaluation Example
+
+```bash
+python -m evaluation.run_evaluation \
+  --model=gpt-4o-mini \
+  --threshold=0.7
+```
+
+Example output:
+
+```text
+Answer Relevancy : 1.0
+Faithfulness     : 1.0
+Cases Evaluated  : 4
+```
+
+---
+
+# 🚀 Running Locally
+
+## Clone Repository
+
+```bash
+git clone https://github.com/wilsonfebin/api-copilot.git
+
+cd api-copilot
+```
+
+---
+
+## Setup Backend
+
+```bash
+pip install -r requirements_backend.txt
+```
+
+Run FastAPI:
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+---
+
+## Setup Frontend
+
+```bash
+pip install -r requirements_ui.txt
+```
+
+Run Streamlit:
+
+```bash
+streamlit run app.py
+```
+
+---
+
+# 🐳 Docker Deployment
+
+```bash
+docker-compose up --build
+```
+
+---
+
+# 📌 Key Engineering Concepts Implemented
+
+- Retrieval-Augmented Generation (RAG)
+- Agentic AI orchestration
+- LangGraph workflows
+- MCP tool routing
+- Intent-aware retrieval
+- Vector similarity search
+- Metadata-based filtering
+- DeepEval evaluation pipelines
+- Guardrails & validation
+- Structured observability
+- Dockerized microservices
+- Modular backend architecture
+
+---
+
+# 🛣 Roadmap
+
+- External MCP server support
+- Hybrid search (BM25 + vector)
+- OpenTelemetry tracing
+- Redis caching
+- Multi-model routing
+- Kubernetes deployment
+- Role-based guardrails
+- Multi-agent workflows
+- Autonomous retrieval planning
+- Tool-calling LLMs
+- Distributed evaluation pipelines
+
+---
+
+# 👨‍💻 Author
+
+## Febin Wilson
+
+Built as a production-style AI systems engineering platform focused on:
+
+- Agentic orchestration
+- Retrieval systems
+- Evaluation-driven optimization
+- AI observability
+- MCP workflows
+- LangGraph orchestration
+- Practical GenAI architectu

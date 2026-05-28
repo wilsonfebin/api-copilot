@@ -300,7 +300,7 @@ def render_top_download_buttons():
         with metric_col:
 
             st.download_button(
-                "⬇️ DeepEval Evaluation Metrics",
+                "⬇️ DeepEval Evaluation Baseline",
                 data=(
                     baseline_content
                     or ""

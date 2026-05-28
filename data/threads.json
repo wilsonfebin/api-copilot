@@ -2,7 +2,7 @@
   {
     "title": "How many documents and chunks are indexed?",
     "created_at": "2026-05-29T02:32:46",
-    "updated_at": "2026-05-29T02:33:09",
+    "updated_at": "2026-05-29T02:42:23",
     "messages": [
       {
         "question": "How many documents and chunks are indexed?",
@@ -19,6 +19,14 @@
         "frontend_time": 5.79,
         "tokens": 201,
         "cost": 0.000117
+      },
+      {
+        "question": "Show latest evaluation metrics",
+        "answer": "### Latest Evaluation Metrics\n\n- **Model:** gpt-4o-mini\n- **Timestamp:** 20260528_183634\n- **Threshold:** 0.7\n\n#### Summary\n- **Answer Relevancy Metric**\n  - Average Score: 0.8796\n  - Passed: 4\n  - Total: 4\n\n- **Faithfulness Metric**\n  - Average Score: 1.0\n  - Passed: 4\n  - Total: 4\n\n#### Latest Baseline\n- **File:** evaluation/baselines/evaluation_baseline_20260528_183634.json",
+        "response_time": 3.02,
+        "frontend_time": 3.05,
+        "tokens": 132,
+        "cost": 7.7e-05
       }
     ]
   }
