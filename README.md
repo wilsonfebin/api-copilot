@@ -8,23 +8,20 @@
 
 ## 🖥 Main UI
 
-```markdown
 ![Main UI](screenshots/main-ui.png)
-```
+
 ---
 
 ## 🛠 Query Response
 
-```markdown
 ![Query Response](screenshots/query-response.png)
-```
+
 ---
 
 ## 📊 Evaluation Metrics
 
-```markdown
 ![Evaluation Metrics](screenshots/evaluation.png)
-```
+
 ---
 
 # ✨ Features
@@ -445,4 +442,4 @@ Built as a production-style AI systems engineering platform focused on:
 - AI observability
 - MCP workflows
 - LangGraph orchestration
-- Practical GenAI architectu
+- Practical GenAI architecture
