@@ -1,24 +1,24 @@
 [
   {
-    "title": "How do I capture payments?",
-    "created_at": "2026-05-28T22:40:39",
-    "updated_at": "2026-05-28T22:40:48",
+    "title": "How many documents and chunks are indexed?",
+    "created_at": "2026-05-28T22:59:00",
+    "updated_at": "2026-05-28T22:59:07",
     "messages": [
       {
-        "question": "How do I capture payments?",
-        "answer": "## Summary\nTo capture payments using the Razorpay Payments API, you need to send a POST request to the appropriate endpoint with the payment ID.\n\n## Technical Steps\n1. **Prepare the API Request**:\n   - Endpoint: `POST /v1/payments/:id/capture`\n   - Replace `:id` with the actual payment ID you wish to capture.\n\n2. **Send the Request**:\n   - Ensure you include any required headers, such as authentication tokens.\n\n3. **Handle the Response**:\n   - Check the response for success or failure.\n   - Log the payment ID for reconciliation and debugging.\n\n## Best Practices\n- Always verify the payment status before attempting to capture.\n- Avoid duplicate captures by checking if the payment is already captured.\n- Implement error handling for potential issues such as unauthorized access, invalid payment IDs, and capture failures.\n- Use webhook integrations to monitor payment events effectively.\n- Secure payment identifiers and customer data throughout the process.",
-        "response_time": 6.21,
-        "frontend_time": 6.54,
-        "tokens": 201,
-        "cost": 0.000118
+        "question": "How many documents and chunks are indexed?",
+        "answer": "The indexed data is as follows:\n\n- **Documents**: 4\n- **Chunks**: 21\n- **Collection Status**: Active",
+        "response_time": 2.94,
+        "frontend_time": 2.97,
+        "tokens": 38,
+        "cost": 1.9e-05
       },
       {
-        "question": "How many documents and chunks are indexed?",
-        "answer": "The indexing statistics are as follows:\n\n- **Documents:** 4\n- **Chunks:** 21\n- **Collection Status:** Active",
-        "response_time": 1.76,
-        "frontend_time": 1.77,
-        "tokens": 35,
-        "cost": 1.7e-05
+        "question": "Show latest evaluation metrics",
+        "answer": "### Latest Evaluation Metrics\n\n- **Model**: gpt-4o-mini\n- **Timestamp**: 2026-05-28 18:36:34\n- **Threshold**: 0.7\n\n#### Summary\n- **Answer Relevancy Metric**\n  - Average Score: 0.8796\n  - Passed: 4\n  - Total: 4\n\n- **Faithfulness Metric**\n  - Average Score: 1.0\n  - Passed: 4\n  - Total: 4\n\n#### Latest Baseline\n- File: [evaluation_baseline_20260528_183634.json](evaluation/baselines/evaluation_baseline_20260528_183634.json)",
+        "response_time": 3.61,
+        "frontend_time": 3.63,
+        "tokens": 154,
+        "cost": 9.1e-05
       }
     ]
   },

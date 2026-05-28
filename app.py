@@ -3,6 +3,7 @@ import time
 import json
 import threading
 from datetime import datetime
+from pathlib import Path
 import streamlit as st
 
 from backend.agents.workflow import run_agentic_flow
@@ -16,6 +17,7 @@ from utils.styles import load_css
 # ========================
 MAX_THREADS = 10
 THREAD_FILE = "data/threads.json"
+BASELINE_DIR = Path("evaluation/baselines")
 
 st.set_page_config(
     page_title="API Copilot",
@@ -152,6 +154,30 @@ def get_metrics():
         }
 
 
+def get_latest_baseline():
+
+    baseline_files = sorted(
+        BASELINE_DIR.glob(
+            "evaluation_baseline_*.json"
+        )
+    )
+
+    if not baseline_files:
+        return None, None
+
+    latest = baseline_files[-1]
+
+    try:
+
+        with open(latest, "r") as f:
+            content = f.read()
+
+        return latest, content
+
+    except:
+        return None, None
+
+
 # ========================
 # HELPERS
 # ========================
@@ -199,6 +225,44 @@ def render_answer_html(answer):
     """
 
 
+def should_show_baseline_download(question):
+
+    q = question.lower()
+
+    return any(
+        keyword in q
+        for keyword in [
+            "evaluation",
+            "metrics",
+            "deepeval",
+            "baseline",
+            "faithfulness",
+            "relevancy",
+        ]
+    )
+
+
+def render_baseline_download(question, key):
+
+    if (
+        should_show_baseline_download(question)
+        and baseline_content
+    ):
+
+        st.download_button(
+            "Download Latest Baseline",
+            data=baseline_content,
+            file_name=baseline_path.name,
+            mime="application/json",
+            use_container_width=True,
+            key=key
+        )
+
+        st.caption(
+            baseline_path.name
+        )
+
+
 def timestamp():
 
     return datetime.now().isoformat(
@@ -219,6 +283,7 @@ if "active_thread" not in st.session_state:
 
 health = get_health()
 metrics = get_metrics()
+baseline_path, baseline_content = get_latest_baseline()
 
 # ========================
 # SIDEBAR
@@ -473,6 +538,14 @@ if query:
                 unsafe_allow_html=True
             )
 
+            render_baseline_download(
+                res["question"],
+                key=(
+                    "download_current_"
+                    f"{int(time.time() * 1000)}"
+                )
+            )
+
             st.caption(
                 f"Backend: {res['response_time']}s • "
                 f"Frontend: {res['frontend_time']}s • "
@@ -560,6 +633,15 @@ if st.session_state.active_thread is not None:
 
             render_answer(
                 chat["answer"]
+            )
+
+            render_baseline_download(
+                chat["question"],
+                key=(
+                    "download_history_"
+                    f"{chat['question']}_"
+                    f"{chat.get('response_time')}"
+                )
             )
 
             frontend_time = chat.get(
