@@ -12,6 +12,11 @@ from backend.config import RATE_LIMIT, RATE_WINDOW, MAX_CONCURRENT_REQS
 
 app = FastAPI()
 
+QUERY_PATHS = {
+    "/query",
+    "/query/stream",
+}
+
 # ========================
 # RATE LIMIT (per IP, /query only)
 # ========================
@@ -26,8 +31,8 @@ semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQS)
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
 
-    # Only limit /query
-    if request.url.path != "/query":
+    # Only limit expensive query endpoints
+    if request.url.path not in QUERY_PATHS:
         return await call_next(request)
 
     client_ip = request.client.host
@@ -53,8 +58,8 @@ async def rate_limit_middleware(request: Request, call_next):
 
 @app.middleware("http")
 async def concurrency_limit_middleware(request: Request, call_next):
-    # Only gate /query (expensive)
-    if request.url.path != "/query":
+    # Only gate expensive query endpoints
+    if request.url.path not in QUERY_PATHS:
         return await call_next(request)
 
     async with semaphore:

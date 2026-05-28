@@ -6,3 +6,4 @@ chromadb
 openai
 tiktoken
 python-dotenv
+deepeval

@@ -14,6 +14,19 @@ from rag.retrieve import answer_query
 from utils.metrics import estimate_tokens, estimate_cost
 
 
+def normalize_intent(intent):
+
+    if hasattr(intent, "value"):
+        return intent.value
+
+    intent = str(intent)
+
+    if intent.startswith("Intent."):
+        return intent.split(".", 1)[1]
+
+    return intent
+
+
 # ========================
 # CACHED RAG CALL
 # ========================
@@ -55,9 +68,14 @@ def run_query(
     question: str,
     intent: str = "GENERAL",
     tool: dict | None = None,
+    include_context: bool = False,
 ):
 
     try:
+
+        intent = normalize_intent(
+            intent
+        )
 
         start = time.time()
 
@@ -94,7 +112,7 @@ def run_query(
             f"tokens={in_tokens + out_tokens}"
         )
 
-        return {
+        response = {
             "question": question,
             "answer": answer,
             "sources": list(
@@ -110,6 +128,15 @@ def run_query(
             "intent": intent,
             "tool": tool,
         }
+
+        if include_context:
+
+            response["retrieval_context"] = [
+                source["content"]
+                for source in result["sources"]
+            ]
+
+        return response
 
     except Exception:
 

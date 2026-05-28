@@ -1,6 +1,7 @@
 import os
 import time
 import json
+import queue
 import threading
 import requests
 import streamlit as st
@@ -12,7 +13,10 @@ from utils.styles import load_css
 # ========================
 MAX_THREADS = 10
 THREAD_FILE = "data/threads.json"
-BACKEND_URL = "http://backend:8000"
+BACKEND_URL = os.getenv(
+    "BACKEND_URL",
+    "http://localhost:8000"
+)
 
 st.set_page_config(
     page_title="API Copilot",
@@ -98,6 +102,60 @@ def call_backend(query):
         }
 
 
+def stream_backend(query):
+
+    frontend_start = time.time()
+
+    with requests.post(
+        f"{BACKEND_URL}/query/stream",
+        json={"question": query},
+        stream=True,
+        timeout=60
+    ) as res:
+
+        res.raise_for_status()
+
+        event = "message"
+
+        for line in res.iter_lines(
+            chunk_size=1,
+            decode_unicode=True
+        ):
+
+            if line is None:
+                continue
+
+            if line.startswith("event: "):
+
+                event = line.replace(
+                    "event: ",
+                    "",
+                    1
+                )
+
+                continue
+
+            if line.startswith("data: "):
+
+                data = json.loads(
+                    line.replace(
+                        "data: ",
+                        "",
+                        1
+                    )
+                )
+
+                data["event"] = event
+                data["frontend_elapsed"] = round(
+                    time.time() - frontend_start,
+                    2
+                )
+
+                yield data
+
+                event = "message"
+
+
 def get_health():
 
     try:
@@ -150,6 +208,26 @@ def metric(label, value):
         <div class="metric-value">{value}</div>
     </div>
     """, unsafe_allow_html=True)
+
+
+def render_answer(answer):
+
+    st.markdown(f"""
+    <div class="answer-box">
+        <h3>Summary</h3>
+        {clean_answer(answer)}
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def render_answer_html(answer):
+
+    return f"""
+    <div class="answer-box">
+        <h3>Summary</h3>
+        {clean_answer(answer)}
+    </div>
+    """
 
 
 # ========================
@@ -337,12 +415,9 @@ if st.session_state.active_thread is not None:
 
         with st.chat_message("assistant"):
 
-            st.markdown(f"""
-            <div class="answer-box">
-                <h3>Summary</h3>
-                {clean_answer(chat["answer"])}
-            </div>
-            """, unsafe_allow_html=True)
+            render_answer(
+                chat["answer"]
+            )
 
             frontend_time = chat.get(
                 "frontend_time",
@@ -380,64 +455,168 @@ if query:
 
         placeholder = st.empty()
 
-        result = {}
-
-        def run():
-            result["data"] = call_backend(query)
-
-        t = threading.Thread(target=run)
-
-        t.start()
-
         start = time.time()
+        answer = ""
+        res = None
+        status_text = "Thinking"
+        events = queue.Queue()
 
-        while t.is_alive():
+        def consume_stream():
 
-            placeholder.markdown(
-                f"⏳ Thinking... "
-                f"{round(time.time()-start,2)}s"
-            )
+            try:
 
-            time.sleep(0.2)
+                for event in stream_backend(query):
+                    events.put(event)
 
-        t.join()
+            except Exception as exc:
 
-        res = result["data"]
+                events.put({
+                    "event": "exception",
+                    "error": str(exc)
+                })
 
-        placeholder.empty()
+            finally:
 
-        st.markdown(f"""
-        <div class="answer-box">
-            <h3>Summary</h3>
-            {clean_answer(res["answer"])}
-        </div>
-        """, unsafe_allow_html=True)
+                events.put({
+                    "event": "stream_complete"
+                })
 
-        st.caption(
-            f"Backend: {res['response_time']}s • "
-            f"Frontend: {res['frontend_time']}s • "
-            f"{res['tokens']} tokens • "
-            f"${res['cost']:.5f}"
+        stream_thread = threading.Thread(
+            target=consume_stream,
+            daemon=True
         )
 
-    payload = {
-        "question": res["question"],
-        "answer": res["answer"],
-        "response_time": res["response_time"],
-        "frontend_time": res["frontend_time"],
-        "tokens": res["tokens"],
-        "cost": res["cost"]
-    }
+        stream_thread.start()
 
-    st.session_state.threads.insert(0, {
-        "title": query,
-        "messages": [payload]
-    })
+        try:
 
-    st.session_state.active_thread = 0
+            while True:
 
-    save_threads(
-        st.session_state.threads[:MAX_THREADS]
-    )
+                try:
 
-    st.rerun()
+                    event = events.get(
+                        timeout=0.1
+                    )
+
+                except queue.Empty:
+
+                    if answer:
+
+                        placeholder.markdown(
+                            render_answer_html(answer),
+                            unsafe_allow_html=True
+                        )
+
+                    else:
+
+                        placeholder.markdown(
+                            f"⏳ {status_text}... "
+                            f"{round(time.time()-start,2)}s"
+                        )
+
+                    continue
+
+                if event["event"] == "status":
+
+                    status_text = event["message"]
+
+                    if not answer:
+
+                        placeholder.markdown(
+                            f"⏳ {status_text}... "
+                            f"{event['frontend_elapsed']}s"
+                        )
+
+                elif event["event"] == "chunk":
+
+                    answer += event["text"]
+
+                    placeholder.markdown(
+                        render_answer_html(answer),
+                        unsafe_allow_html=True
+                    )
+
+                elif event["event"] == "done":
+
+                    res = event
+                    res["frontend_time"] = event[
+                        "frontend_elapsed"
+                    ]
+
+                elif event["event"] == "error":
+
+                    res = {
+                        "error": event.get(
+                            "error",
+                            "Streaming request failed"
+                        )
+                    }
+
+                elif event["event"] == "exception":
+
+                    raise RuntimeError(
+                        event.get(
+                            "error",
+                            "Streaming request failed"
+                        )
+                    )
+
+                elif event["event"] == "stream_complete":
+
+                    break
+
+        except Exception:
+
+            res = call_backend(query)
+
+            answer = res.get(
+                "answer",
+                ""
+            )
+
+            placeholder.markdown(
+                render_answer_html(answer),
+                unsafe_allow_html=True
+            )
+
+        if res and "error" not in res:
+
+            st.caption(
+                f"Backend: {res['response_time']}s • "
+                f"Frontend: {res['frontend_time']}s • "
+                f"{res['tokens']} tokens • "
+                f"${res['cost']:.5f}"
+            )
+
+        else:
+
+            st.error(
+                (res or {}).get(
+                    "error",
+                    "Something went wrong"
+                )
+            )
+
+    if res and "error" not in res:
+
+        payload = {
+            "question": res["question"],
+            "answer": res["answer"],
+            "response_time": res["response_time"],
+            "frontend_time": res["frontend_time"],
+            "tokens": res["tokens"],
+            "cost": res["cost"]
+        }
+
+        st.session_state.threads.insert(0, {
+            "title": query,
+            "messages": [payload]
+        })
+
+        st.session_state.active_thread = 0
+
+        save_threads(
+            st.session_state.threads[:MAX_THREADS]
+        )
+
+        st.rerun()

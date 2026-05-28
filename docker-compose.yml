@@ -24,6 +24,8 @@ services:
       - "8501:8501"
     volumes:
       - .:/app
+    environment:
+      - BACKEND_URL=http://backend:8000
     depends_on:
       - backend
     command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0
