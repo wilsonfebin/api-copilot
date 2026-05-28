@@ -2,7 +2,7 @@
   {
     "title": "How do webhooks work?",
     "created_at": "2026-05-28T12:38:58",
-    "updated_at": "2026-05-28T12:38:58",
+    "updated_at": "2026-05-28T12:52:03",
     "messages": [
       {
         "question": "How do webhooks work?",
@@ -11,6 +11,14 @@
         "frontend_time": 8.43,
         "tokens": 360,
         "cost": 0.000213
+      },
+      {
+        "question": "how webhooks works?",
+        "answer": "## Summary\nRazorpay Webhooks enable real-time notifications for specific events related to transactions and onboarding. They send payloads to a configured endpoint whenever subscribed events occur, allowing for immediate processing and response.\n\n## Technical Steps\n1. **Setup Webhook**:\n   - Log in to the Razorpay Dashboard.\n   - Navigate to **Partner Dashboard \u2192 Settings \u2192 Webhooks**.\n   - Configure the following:\n     - **Webhook URL** (HTTPS recommended)\n     - **Secret key** for signature validation\n     - **Alert email** for failure notifications\n     - **Active events** to subscribe to\n   - Create the webhook.\n\n2. **Receive and Handle Events**:\n   - Ensure your endpoint can accept POST requests.\n   - Validate the webhook signature using the secret key to confirm authenticity.\n   - Process the event payload based on the event type (e.g., payment status updates, refunds).\n\n3. **Implement Retry Logic**:\n   - Design your webhook handler to be idempotent to handle retries safely.\n   - Monitor for failed deliveries and implement retry mechanisms as needed.\n\n## Best Practices\n- Use HTTPS for secure communication.\n- Always verify webhook signatures to ensure the payload is from Razorpay.\n- Store your secret keys securely and avoid hardcoding them in your application.\n- Log event payloads for debugging and reconciliation purposes.\n- Monitor webhook delivery status and set up alerts for failures to ensure timely responses.",
+        "response_time": 7.58,
+        "frontend_time": 8.56,
+        "tokens": 292,
+        "cost": 0.000173
       }
     ]
   },

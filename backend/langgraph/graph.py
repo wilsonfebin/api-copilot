@@ -7,6 +7,7 @@ from backend.langgraph.nodes import (
     prompt_node,
     response_generation_node,
     retrieval_node,
+    tool_node,
     validation_node,
 )
 from backend.langgraph.state import RAGGraphState
@@ -27,6 +28,11 @@ def get_rag_graph():
     graph.add_node(
         "retrieval",
         retrieval_node
+    )
+
+    graph.add_node(
+        "tool",
+        tool_node
     )
 
     graph.add_node(
@@ -51,6 +57,11 @@ def get_rag_graph():
 
     graph.add_edge(
         "intent",
+        "tool"
+    )
+
+    graph.add_edge(
+        "tool",
         "retrieval"
     )
 

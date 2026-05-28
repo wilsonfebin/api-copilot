@@ -25,6 +25,14 @@ CACHE_SIZE = int(os.getenv("CACHE_SIZE", 50))
 TOP_K = int(os.getenv("TOP_K", 2))
 
 # ========================
+# MCP
+# ========================
+ENABLE_MCP = (
+    os.getenv("ENABLE_MCP", "true").lower()
+    == "true"
+)
+
+# ========================
 # GUARDRAILS
 # ========================
 ENABLE_GUARDRAILS = (

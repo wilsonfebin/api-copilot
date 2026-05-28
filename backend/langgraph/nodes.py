@@ -2,7 +2,9 @@ import re
 import time
 
 from backend.agents.intent_router import classify_query
+from backend.config import ENABLE_MCP
 from backend.guardrails.validator import run_guardrails
+from backend.mcp.router import route_tool
 from backend.utils.logger import logger
 from llm.client import ask_llm, get_embedding
 from rag.retrieve import (
@@ -161,6 +163,76 @@ def retrieval_node(state):
     }
 
 
+def tool_node(state):
+
+    start = time.time()
+
+    logger.info(
+        "LANGGRAPH NODE | ToolNode"
+    )
+
+    intent = state.get(
+        "intent",
+        "GENERAL"
+    )
+
+    metadata = state.get(
+        "metadata",
+        {}
+    )
+
+    if not ENABLE_MCP:
+
+        result = {
+            "tool_name": "MCPDisabled",
+            "data": {},
+            "error": None,
+        }
+
+        metadata["mcp_tool"] = "disabled"
+
+    else:
+
+        tool_key, tool = route_tool(
+            intent=intent,
+            question=state["question"]
+        )
+
+        logger.info(
+            f"MCP ROUTER | intent={intent} | "
+            f"tool={tool_key}"
+        )
+
+        result = tool.run(
+            question=state["question"],
+            state=state,
+        )
+
+        logger.info(
+            f"MCP TOOL | {result['tool_name']}"
+        )
+
+        logger.info(
+            f"MCP RESULT | {result}"
+        )
+
+        metadata["mcp_tool"] = tool_key
+
+    elapsed = round(
+        time.time() - start,
+        3
+    )
+
+    logger.info(
+        f"NODE TIME | ToolNode | {elapsed}s"
+    )
+
+    return {
+        "tool_result": result,
+        "metadata": metadata,
+    }
+
+
 def prompt_node(state):
 
     start = time.time()
@@ -181,13 +253,26 @@ def prompt_node(state):
         )
     )
 
+    context = "\n\n".join(
+        state.get(
+            "retrieved_context",
+            []
+        )
+    )
+
+    tool_result = state.get(
+        "tool_result"
+    )
+
+    if tool_result:
+
+        context = (
+            f"{context}\n\n"
+            f"Tool Context:\n{tool_result}"
+        )
+
     prompt = prompt_builder(
-        context="\n\n".join(
-            state.get(
-                "retrieved_context",
-                []
-            )
-        ),
+        context=context,
         user_query=state["question"],
         word_limit=metadata.get(
             "word_limit"
