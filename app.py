@@ -8,16 +8,15 @@ import requests
 import streamlit as st
 
 from utils.styles import load_css
+import streamlit as st
+
 
 # ========================
 # CONFIG
 # ========================
 MAX_THREADS = 10
 THREAD_FILE = "data/threads.json"
-BACKEND_URL = os.getenv(
-    "BACKEND_URL",
-    "http://backend:8000"
-)
+BACKEND_URL = st.secrets["BACKEND_URL"]
 
 st.set_page_config(
     page_title="API Copilot",
