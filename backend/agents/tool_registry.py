@@ -14,6 +14,18 @@ TOOL_REGISTRY = {
     Intent.WEBHOOKS: {
         "collection": "webhooks"
     },
+    Intent.VECTOR: {
+        "collection": "mcp_vector_stats"
+    },
+    Intent.METRICS: {
+        "collection": "mcp_metrics"
+    },
+    Intent.HEALTH: {
+        "collection": "mcp_health"
+    },
+    Intent.THREAD: {
+        "collection": "mcp_thread_history"
+    },
     Intent.GENERAL: {
         "collection": "general"
     },

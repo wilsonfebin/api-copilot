@@ -72,7 +72,11 @@ def route_tool(intent, question):
         or any(
             keyword in q
             for keyword in [
+                "discuss earlier",
+                "previous conversation",
                 "thread",
+                "history",
+                "earlier",
                 "conversation history",
                 "recent questions",
                 "chat history",

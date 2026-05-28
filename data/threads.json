@@ -1,47 +1,16 @@
 [
   {
-    "title": "How do webhooks work?",
-    "created_at": "2026-05-28T12:38:58",
-    "updated_at": "2026-05-28T12:52:03",
-    "messages": [
-      {
-        "question": "How do webhooks work?",
-        "answer": "## Summary\nRazorpay Webhooks enable real-time notifications for specific events related to transactions and onboarding. They deliver payloads to a configured endpoint URL whenever subscribed events occur, allowing for immediate processing and response.\n\n## Technical Steps\n1. **Setup Webhook:**\n   - Log in to the Razorpay Dashboard.\n   - Navigate to: Partner Dashboard \u2192 Settings \u2192 Webhooks.\n   - Configure the following:\n     - **Webhook URL:** Use an HTTPS endpoint for security.\n     - **Secret Key:** For signature validation to ensure authenticity.\n     - **Alert Email:** For notifications on delivery failures.\n     - **Active Events:** Select the events you want to subscribe to.\n   - Create the webhook.\n\n2. **Handle Incoming Webhooks:**\n   - Implement an endpoint to receive webhook payloads.\n   - Validate the signature using the secret key to confirm the payload's authenticity.\n   - Process the event based on its type (e.g., payment status updates, refunds).\n\n3. **Implement Retry Logic:**\n   - Ensure your endpoint can handle retries from Razorpay in case of failures.\n   - Design your event handling to be idempotent, meaning repeated processing of the same event does not cause unintended side effects.\n\n4. **Monitor and Log:**\n   - Monitor for failed webhook deliveries and set up alerts.\n   - Log incoming payloads for debugging and reconciliation purposes.\n\n## Best Practices\n- Always use HTTPS for your webhook endpoints to secure data in transit.\n- Verify webhook signatures to ensure the payload is from Razorpay.\n- Store your secret keys securely and avoid hardcoding them in your application.\n- Implement retry-safe handlers to manage duplicate event processing.\n- Regularly monitor your webhook delivery status and logs to ensure reliability and troubleshoot issues promptly.",
-        "response_time": 7.36,
-        "frontend_time": 8.43,
-        "tokens": 360,
-        "cost": 0.000213
-      },
-      {
-        "question": "how webhooks works?",
-        "answer": "## Summary\nRazorpay Webhooks enable real-time notifications for specific events related to transactions and onboarding. They send payloads to a configured endpoint whenever subscribed events occur, allowing for immediate processing and response.\n\n## Technical Steps\n1. **Setup Webhook**:\n   - Log in to the Razorpay Dashboard.\n   - Navigate to **Partner Dashboard \u2192 Settings \u2192 Webhooks**.\n   - Configure the following:\n     - **Webhook URL** (HTTPS recommended)\n     - **Secret key** for signature validation\n     - **Alert email** for failure notifications\n     - **Active events** to subscribe to\n   - Create the webhook.\n\n2. **Receive and Handle Events**:\n   - Ensure your endpoint can accept POST requests.\n   - Validate the webhook signature using the secret key to confirm authenticity.\n   - Process the event payload based on the event type (e.g., payment status updates, refunds).\n\n3. **Implement Retry Logic**:\n   - Design your webhook handler to be idempotent to handle retries safely.\n   - Monitor for failed deliveries and implement retry mechanisms as needed.\n\n## Best Practices\n- Use HTTPS for secure communication.\n- Always verify webhook signatures to ensure the payload is from Razorpay.\n- Store your secret keys securely and avoid hardcoding them in your application.\n- Log event payloads for debugging and reconciliation purposes.\n- Monitor webhook delivery status and set up alerts for failures to ensure timely responses.",
-        "response_time": 7.58,
-        "frontend_time": 8.56,
-        "tokens": 292,
-        "cost": 0.000173
-      }
-    ]
-  },
-  {
     "title": "How does Razorpay authentication work?",
-    "created_at": "2026-05-28T12:38:13",
-    "updated_at": "2026-05-28T12:38:35",
+    "created_at": "2026-05-28T18:23:54",
+    "updated_at": "2026-05-28T18:23:54",
     "messages": [
       {
         "question": "How does Razorpay authentication work?",
-        "answer": "## Summary\nRazorpay authentication utilizes **Basic Authentication** requiring a **Key ID** and **Key Secret** for each API request. The credentials must be encoded in a specific format and included in the request headers.\n\n## Technical Steps\n1. **Prepare Credentials**: Obtain your Key ID and Key Secret from your Razorpay account.\n2. **Create Authorization Header**:\n   - Format: `Authorization: Basic base64(KEY_ID:KEY_SECRET)`\n   - Encode the credentials using Base64.\n3. **Make API Request**:\n   - Include the Authorization header in your API request.\n\n### Example:\n```http\nGET /api/endpoint HTTP/1.1\nHost: api.razorpay.com\nAuthorization: Basic base64(KEY_ID:KEY_SECRET)\n```\n\n## Best Practices\n- **Secure Key Management**: Store your Key ID and Key Secret securely, using environment variables.\n- **Use Test Mode for Development**: Always test in Test Mode to avoid processing real payments.\n- **Regularly Rotate Keys**: Implement key rotation to enhance security.\n- **Log Authentication Failures**: Keep logs of failed authentication attempts for debugging.\n- **Follow Header Formatting Strictly**: Ensure the Authorization header is formatted correctly to avoid common errors.",
-        "response_time": 4.87,
-        "frontend_time": 5.7,
-        "tokens": 263,
-        "cost": 0.000155
-      },
-      {
-        "question": "give me a summary of errors",
-        "answer": "## Summary\nRazorpay API errors provide structured diagnostic information to help identify and resolve issues. Key error parameters include `code`, `description`, `field`, `source`, `step`, `reason`, and `metadata`. Understanding these parameters is crucial for effective debugging and improving the customer experience.\n\n## Technical Steps\n1. **Inspect Error Parameters**:\n   - **`code`**: Identify the high-level error category (e.g., `BAD_REQUEST_ERROR`).\n   - **`description`**: Read the human-readable explanation for context (e.g., `Authentication failed due to incorrect otp`).\n   - **`field`**: Check which request parameter caused the error, if applicable.\n   - **`source`**: Determine the origin of the failure (e.g., `customer`, `bank`).\n   - **`step`**: Identify the process step where the error occurred (e.g., `payment_authentication`).\n\n2. **Validate Request Payloads**:\n   - Ensure all required fields are present and correctly formatted.\n   - Check for invalid or missing credentials and OTPs.\n\n3. **Review Logs**:\n   - Maintain detailed logging to trace errors and identify patterns.\n   - Look for recurring issues that may indicate systemic problems.\n\n4. **Handle Specific Errors**:\n   - For **invalid credentials**: Verify API keys and authentication methods.\n   - For **OTP failures**: Ensure OTP is correctly generated and sent.\n   - For **bank declines**: Review transaction details and customer account status.\n   - For **gateway issues**: Check the status of the payment gateway.\n   - For **network failures**: Inspect network connectivity and retry logic.\n\n## Best Practices\n- **Implement Robust Validation**: Always validate request fields before sending API calls.\n- **Use Webhooks**: Implement webhooks for real-time reconciliation and error handling.\n- **Monitor Systems**: Set up monitoring for API performance and error rates to catch issues early",
-        "response_time": 9.27,
-        "frontend_time": 10.39,
-        "tokens": 406,
-        "cost": 0.000241
+        "answer": "## Summary\nRazorpay authentication utilizes **Basic Authentication** requiring a **Key ID** and **Key Secret** for each API request. The authorization header must be formatted correctly to ensure successful authentication.\n\n## Technical Steps\n1. **Generate API Keys**: Obtain your Key ID and Key Secret from the Razorpay dashboard.\n2. **Format the Authorization Header**:\n   - Use the format: `Authorization: Basic base64(KEY_ID:KEY_SECRET)`\n   - Ensure that `KEY_ID` and `KEY_SECRET` are concatenated with a colon (`:`) and then encoded in base64.\n3. **Include the Header in API Requests**: Add the formatted authorization header to your API requests.\n\n## Best Practices\n- **Secure Key Management**: Store your API keys securely and avoid hardcoding them in your application.\n- **Use Environment Variables**: Load keys from environment variables to enhance security.\n- **Regularly Rotate Keys**: Implement a key rotation policy to minimize security risks.\n- **Log Authentication Failures**: Keep logs of authentication attempts to aid in debugging issues.\n- **Test Mode vs. Live Mode**: Use Test Mode for integration testing and Live Mode for production to avoid processing real payments during development.\n\nBy following these guidelines, you can effectively implement Razorpay authentication in your application.",
+        "response_time": 6.34,
+        "frontend_time": 7.43,
+        "tokens": 272,
+        "cost": 0.00016
       }
     ]
   }

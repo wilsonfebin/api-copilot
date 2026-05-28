@@ -30,6 +30,45 @@ def normalize_intent(intent):
     return intent
 
 
+def is_direct_mcp_tool(tool_result):
+
+    if not tool_result:
+        return False
+
+    return tool_result.get(
+        "tool_name"
+    ) not in [
+        "RetrievalTool",
+        "MCPDisabled",
+    ]
+
+
+def build_tool_response_prompt(
+    question,
+    tool_name,
+    tool_result,
+):
+
+    return f"""
+You are API Copilot.
+
+The user asked:
+{question}
+
+The MCP tool `{tool_name}` returned:
+{tool_result}
+
+Answer using ONLY this tool result.
+
+Rules:
+- Do not say the context is missing.
+- Do not search Razorpay documents.
+- Do not mention unavailable documentation.
+- Be concise and operational.
+- Use markdown.
+"""
+
+
 def intent_node(state):
 
     start = time.time()
@@ -91,6 +130,64 @@ def retrieval_node(state):
         "intent",
         "GENERAL"
     )
+
+    tool_result = state.get(
+        "tool_result"
+    )
+
+    is_direct_tool_response = state.get(
+        "is_direct_tool_response",
+        False
+    )
+
+    if (
+        is_direct_tool_response
+        and tool_result
+    ):
+
+        tool_name = tool_result["tool_name"]
+        tool_content = str(
+            tool_result.get(
+                "data",
+                {}
+            )
+        )
+
+        elapsed = round(
+            time.time() - start,
+            3
+        )
+
+        logger.info(
+            "SKIP RETRIEVAL | "
+            "direct_tool_response=True"
+        )
+
+        logger.info(
+            f"RETRIEVAL SKIPPED | "
+            f"intent={intent} | "
+            f"tool={tool_name}"
+        )
+
+        logger.info(
+            f"GRAPH STATE | sources=['mcp:{tool_name}']"
+        )
+
+        logger.info(
+            f"NODE TIME | RetrievalNode | {elapsed}s"
+        )
+
+        return {
+            "retrieved_context": [
+                tool_content
+            ],
+            "sources": [
+                {
+                    "source": f"mcp:{tool_name}",
+                    "content": tool_content,
+                }
+            ],
+        }
 
     query_embedding = get_embedding(
         question
@@ -190,6 +287,8 @@ def tool_node(state):
         }
 
         metadata["mcp_tool"] = "disabled"
+        metadata["tool_name"] = result["tool_name"]
+        metadata["is_direct_tool_response"] = False
 
     else:
 
@@ -217,6 +316,18 @@ def tool_node(state):
         )
 
         metadata["mcp_tool"] = tool_key
+        metadata["tool_name"] = result["tool_name"]
+        metadata["is_direct_tool_response"] = (
+            is_direct_mcp_tool(
+                result
+            )
+        )
+
+        if metadata["is_direct_tool_response"]:
+            logger.info(
+                f"MCP DIRECT RESPONSE | "
+                f"tool={result['tool_name']}"
+            )
 
     elapsed = round(
         time.time() - start,
@@ -228,7 +339,11 @@ def tool_node(state):
     )
 
     return {
+        "tool_name": result["tool_name"],
         "tool_result": result,
+        "is_direct_tool_response": metadata[
+            "is_direct_tool_response"
+        ],
         "metadata": metadata,
     }
 
@@ -246,6 +361,49 @@ def prompt_node(state):
         {}
     )
 
+    tool_result = state.get(
+        "tool_result"
+    )
+
+    is_direct_tool_response = state.get(
+        "is_direct_tool_response",
+        False
+    )
+
+    if (
+        is_direct_tool_response
+        and tool_result
+    ):
+
+        tool_name = state.get(
+            "tool_name",
+            tool_result["tool_name"]
+        )
+
+        logger.info(
+            f"TOOL RESPONSE PROMPT | "
+            f"tool={tool_name}"
+        )
+
+        prompt = build_tool_response_prompt(
+            question=state["question"],
+            tool_name=tool_name,
+            tool_result=tool_result,
+        )
+
+        elapsed = round(
+            time.time() - start,
+            3
+        )
+
+        logger.info(
+            f"NODE TIME | PromptNode | {elapsed}s"
+        )
+
+        return {
+            "prompt": prompt,
+        }
+
     prompt_builder = get_prompt_builder(
         state.get(
             "intent",
@@ -260,16 +418,21 @@ def prompt_node(state):
         )
     )
 
-    tool_result = state.get(
-        "tool_result"
-    )
-
     if tool_result:
 
-        context = (
-            f"{context}\n\n"
+        tool_context = (
             f"Tool Context:\n{tool_result}"
         )
+
+        if is_direct_mcp_tool(
+            tool_result
+        ):
+            context = tool_context
+        else:
+            context = (
+                f"{context}\n\n"
+                f"{tool_context}"
+            )
 
     prompt = prompt_builder(
         context=context,

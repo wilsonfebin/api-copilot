@@ -397,73 +397,64 @@ with st.sidebar:
 # ========================
 st.title("🚀 API Copilot")
 
-st.subheader(
-    "API Integration Copilot"
-)
-
 st.caption(
     "RAG-powered assistant for debugging and integrating APIs"
 )
 
 # ========================
-# EMPTY STATE
+# DEMO QUERIES
 # ========================
-if st.session_state.active_thread is None:
+left, right = st.columns(2)
+
+suggestions = [
+    "How does Razorpay authentication work?",
+    "How do I capture payments?",
+    "What causes invalid OTP?",
+    "How do webhooks work?",
+    "Explain Razorpay payments in 150 words."
+]
+
+mcp_suggestions = [
+    "How many documents and chunks are indexed?",
+    "Show latest evaluation metrics",
+    "Is the vector database healthy?",
+    "What did we discuss earlier?",
+    "Show system diagnostics",
+]
+
+with left:
 
     st.markdown(
         "### Suggested Questions"
     )
 
-    suggestions = [
-        "How does Razorpay authentication work?",
-        "How do I capture payments?",
-        "What causes invalid OTP?",
-        "How do webhooks work?",
-        "Explain Razorpay payments in 150 words."
-    ]
-
     for q in suggestions:
 
         if st.button(
             q,
-            key=f"suggestion_{q}"
+            key=f"suggestion_{q}",
+            use_container_width=True
         ):
 
             st.session_state.user_query = q
             st.rerun()
 
+with right:
 
-# ========================
-# CHAT DISPLAY
-# ========================
-if st.session_state.active_thread is not None:
+    st.markdown(
+        "### 🛠 MCP Tool Demo"
+    )
 
-    msgs = st.session_state.threads[
-        st.session_state.active_thread
-    ]["messages"]
+    for q in mcp_suggestions:
 
-    for chat in msgs:
+        if st.button(
+            q,
+            key=f"mcp_suggestion_{q}",
+            use_container_width=True
+        ):
 
-        with st.chat_message("user"):
-            st.write(chat["question"])
-
-        with st.chat_message("assistant"):
-
-            render_answer(
-                chat["answer"]
-            )
-
-            frontend_time = chat.get(
-                "frontend_time",
-                "-"
-            )
-
-            st.caption(
-                f"Backend: {chat['response_time']}s • "
-                f"Frontend: {frontend_time}s • "
-                f"{chat['tokens']} tokens • "
-                f"${chat['cost']:.5f}"
-            )
+            st.session_state.user_query = q
+            st.rerun()
 
 
 # ========================
@@ -478,6 +469,9 @@ if "user_query" in st.session_state:
     query = st.session_state.user_query
 
     del st.session_state.user_query
+
+
+rendered_current_response = False
 
 
 if query:
@@ -671,4 +665,47 @@ if query:
             st.session_state.threads[:MAX_THREADS]
         )
 
-        st.rerun()
+        rendered_current_response = True
+
+
+# ========================
+# CHAT DISPLAY
+# ========================
+if st.session_state.active_thread is not None:
+
+    msgs = st.session_state.threads[
+        st.session_state.active_thread
+    ]["messages"]
+
+    visible_messages = list(
+        reversed(msgs)
+    )
+
+    if (
+        rendered_current_response
+        and visible_messages
+    ):
+        visible_messages = visible_messages[1:]
+
+    for chat in visible_messages:
+
+        with st.chat_message("user"):
+            st.write(chat["question"])
+
+        with st.chat_message("assistant"):
+
+            render_answer(
+                chat["answer"]
+            )
+
+            frontend_time = chat.get(
+                "frontend_time",
+                "-"
+            )
+
+            st.caption(
+                f"Backend: {chat['response_time']}s • "
+                f"Frontend: {frontend_time}s • "
+                f"{chat['tokens']} tokens • "
+                f"${chat['cost']:.5f}"
+            )
