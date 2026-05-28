@@ -25,6 +25,16 @@ CACHE_SIZE = int(os.getenv("CACHE_SIZE", 50))
 TOP_K = int(os.getenv("TOP_K", 2))
 
 # ========================
+# GUARDRAILS
+# ========================
+ENABLE_GUARDRAILS = (
+    os.getenv("ENABLE_GUARDRAILS", "true").lower()
+    == "true"
+)
+MIN_RESPONSE_LENGTH = int(os.getenv("MIN_RESPONSE_LENGTH", 20))
+MAX_RESPONSE_WORDS = int(os.getenv("MAX_RESPONSE_WORDS", 500))
+
+# ========================
 # LLM
 # ========================
 MAX_TOKENS = int(os.getenv("MAX_TOKENS", 500))

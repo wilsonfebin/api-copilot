@@ -3,6 +3,7 @@ import time
 import json
 import queue
 import threading
+from datetime import datetime
 import requests
 import streamlit as st
 
@@ -62,6 +63,30 @@ def save_threads(threads):
 
     with open(THREAD_FILE, "w") as f:
         json.dump(threads, f, indent=2)
+
+
+def normalize_threads(threads):
+
+    now = timestamp()
+
+    for thread in threads:
+
+        thread.setdefault(
+            "created_at",
+            now
+        )
+
+        thread.setdefault(
+            "updated_at",
+            thread["created_at"]
+        )
+
+        thread.setdefault(
+            "messages",
+            []
+        )
+
+    return threads
 
 
 # ========================
@@ -230,11 +255,20 @@ def render_answer_html(answer):
     """
 
 
+def timestamp():
+
+    return datetime.now().isoformat(
+        timespec="seconds"
+    )
+
+
 # ========================
 # INIT
 # ========================
 if "threads" not in st.session_state:
-    st.session_state.threads = load_threads()
+    st.session_state.threads = normalize_threads(
+        load_threads()
+    )
 
 if "active_thread" not in st.session_state:
     st.session_state.active_thread = None
@@ -608,12 +642,30 @@ if query:
             "cost": res["cost"]
         }
 
-        st.session_state.threads.insert(0, {
-            "title": query,
-            "messages": [payload]
-        })
+        if st.session_state.active_thread is not None:
 
-        st.session_state.active_thread = 0
+            active_thread = st.session_state.active_thread
+
+            st.session_state.threads[
+                active_thread
+            ]["messages"].append(payload)
+
+            st.session_state.threads[
+                active_thread
+            ]["updated_at"] = timestamp()
+
+        else:
+
+            now = timestamp()
+
+            st.session_state.threads.insert(0, {
+                "title": query,
+                "created_at": now,
+                "updated_at": now,
+                "messages": [payload]
+            })
+
+            st.session_state.active_thread = 0
 
         save_threads(
             st.session_state.threads[:MAX_THREADS]

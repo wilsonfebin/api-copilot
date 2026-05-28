@@ -2,6 +2,7 @@ import re
 import time
 
 from backend.agents.intent_router import classify_query
+from backend.guardrails.validator import run_guardrails
 from backend.utils.logger import logger
 from llm.client import ask_llm, get_embedding
 from rag.retrieve import (
@@ -325,6 +326,49 @@ def validation_node(state):
             "GRAPH VALIDATION | missing_sources"
         )
 
+    guardrail_result = run_guardrails(
+        state
+    )
+
+    logger.info(
+        f"GUARDRAIL CHECK | "
+        f"passed={guardrail_result['passed']}"
+    )
+
+    for warning in guardrail_result["warnings"]:
+        logger.warning(
+            f"GUARDRAIL WARNING | {warning}"
+        )
+
+    metadata = state.get(
+        "metadata",
+        {}
+    )
+
+    metadata["guardrails"] = guardrail_result
+
+    if not guardrail_result["passed"]:
+
+        logger.error(
+            f"GUARDRAIL BLOCKED | "
+            f"{guardrail_result['blocked_reason']}"
+        )
+
+        elapsed = round(
+            time.time() - start,
+            3
+        )
+
+        logger.info(
+            f"NODE TIME | ValidationNode | {elapsed}s"
+        )
+
+        return {
+            "answer": "Request blocked by safety validation.",
+            "sources": [],
+            "metadata": metadata,
+        }
+
     elapsed = round(
         time.time() - start,
         3
@@ -337,4 +381,5 @@ def validation_node(state):
     return {
         "answer": answer or "Error processing request",
         "sources": sources,
+        "metadata": metadata,
     }
