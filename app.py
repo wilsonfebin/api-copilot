@@ -16,7 +16,7 @@ MAX_THREADS = 10
 THREAD_FILE = "data/threads.json"
 BACKEND_URL = os.getenv(
     "BACKEND_URL",
-    "http://localhost:8000"
+    "http://backend:8000"
 )
 
 st.set_page_config(
