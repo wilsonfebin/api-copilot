@@ -1,12 +1,17 @@
 import argparse
 import json
 import os
+from datetime import datetime
+from pathlib import Path
 from statistics import mean
 
 from backend.agents.workflow import run_agentic_flow
 from backend.services.rag_service import run_query
 from backend.utils.logger import logger
 from evaluation.test_cases import EVALUATION_CASES
+
+
+BASELINE_DIR = Path("evaluation/baselines")
 
 
 def load_deepeval():
@@ -154,6 +159,33 @@ def print_report(report: dict):
     print(json.dumps(report, indent=2))
 
 
+def save_baseline(report: dict):
+
+    BASELINE_DIR.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    timestamp = report["timestamp"]
+
+    path = BASELINE_DIR / (
+        f"evaluation_baseline_{timestamp}.json"
+    )
+
+    with open(path, "w") as f:
+        json.dump(report, f, indent=2)
+
+    logger.info(
+        f"BASELINE SAVED | {path}"
+    )
+
+    print(
+        f"BASELINE SAVED | {path}"
+    )
+
+    return path
+
+
 def main():
 
     parser = argparse.ArgumentParser(
@@ -202,7 +234,14 @@ def main():
         for case in EVALUATION_CASES
     ]
 
+    timestamp = datetime.now().strftime(
+        "%Y%m%d_%H%M%S"
+    )
+
     report = {
+        "timestamp": timestamp,
+        "model": args.model,
+        "threshold": args.threshold,
         "summary": summarize(results),
         "results": results,
     }
@@ -211,6 +250,8 @@ def main():
         f"EVALUATION DONE | "
         f"cases={len(results)}"
     )
+
+    save_baseline(report)
 
     print_report(report)
 

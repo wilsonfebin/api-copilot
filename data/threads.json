@@ -4,37 +4,11 @@
     "messages": [
       {
         "question": "How does Razorpay authentication work?",
-        "answer": "## Summary\nRazorpay authentication utilizes **Basic Authentication** requiring a **Key ID** and **Key Secret** for each API request. The credentials must be encoded in a specific format within the `Authorization` header.\n\n## Technical Steps\n1. **Prepare Credentials**: Obtain your **Key ID** and **Key Secret** from your Razorpay account.\n2. **Base64 Encode**: Format the credentials as `KEY_ID:KEY_SECRET` and encode this string in Base64.\n3. **Set Authorization Header**: Include the following header in your API request:\n   ```text\n   Authorization: Basic base64(KEY_ID:KEY_SECRET)\n   ```\n4. **Make API Request**: Send your API request with the properly formatted header.\n\n## Best Practices\n- Ensure the `Authorization` header follows the exact format; avoid incorrect casing or extra characters.\n- Regularly rotate your API keys and manage them securely.\n- Use environment variables to store credentials and follow least-privilege security practices.\n- Log authentication failures to assist in debugging and auditing your integrations.",
-        "response_time": 6.83,
-        "frontend_time": 7.59,
-        "tokens": 223,
-        "cost": 0.000131
-      }
-    ]
-  },
-  {
-    "title": "How does Razorpay authentication work?",
-    "messages": [
-      {
-        "question": "How does Razorpay authentication work?",
-        "answer": "## Summary\nRazorpay authentication utilizes **Basic Authentication** requiring a combination of **Key ID** and **Key Secret** for each API request. The credentials must be encoded in base64 and included in the `Authorization` header.\n\n## Technical Steps\n1. **Prepare Credentials**: Obtain your **Key ID** and **Key Secret** from your Razorpay account.\n2. **Base64 Encode**: Format your credentials as `KEY_ID:KEY_SECRET` and encode this string in base64.\n3. **Set Authorization Header**: Include the encoded string in the `Authorization` header of your API request:\n   ```text\n   Authorization: Basic base64(KEY_ID:KEY_SECRET)\n   ```\n4. **Choose Mode**: Decide between **Test Mode** for integration testing or **Live Mode** for production.\n\n## Best Practices\n- Ensure the `Authorization` header strictly follows the specified format.\n- Regularly rotate your API keys and manage them securely.\n- Log authentication failures to assist in debugging.\n- Use environment variables to store your credentials securely.\n- Follow least-privilege security practices to minimize exposure.",
-        "response_time": 5.22,
-        "frontend_time": 6.02,
-        "tokens": 234,
-        "cost": 0.000137
-      }
-    ]
-  },
-  {
-    "title": "How do I capture payments?",
-    "messages": [
-      {
-        "question": "How do I capture payments?",
-        "answer": "## Summary\nTo capture payments using the Razorpay Payments API, you need to send a POST request to the appropriate endpoint with the payment ID of the authorized payment.\n\n## Technical Steps\n1. **Verify Payment Status**: Ensure the payment status is `authorized` before proceeding to capture.\n2. **Prepare API Request**:\n   - Endpoint: `POST /v1/payments/:id/capture`\n   - Replace `:id` with the actual payment ID.\n3. **Send Request**: Include necessary headers (e.g., authorization) and any required parameters in the body.\n4. **Handle Response**: Check for success or errors in the response. Log payment IDs for reconciliation.\n\n## Best Practices\n- Always verify payment status before capture to avoid duplicate captures.\n- Implement error handling for unauthorized access, invalid payment IDs, capture failures, and rate limits.\n- Use webhook integrations to monitor payment events and updates.\n- Secure payment identifiers and customer data throughout the process.",
-        "response_time": 4.71,
-        "frontend_time": 9.58,
-        "tokens": 204,
-        "cost": 0.00012
+        "answer": "## Summary\nRazorpay authentication utilizes Basic Authentication, requiring a Key ID and Key Secret for each API request. The authorization header must be correctly formatted to ensure successful authentication.\n\n## Technical Steps\n1. **Credentials**: Obtain your Key ID and Key Secret from your Razorpay account.\n2. **Authorization Header**: Construct the header using the following format:\n   ```text\n   Authorization: Basic base64(KEY_ID:KEY_SECRET)\n   ```\n   - Ensure that `KEY_ID` and `KEY_SECRET` are concatenated with a colon (`:`) and then encoded in base64.\n3. **Send Request**: Include the constructed `Authorization` header in your API requests.\n\n## Best Practices\n- **Secure Key Management**: Store your API keys securely, using environment variables or secure vaults.\n- **Test vs. Live Mode**: Use Test Mode for integration testing and Live Mode for production to avoid processing real payments during development.\n- **Regular Key Rotation**: Rotate your API keys periodically to enhance security.\n- **Log Failures**: Implement logging for authentication failures to assist in debugging.\n- **Avoid Common Mistakes**: Ensure correct casing, include all credentials, and follow the strict header formatting to prevent authentication errors.",
+        "response_time": 6.29,
+        "frontend_time": 7.2,
+        "tokens": 259,
+        "cost": 0.000152
       }
     ]
   }

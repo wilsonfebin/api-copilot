@@ -1,0 +1,123 @@
+{
+  "timestamp": "20260528_121946",
+  "model": "gpt-4o-mini",
+  "threshold": 0.7,
+  "summary": {
+    "AnswerRelevancyMetric": {
+      "average_score": 0.9773,
+      "passed": 4,
+      "total": 4
+    },
+    "FaithfulnessMetric": {
+      "average_score": 0.9722,
+      "passed": 4,
+      "total": 4
+    }
+  },
+  "results": [
+    {
+      "name": "auth_basics",
+      "question": "How does Razorpay authentication work?",
+      "answer": "## Summary\nRazorpay authentication utilizes Basic Authentication, requiring a combination of Key ID and Key Secret to securely authenticate API requests.\n\n## Technical Steps\n1. **Credentials**: Obtain your Key ID and Key Secret from your Razorpay account.\n2. **Authorization Header**: Format the authorization header as follows:\n   ```text\n   Authorization: Basic base64(KEY_ID:KEY_SECRET)\n   ```\n   - Ensure that `KEY_ID` and `KEY_SECRET` are concatenated with a colon (`:`) and then encoded in base64.\n3. **Make API Requests**: Include the formatted authorization header in all API requests.\n\n## Best Practices\n- **Secure Key Management**: Store your API keys securely and avoid hardcoding them in your application.\n- **Environment Variables**: Use environment variables to manage your keys, especially in production.\n- **Test vs. Live Mode**: Use Test Mode for integration testing and Live Mode for production to handle real payments.\n- **Regular Key Rotation**: Rotate your API keys regularly to enhance security.\n- **Log Failures**: Implement logging for authentication failures to aid in debugging.\n- **Common Mistakes**: Avoid incorrect casing, missing credentials, and improper base64 formatting to prevent authentication errors.",
+      "intent": "AUTH",
+      "sources": [
+        "razorpay_auth.txt"
+      ],
+      "response_time": 4.55,
+      "tokens": 260,
+      "cost": 0.000153,
+      "metrics": [
+        {
+          "name": "AnswerRelevancyMetric",
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addressed the question about Razorpay authentication without any irrelevant statements."
+        },
+        {
+          "name": "FaithfulnessMetric",
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        }
+      ]
+    },
+    {
+      "name": "capture_payments",
+      "question": "How do I capture payments?",
+      "answer": "## Summary\nTo capture payments using the Razorpay Payments API, you need to send a POST request to the capture endpoint with the appropriate payment ID.\n\n## Technical Steps\n1. **Verify Payment Status**: Ensure the payment status is `authorized` before proceeding to capture.\n2. **Send Capture Request**:\n   ```http\n   POST /v1/payments/:id/capture\n   ```\n   Replace `:id` with the actual payment ID you wish to capture.\n3. **Handle API Response**: Check the response for success or errors. Log the payment ID for reconciliation.\n\n## Best Practices\n- Always verify the payment status before capturing to avoid duplicate captures.\n- Implement error handling for unauthorized access, invalid payment IDs, capture failures, and rate limits.\n- Use webhook integrations to monitor payment events and updates.\n- Secure payment identifiers and customer data throughout the process.",
+      "intent": "PAYMENTS",
+      "sources": [
+        "razorpay_payments.txt"
+      ],
+      "response_time": 3.48,
+      "tokens": 184,
+      "cost": 0.000108,
+      "metrics": [
+        {
+          "name": "AnswerRelevancyMetric",
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the question about capturing payments without any irrelevant statements."
+        },
+        {
+          "name": "FaithfulnessMetric",
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        }
+      ]
+    },
+    {
+      "name": "invalid_otp",
+      "question": "What causes invalid OTP errors?",
+      "answer": "## Summary\nInvalid OTP errors typically occur due to incorrect one-time passwords being entered by the customer during the payment authentication process. This can happen for various reasons, including user error or timing issues with OTP expiration.\n\n## Technical Steps\n1. **Inspect Request Payload**: Check the payload for the OTP field to ensure the correct OTP is being sent.\n2. **Validate OTP**: Ensure that the OTP being used has not expired and matches the one generated for the transaction.\n3. **Log Details**: Capture and log the following for further analysis:\n   - `payment_id`\n   - `order_id`\n   - `code` (e.g., `BAD_REQUEST_ERROR`)\n   - `reason` (e.g., `invalid_otp`)\n4. **Retry Mechanism**: Implement a retry mechanism that allows the customer to attempt entering the OTP again without losing their transaction context.\n\n## Best Practices\n- **Notify Customers**: Inform customers immediately when an invalid OTP is detected and prompt them to retry with the correct OTP.\n- **Preserve Payment Flow**: Ensure that the payment flow remains uninterrupted while the customer retries the OTP.\n- **Monitor Patterns**: Keep track of recurring invalid OTP errors to identify potential issues in the authentication process or user experience.\n- **Avoid Raw Error Exposure**: Do not expose internal error messages to customers; instead, provide user-friendly descriptions.",
+      "intent": "ERRORS",
+      "sources": [
+        "razorpay_errors.txt"
+      ],
+      "response_time": 8.43,
+      "tokens": 285,
+      "cost": 0.000168,
+      "metrics": [
+        {
+          "name": "AnswerRelevancyMetric",
+          "score": 0.9090909090909091,
+          "success": true,
+          "reason": "The score is 0.91 because while the response provided relevant information about OTP errors, it included an irrelevant statement about internal error messages that did not directly address the causes of invalid OTP errors."
+        },
+        {
+          "name": "FaithfulnessMetric",
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+        }
+      ]
+    },
+    {
+      "name": "webhook_flow",
+      "question": "How do Razorpay webhooks work?",
+      "answer": "## Summary\nRazorpay Webhooks enable real-time notifications for specific events related to transactions and onboarding. They deliver payloads to a configured endpoint whenever subscribed events occur.\n\n## Technical Steps\n1. **Setup Webhook**:\n   - Log in to the Razorpay Dashboard.\n   - Navigate to Partner Dashboard \u2192 Settings \u2192 Webhooks.\n   - Configure the Webhook URL (HTTPS recommended) and a secret key for signature validation.\n\n2. **Event Delivery**:\n   - When a subscribed event is triggered, Razorpay sends a payload to the configured endpoint URL.\n\n3. **Signature Validation**:\n   - Use the secret key to validate the signature of incoming webhook requests to ensure they are from Razorpay.\n\n4. **Handle Events**:\n   - Implement logic to process the received events, such as updating payment statuses or handling refunds.\n\n5. **Retry Mechanism**:\n   - If the webhook delivery fails (due to downtime, signature mismatch, etc.), Razorpay will attempt to resend the webhook based on its retry policy.\n\n## Best Practices\n- **Maintain Uptime**: Ensure your endpoint is always available to receive webhooks.\n- **Implement Idempotency**: Design your event handling logic to be idempotent to avoid processing the same event multiple times.\n- **Monitor Health**: Continuously monitor the health of your webhook endpoint to catch issues early.\n- **Log Events**: Keep logs of received webhook events for troubleshooting and reconciliation purposes.",
+      "intent": "WEBHOOKS",
+      "sources": [
+        "razorpay_webhooks.txt"
+      ],
+      "response_time": 5.18,
+      "tokens": 303,
+      "cost": 0.000178,
+      "metrics": [
+        {
+          "name": "AnswerRelevancyMetric",
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addressed the question about how Razorpay webhooks work without including any irrelevant information."
+        },
+        {
+          "name": "FaithfulnessMetric",
+          "score": 0.8888888888888888,
+          "success": true,
+          "reason": "The score is 0.89 because the actual output lacks specific details about the navigation path for setting up a webhook, which is crucial information that was not provided in the retrieval context."
+        }
+      ]
+    }
+  ]
+}

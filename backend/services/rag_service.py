@@ -1,16 +1,15 @@
 import time
 from functools import lru_cache
 
+from backend.langgraph.router import run_rag_graph
 from backend.utils.logger import logger
 from backend.config import (
     RETRY_COUNT,
     RETRY_DELAY,
     REQUEST_TIMEOUT,
-    TOP_K,
     CACHE_SIZE,
 )
 
-from rag.retrieve import answer_query
 from utils.metrics import estimate_tokens, estimate_cost
 
 
@@ -32,10 +31,9 @@ def normalize_intent(intent):
 # ========================
 @lru_cache(maxsize=CACHE_SIZE)
 def cached_answer(question: str, intent: str = "GENERAL"):
-    return answer_query(
-        question,
-        top_k=TOP_K,
-        intent=intent
+    return run_rag_graph(
+        question=question,
+        intent=intent,
     )
 
 

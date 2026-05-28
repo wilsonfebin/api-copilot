@@ -7,3 +7,4 @@ openai
 tiktoken
 python-dotenv
 deepeval
+langgraph

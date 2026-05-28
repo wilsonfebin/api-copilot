@@ -8,3 +8,4 @@ streamlit
 tiktoken
 python-dotenv
 deepeval
+langgraph
