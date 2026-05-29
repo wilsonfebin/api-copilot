@@ -1,56 +1,30 @@
-name: CI
+name: Deploy Streamlit Branch
 
 on:
   push:
-    branches: [ main, feature/codex-dev ]
-  pull_request:
-
-# Optional: force newer Node runtime for GitHub Actions
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    branches:
+      - feature/codex-dev
 
 jobs:
-  build-and-check:
+  streamlit-deploy-check:
     runs-on: ubuntu-latest
 
     steps:
-      # 1) Checkout repository
-      - name: Checkout code
+      - name: Checkout feature branch
         uses: actions/checkout@v4
 
-      # 2) Setup Python runtime
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      # 3) Install dependencies
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt || true
-          if [ -f requirements_backend.txt ]; then pip install -r requirements_backend.txt; fi
-          if [ -f requirements_ui.txt ]; then pip install -r requirements_ui.txt; fi
-
-      # 4) Syntax validation
-      - name: Python compile check
+          pip install -r requirements.txt
+          
+      - name: Compile check
         run: python -m compileall .
 
-      # 5) Lint (non-blocking)
-      - name: Lint (optional)
+      - name: Deployment note
         run: |
-          pip install flake8
-          flake8 . --max-line-length=120 || true
-
-      # 6) Build backend Docker image
-      - name: Build backend image
-        run: |
-          if [ -f backend/Dockerfile ]; then
-            docker build -t api-copilot-backend -f backend/Dockerfile .
-          fi
-
-      # 7) Build UI Docker image
-      - name: Build UI image
-        run: |
-          if [ -f Dockerfile.ui ]; then
-            docker build -t api-copilot-ui -f Dockerfile.ui .
-          fi
+          echo "Streamlit Cloud will redeploy automatically if the app is configured to track feature/codex-dev."
