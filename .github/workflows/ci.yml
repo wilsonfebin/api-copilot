@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, feature/codex-de ]
+    branches: [ main, feature/codex-dev ]
   pull_request:
 
 # Optional: force newer Node runtime for GitHub Actions
