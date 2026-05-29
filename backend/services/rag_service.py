@@ -4,10 +4,12 @@ from functools import lru_cache
 from backend.langgraph.router import run_rag_graph
 from backend.utils.logger import logger
 from backend.config import (
+    DEFAULT_LLM_PROVIDER,
     RETRY_COUNT,
     RETRY_DELAY,
     REQUEST_TIMEOUT,
     CACHE_SIZE,
+    get_default_model,
 )
 
 from utils.metrics import estimate_tokens, estimate_cost
@@ -30,10 +32,21 @@ def normalize_intent(intent):
 # CACHED RAG CALL
 # ========================
 @lru_cache(maxsize=CACHE_SIZE)
-def cached_answer(question: str, intent: str = "GENERAL"):
+def cached_answer(
+    question: str,
+    intent: str = "GENERAL",
+    llm_provider: str = DEFAULT_LLM_PROVIDER,
+    model: str | None = None,
+):
+    model = model or get_default_model(
+        llm_provider
+    )
+
     return run_rag_graph(
         question=question,
         intent=intent,
+        llm_provider=llm_provider,
+        model=model,
     )
 
 
@@ -67,6 +80,8 @@ def run_query(
     intent: str = "GENERAL",
     tool: dict | None = None,
     include_context: bool = False,
+    llm_provider: str = DEFAULT_LLM_PROVIDER,
+    model: str | None = None,
 ):
 
     try:
@@ -75,10 +90,16 @@ def run_query(
             intent
         )
 
+        model = model or get_default_model(
+            llm_provider
+        )
+
         start = time.time()
 
         logger.info(
-            f"RAG START | intent={intent} | question={question}"
+            f"RAG START | intent={intent} | "
+            f"provider={llm_provider} | "
+            f"model={model} | question={question}"
         )
 
         # ========================
@@ -88,7 +109,9 @@ def run_query(
 
             return cached_answer(
                 question,
-                intent
+                intent,
+                llm_provider,
+                model,
             )
 
         result = retry_call(execute)
@@ -100,12 +123,21 @@ def run_query(
 
         answer = result["answer"]
 
-        in_tokens = estimate_tokens(question)
-        out_tokens = estimate_tokens(answer)
+        in_tokens = estimate_tokens(
+            question,
+            model=model
+        )
+
+        out_tokens = estimate_tokens(
+            answer,
+            model=model
+        )
 
         logger.info(
             f"RAG DONE | "
             f"intent={intent} | "
+            f"provider={llm_provider} | "
+            f"model={model} | "
             f"{elapsed}s | "
             f"tokens={in_tokens + out_tokens}"
         )
@@ -118,13 +150,20 @@ def run_query(
             ),
             "response_time": elapsed,
             "tokens": in_tokens + out_tokens,
-            "cost": estimate_cost(in_tokens, out_tokens),
+            "cost": estimate_cost(
+                in_tokens,
+                out_tokens,
+                provider=llm_provider,
+                model=model,
+            ),
 
             # ========================
             # AGENT METADATA
             # ========================
             "intent": intent,
             "tool": tool,
+            "llm_provider": llm_provider,
+            "model": model,
         }
 
         if include_context:
@@ -149,4 +188,8 @@ def run_query(
             "cost": 0.0,
             "intent": intent,
             "tool": tool,
+            "llm_provider": llm_provider,
+            "model": model or get_default_model(
+                llm_provider
+            ),
         }

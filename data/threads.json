@@ -1,32 +1,35 @@
 [
   {
-    "title": "How many documents and chunks are indexed?",
-    "created_at": "2026-05-29T02:32:46",
-    "updated_at": "2026-05-29T02:42:23",
+    "title": "How does Razorpay authentication work?",
+    "created_at": "2026-05-29T20:01:17",
+    "updated_at": "2026-05-29T20:01:17",
     "messages": [
       {
-        "question": "How many documents and chunks are indexed?",
-        "answer": "The indexed data is as follows:\n\n- **Documents:** 4\n- **Chunks:** 21\n- **Collection Status:** Active",
-        "response_time": 2.89,
-        "frontend_time": 2.93,
-        "tokens": 35,
-        "cost": 1.7e-05
-      },
-      {
-        "question": "Explain Razorpay payments in 150 words.",
-        "answer": "## Summary\nRazorpay Payments APIs facilitate the management of payment lifecycles, enabling developers to capture authorized payments, retrieve payment details, and link payments to orders. The core states of payments include `authorized` (payment approved but not captured) and `captured` (payment successfully collected).\n\n## Technical Steps\n1. **Capture Payment**: Use the endpoint `POST /v1/payments/:id/capture` to capture authorized payments.\n2. **Verify Payment Status**: Always check the payment status before attempting to capture.\n3. **Log Payment IDs**: Maintain logs of payment IDs for reconciliation and debugging purposes.\n\n## Best Practices\n- Implement error handling for unauthorized access, invalid payment IDs, capture failures, and rate limits.\n- Avoid duplicate captures by verifying payment status.\n- Utilize webhook integrations for real-time payment event notifications.\n- Securely manage payment identifiers and customer data.\n- Monitor reconciliation workflows to ensure accuracy in transaction tracking.",
-        "response_time": 5.71,
-        "frontend_time": 5.79,
-        "tokens": 201,
-        "cost": 0.000117
-      },
+        "question": "How does Razorpay authentication work?",
+        "answer": "## Summary\n\nRazorpay uses **Basic Authentication** for all API requests. Each request must include your **Key ID** and **Key Secret** encoded in a specific format within the `Authorization` header.\n\n---\n\n## Technical Steps\n\n1. **Obtain Credentials**\n   - Get your **Key ID** and **Key Secret** from the Razorpay dashboard (separate for Test and Live modes).\n\n2. **Create the Authorization Header**\n   - Concatenate your credentials: `KEY_ID:KEY_SECRET`\n   - Base64 encode the result.\n   - Set the HTTP header:\n     ```http\n     Authorization: Basic base64(KEY_ID:KEY_SECRET)\n     ```\n   - Example (pseudo-code):\n     ```python\n     import base64\n     token = base64.b64encode(f\"{KEY_ID}:{KEY_SECRET}\".encode()).decode()\n     headers = {\"Authorization\": f\"Basic {token}\"}\n     ```\n\n3. **Send API Requests**\n   - Include the `Authorization` header in every API call.\n\n---\n\n## Best Practices\n\n- **Strict Header Format:** Use exact casing and format: `Authorization: Basic <base64string>`. Do not add quotes or variables.\n- **Key Management:** Store keys securely (e.g., environment variables). Never hardcode in source code.\n- **Test vs. Live:** Use separate keys for test and production environments.\n- **Key Rotation:** Rotate keys regularly and remove unused/old keys.\n- **Audit & Logging:** Log authentication failures for debugging and audit integrations periodically.\n- **Least Privilege:** Use keys with only the necessary permissions.\n\n---\n\n**Common Mistakes:**  \n- Incorrect header casing or format  \n- Missing credentials  \n- Improper base64 encoding  \n- Using expired or invalid keys",
+        "response_time": 6.72,
+        "frontend_time": 6.72,
+        "tokens": 279,
+        "cost": 0.000439,
+        "llm_provider": "openai",
+        "model": "gpt-4.1"
+      }
+    ]
+  },
+  {
+    "title": "Show latest evaluation metrics",
+    "created_at": "2026-05-29T18:56:48",
+    "updated_at": "2026-05-29T18:56:48",
+    "messages": [
       {
         "question": "Show latest evaluation metrics",
-        "answer": "### Latest Evaluation Metrics\n\n- **Model:** gpt-4o-mini\n- **Timestamp:** 20260528_183634\n- **Threshold:** 0.7\n\n#### Summary\n- **Answer Relevancy Metric**\n  - Average Score: 0.8796\n  - Passed: 4\n  - Total: 4\n\n- **Faithfulness Metric**\n  - Average Score: 1.0\n  - Passed: 4\n  - Total: 4\n\n#### Latest Baseline\n- **File:** evaluation/baselines/evaluation_baseline_20260528_183634.json",
-        "response_time": 3.02,
-        "frontend_time": 3.05,
-        "tokens": 132,
-        "cost": 7.7e-05
+        "answer": "### Latest Evaluation Metrics\n\n**Provider: OpenAI (model: gpt-4.1-mini)**  \n- **Answer Relevancy:** 1.0 (4/4 passed)  \n- **Faithfulness:** 1.0 (4/4 passed)  \n- **Threshold:** 0.7  \n- **Timestamp:** 2026-05-29 18:22:04  \n\n**Provider: Claude (model: claude-haiku-4-5-20251001)**  \n- **Answer Relevancy:** 0.9101 (4/4 passed)  \n- **Faithfulness:** 1.0 (4/4 passed)  \n- **Threshold:** 0.7  \n- **Timestamp:** 2026-05-29 18:30:42",
+        "response_time": 0.0,
+        "frontend_time": 0.0,
+        "tokens": 67,
+        "cost": 0.000101,
+        "llm_provider": "openai",
+        "model": "gpt-4.1-mini"
       }
     ]
   }

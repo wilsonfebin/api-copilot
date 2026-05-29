@@ -2,7 +2,11 @@ import re
 import time
 
 from backend.agents.intent_router import classify_query
-from backend.config import ENABLE_MCP
+from backend.config import (
+    DEFAULT_LLM_PROVIDER,
+    ENABLE_MCP,
+    get_default_model,
+)
 from backend.guardrails.validator import run_guardrails
 from backend.mcp.router import route_tool
 from backend.utils.logger import logger
@@ -469,8 +473,33 @@ def response_generation_node(state):
         {}
     )
 
+    llm_provider = state.get(
+        "llm_provider",
+        metadata.get(
+            "llm_provider",
+            DEFAULT_LLM_PROVIDER
+        )
+    )
+
+    model = state.get(
+        "model",
+        metadata.get(
+            "model",
+            get_default_model(
+                llm_provider
+            )
+        )
+    )
+
+    logger.info(
+        f"LLM PROVIDER | provider={llm_provider} | "
+        f"model={model}"
+    )
+
     answer = ask_llm(
-        state["prompt"]
+        state["prompt"],
+        provider=llm_provider,
+        model=model,
     )
 
     word_limit = metadata.get(
@@ -488,7 +517,9 @@ def response_generation_node(state):
         )
 
         compressed_answer = ask_llm(
-            compression_prompt
+            compression_prompt,
+            provider=llm_provider,
+            model=model,
         )
 
         if (

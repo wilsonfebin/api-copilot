@@ -7,6 +7,11 @@ from pathlib import Path
 import streamlit as st
 
 from backend.agents.workflow import run_agentic_flow
+from backend.config import (
+    DEFAULT_LLM_PROVIDER,
+    SUPPORTED_MODELS,
+    get_default_model,
+)
 from backend.services.rag_service import run_query
 from rag.vector_store import get_vector_stats
 from utils.styles import load_css
@@ -92,7 +97,11 @@ def normalize_threads(threads):
 # ========================
 # BACKEND
 # ========================
-def call_backend(query):
+def call_backend(
+    query,
+    llm_provider=DEFAULT_LLM_PROVIDER,
+    model_name=None,
+):
 
     try:
 
@@ -102,10 +111,16 @@ def call_backend(query):
             query
         )
 
+        model_name = model_name or get_default_model(
+            llm_provider
+        )
+
         data = run_query(
             question=query,
             intent=agent_state["intent"],
-            tool=agent_state["tool"]
+            tool=agent_state["tool"],
+            llm_provider=llm_provider,
+            model=model_name,
         )
 
         frontend_elapsed = round(
@@ -371,6 +386,20 @@ with st.sidebar:
     st.header("System Overview")
     st.caption("API Copilot v2 Beta")
 
+    llm_provider = st.selectbox(
+        "LLM Provider",
+        list(SUPPORTED_MODELS.keys()),
+        index=list(SUPPORTED_MODELS.keys()).index(
+            DEFAULT_LLM_PROVIDER
+        )
+    )
+
+    model_name = st.selectbox(
+        "Model",
+        SUPPORTED_MODELS[llm_provider],
+        index=0
+    )
+
     st.markdown("### System Health")
 
     for label, status in [
@@ -580,7 +609,9 @@ if query:
         def run():
 
             result["data"] = call_backend(
-                query
+                query,
+                llm_provider=llm_provider,
+                model_name=model_name,
             )
 
         worker_thread = threading.Thread(
@@ -628,6 +659,8 @@ if query:
             )
 
             st.caption(
+                f"Provider: {res.get('llm_provider', llm_provider)} • "
+                f"Model: {res.get('model', model_name)} • "
                 f"Backend: {res['response_time']}s • "
                 f"Frontend: {res['frontend_time']}s • "
                 f"{res['tokens']} tokens • "
@@ -651,7 +684,15 @@ if query:
             "response_time": res["response_time"],
             "frontend_time": res["frontend_time"],
             "tokens": res["tokens"],
-            "cost": res["cost"]
+            "cost": res["cost"],
+            "llm_provider": res.get(
+                "llm_provider",
+                llm_provider
+            ),
+            "model": res.get(
+                "model",
+                model_name
+            )
         }
 
         if st.session_state.active_thread is not None:
@@ -731,6 +772,8 @@ if st.session_state.active_thread is not None:
             )
 
             st.caption(
+                f"Provider: {chat.get('llm_provider', DEFAULT_LLM_PROVIDER)} • "
+                f"Model: {chat.get('model', get_default_model())} • "
                 f"Backend: {chat['response_time']}s • "
                 f"Frontend: {frontend_time}s • "
                 f"{chat['tokens']} tokens • "
