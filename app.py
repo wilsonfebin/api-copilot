@@ -405,7 +405,7 @@ with st.sidebar:
     for label, status in [
 
         (
-            "OpenAI API",
+            "API",
             "Healthy"
             if health
             and health["services"]["openai"]
