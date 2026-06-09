@@ -1,35 +1,122 @@
 [
   {
     "title": "Investigate Razorpay webhook failures",
-    "created_at": "2026-06-10T00:21:49",
-    "updated_at": "2026-06-10T00:21:49",
+    "created_at": "2026-06-10T00:43:39",
+    "updated_at": "2026-06-10T01:16:04",
     "messages": [
       {
         "question": "Investigate Razorpay webhook failures",
-        "answer": "## Enterprise Workflow Execution\n\u2713 Retrieved relevant Razorpay documentation\n\u2713 Analyzed webhook retry failure patterns\n\u2713 Generated AI-assisted RCA summary\n\u2713 Created enterprise incident workflow\n\u2713 Teams notification skipped: Microsoft Graph credentials not configured\n\n## RCA Summary\n**1. Incident Summary**  \nRecent investigations into Razorpay webhook failures reveal intermittent delivery issues impacting critical workflows such as failed payment processing, automated refunds, invoice reconciliation, partner onboarding, merchant activation, and customer communication triggers. These failures disrupt real-time event notifications and transaction lifecycle tracking, causing delays and inconsistencies in dependent systems.\n\n**2. Probable Root Causes**  \n- **Endpoint Downtime:** Temporary unavailability or degraded performance of webhook receiver endpoints leading to missed or delayed webhook deliveries.  \n- **Signature Mismatch:** Invalid or outdated webhook secret keys causing failed authenticity verification and rejection of payloads.  \n- **Invalid SSL Certificates:** Expired or misconfigured SSL/TLS certificates on webhook endpoints preventing secure HTTPS connections.  \n- **Slow Processing:** Prolonged processing times at the endpoint causing timeouts and webhook retries or failures.  \n\n**3. Failure Pattern Analysis**  \n- Failures correlate with periods of endpoint maintenance or network instability.  \n- Signature verification errors spike following secret key rotations or misconfigurations.  \n- SSL-related failures coincide with certificate expiry cycles or incomplete renewal processes.  \n- Slow processing issues are observed during peak transaction loads, indicating insufficient scaling or inefficient webhook handlers.  \n- Retry mechanisms are in place but may not fully mitigate failures if root causes persist.  \n\n**4. Recommended Remediation**  \n- **Ensure Endpoint Reliability:** Implement high-availability and load balancing for webhook endpoints to minimize downtime.  \n- **Validate and Rotate Secrets Securely:** Regularly update webhook secrets with coordinated deployments to avoid signature mismatches.  \n- **Maintain SSL Certificates:** Automate certificate renewal and monitoring to prevent HTTPS failures.  \n- **Optimize Processing:** Profile and optimize webhook handler code to reduce latency; consider asynchronous processing where feasible.  \n- **Enhance Monitoring:** Deploy continuous webhook health monitoring with alerting on failures, signature mismatches, and SSL issues.  \n- **Strengthen Retry Logic:** Confirm retry-safe webhook handlers and implement exponential backoff strategies to handle transient failures gracefully.  \n- **Audit Logs:** Maintain detailed logs of webhook events and failures for rapid troubleshooting and RCA.  \n\n**5. Teams Notification Payload**  \n- Razorpay webhook failures detected impacting key workflows.  \n- Root causes: endpoint downtime, signature mismatches, SSL issues, slow processing.  \n- Remediation underway: endpoint reliability, secret validation, SSL maintenance, processing optimization.  \n- Monitoring and alerting enhanced to prevent recurrence.  \n- Please review webhook health dashboards and report anomalies promptly.\n\n## Incident Payload\n```json\n{\n  \"severity\": \"high\",\n  \"service\": \"webhook-service\",\n  \"incident_type\": \"webhook_failure\",\n  \"summary\": \"Repeated webhook retry or signature validation failures detected\",\n  \"recommended_action\": \"Validate webhook signature handling, retry processing, endpoint uptime, and idempotency controls\"\n}\n```\n\n## Validation\nPayload validation: valid\n\n## Microsoft Graph Status\nDemo mode / Skipped because Microsoft Graph credentials not configured",
-        "response_time": 8.63,
-        "frontend_time": 8.63,
-        "tokens": 977,
-        "cost": 0.001172,
+        "answer": "## Enterprise Workflow Execution\n\u2713 Retrieved relevant Razorpay documentation\n\u2713 Analyzed webhook retry failure patterns\n\u2713 Generated AI-assisted RCA summary\n\u2713 Created enterprise incident workflow\n\u2713 Prepared Teams notification for human approval\n\n## RCA Summary\n**1. Incident Summary**  \nRecent investigations into Razorpay webhook failures reveal intermittent disruptions impacting critical workflows such as failed payment processing, automated refunds, invoice reconciliation, partner onboarding, and merchant activation tracking. These failures have led to delayed or missed event notifications, affecting transaction lifecycle visibility and downstream automation reliability.\n\n**2. Probable Root Causes**  \n- **Endpoint Downtime:** Temporary unavailability or degraded performance of webhook receiver endpoints causing delivery timeouts or connection failures.  \n- **Signature Mismatch:** Invalid or outdated webhook secret keys leading to failed authenticity verification and rejection of payloads.  \n- **Invalid SSL Certificates:** Expired or misconfigured SSL certificates on webhook endpoints causing HTTPS handshake failures.  \n- **Slow Processing:** Prolonged processing times at the endpoint causing webhook delivery timeouts and retries.  \n- **Insufficient Retry Handling:** Lack of idempotent and retry-safe webhook consumers resulting in inconsistent state or missed events during retries.\n\n**3. Failure Pattern Analysis**  \n- Failures predominantly coincide with peak transaction volumes, indicating potential endpoint resource constraints or throttling.  \n- Signature verification errors correlate with recent secret key rotations or misalignment between Razorpay and endpoint configurations.  \n- SSL-related failures spike following certificate renewals or infrastructure changes without proper validation.  \n- Retry attempts are observed but often fail due to non-idempotent processing logic or lack of comprehensive logging, complicating root cause tracing.  \n- Notifications for critical events like payment.failed and refund processing are disproportionately affected, impacting financial reconciliation and customer communication workflows.\n\n**4. Recommended Remediation**  \n- **Enhance Endpoint Resilience:** Ensure high availability and scalability of webhook receivers with load balancing and health checks.  \n- **Secure and Synchronize Secrets:** Implement automated secret management and rotation with synchronized updates between Razorpay and endpoint configurations.  \n- **Validate SSL Certificates:** Enforce strict monitoring and alerting on SSL certificate expiry and configuration correctness.  \n- **Optimize Processing Logic:** Refactor webhook handlers for idempotency and reduced processing latency to prevent timeouts.  \n- **Implement Robust Retry Mechanisms:** Use exponential backoff and dead-letter queues for failed webhook deliveries, coupled with detailed logging for diagnostics.  \n- **Continuous Monitoring:** Deploy webhook health dashboards and alerting to detect and respond to failures proactively.\n\n**5. Teams Notification Payload**  \n- Razorpay webhook failures detected impacting payment and refund workflows.  \n- Root causes: endpoint downtime, signature mismatches, SSL issues, slow processing.  \n- Immediate\n\n## Incident Payload\n```json\n{\n  \"severity\": \"high\",\n  \"service\": \"webhook-service\",\n  \"incident_type\": \"webhook_failure\",\n  \"summary\": \"Repeated webhook retry or signature validation failures detected\",\n  \"recommended_action\": \"Validate webhook signature handling, retry processing, endpoint uptime, and idempotency controls\"\n}\n```\n\n## Validation\nPayload validation: valid\n\n## HITL Approval Status\nStatus: Awaiting human approval\n\nNo external notification has been sent yet.\nReview the RCA and incident payload, then approve execution.\n\n## Notification Status\nMode: hitl\nStatus: awaiting_approval\nReason: Human approval required before enterprise notification execution",
+        "response_time": 12.55,
+        "frontend_time": 12.55,
+        "tokens": 1013,
+        "cost": 0.00123,
+        "llm_provider": "openai",
+        "model": "gpt-4.1-mini",
+        "workflow_type": "enterprise_incident_workflow",
+        "workflow_status": "notification_skipped_demo_mode",
+        "hitl_required": true,
+        "approval_status": "approved",
+        "incident_payload": {
+          "severity": "high",
+          "service": "webhook-service",
+          "incident_type": "webhook_failure",
+          "summary": "Repeated webhook retry or signature validation failures detected",
+          "recommended_action": "Validate webhook signature handling, retry processing, endpoint uptime, and idempotency controls"
+        },
+        "notification_status": {
+          "posted": false,
+          "mode": "demo",
+          "status": "skipped",
+          "reason": "No Teams webhook or Microsoft Graph credentials configured",
+          "status_code": null,
+          "validation": {
+            "valid": true,
+            "missing_fields": []
+          }
+        }
+      },
+      {
+        "question": "How does Razorpay authentication work?",
+        "answer": "## Summary\n\nRazorpay authentication uses **Basic Authentication** with an API Key ID and Key Secret. Each API request must include an `Authorization` header formatted as `Basic base64(KEY_ID:KEY_SECRET)`. Proper casing, encoding, and key management are critical to avoid authentication failures.\n\n## Technical Steps\n\n1. Obtain your **Key ID** and **Key Secret** from Razorpay dashboard (Test or Live mode).\n2. Concatenate `KEY_ID` and `KEY_SECRET` with a colon:  \n   ```\n   KEY_ID:KEY_SECRET\n   ```\n3. Base64 encode the concatenated string.\n4. Set the HTTP header:  \n   ```\n   Authorization: Basic <base64_encoded_string>\n   ```\n5. Include this header in every API request.\n\n**Important:**  \n- The header must be exactly `Basic` (capital B, lowercase rest) followed by a space and the base64 string.  \n- Do not add quotes or other characters around the base64 token.\n\n## Best Practices\n\n- Use separate keys for Test and Live environments.  \n- Store keys securely (e.g., environment variables, secret managers).  \n- Rotate keys regularly to minimize risk.  \n- Log and monitor authentication failures for debugging.  \n- Avoid common mistakes like incorrect casing, missing credentials, or improper base64 formatting.  \n- Follow least-privilege principles when generating API keys.",
+        "response_time": 7.55,
+        "frontend_time": 7.55,
+        "tokens": 241,
+        "cost": 0.00038,
         "llm_provider": "openai",
         "model": "gpt-4.1-mini"
-      }
-    ]
-  },
-  {
-    "title": "Investigate Razorpay webhook failures",
-    "created_at": "2026-06-10T00:19:08",
-    "updated_at": "2026-06-10T00:19:08",
-    "messages": [
+      },
+      {
+        "question": "How many documents and chunks are indexed?",
+        "answer": "There are **4 documents** and **21 chunks** indexed.",
+        "response_time": 0.88,
+        "frontend_time": 0.89,
+        "tokens": 19,
+        "cost": 2.1e-05,
+        "llm_provider": "openai",
+        "model": "gpt-4.1-mini"
+      },
+      {
+        "question": "Show latest evaluation metrics",
+        "answer": "### Latest Evaluation Metrics (Timestamp: 2026-05-29 18:37:52)\n\n**Provider:** OpenAI  \n**Model:** gpt-4.1-mini  \n**Threshold:** 0.7  \n\n| Metric               | Average Score | Passed | Total |\n|----------------------|---------------|--------|-------|\n| Answer Relevancy      | 0.9062        | 3      | 4     |\n| Faithfulness         | 1.0           | 4      | 4     |",
+        "response_time": 2.35,
+        "frontend_time": 2.35,
+        "tokens": 60,
+        "cost": 9.1e-05,
+        "llm_provider": "openai",
+        "model": "gpt-4.1-mini"
+      },
+      {
+        "question": "What did we discuss earlier?",
+        "answer": "Earlier, we discussed the following topics:\n\n1. Investigate Razorpay webhook failures  \n   - Questions included: How does Razorpay authentication work?, How many documents and chunks are indexed?, Show latest evaluation metrics.\n\n2. How does Razorpay authentication work?\n\n3. Show latest evaluation metrics.",
+        "response_time": 1.68,
+        "frontend_time": 1.68,
+        "tokens": 59,
+        "cost": 8.8e-05,
+        "llm_provider": "openai",
+        "model": "gpt-4.1-mini"
+      },
       {
         "question": "Investigate Razorpay webhook failures",
-        "answer": "## Enterprise Workflow Execution\n\u2713 Retrieved relevant Razorpay documentation\n\u2713 Analyzed webhook retry failure patterns\n\u2713 Generated AI-assisted RCA summary\n\u2713 Created enterprise incident workflow\n\u2713 Teams notification skipped: Microsoft Graph credentials not configured\n\n## RCA Summary\n**1. Incident Summary**  \nRecent investigations into Razorpay webhook failures reveal intermittent delivery issues impacting critical workflows such as failed payment processing, automated refunds, invoice reconciliation, partner onboarding, merchant product activation, and customer communication triggers. These failures have led to delays in transaction lifecycle updates and potential inconsistencies in downstream systems relying on real-time event notifications. The impact spans payment status accuracy, refund tracking, and onboarding automation, affecting operational reliability and customer experience.\n\n---\n\n**2. Probable Root Causes**  \n- **Endpoint Downtime:** Temporary unavailability or degraded performance of webhook receiver endpoints causing delivery timeouts or connection failures.  \n- **Signature Mismatch:** Incorrect or outdated webhook secret keys leading to failed signature validation and rejection of webhook payloads.  \n- **Invalid SSL Certificates:** Expired, misconfigured, or untrusted SSL certificates on webhook endpoints causing HTTPS handshake failures.  \n- **Slow Processing:** Prolonged processing times at the endpoint causing webhook delivery timeouts and triggering retries or failures.  \n- **Configuration Issues:** Misconfigured webhook URLs or inactive event subscriptions leading to missed or undelivered events.\n\n---\n\n**3. Failure Pattern Analysis**  \n- Failures are sporadic but correlate strongly with endpoint maintenance windows or network instability periods.  \n- Signature validation errors spike following secret key rotations or configuration changes without synchronized updates on both Razorpay and endpoint sides.  \n- SSL-related failures coincide with certificate expiry dates or changes in certificate authorities.  \n- Slow processing is observed during peak transaction loads, indicating potential scalability bottlenecks in webhook handlers.  \n- Retry mechanisms are in place but may cause event duplication or delayed processing if not idempotent.\n\n---\n\n**4. Recommended Remediation**  \n- **Ensure Endpoint High Availability:** Implement robust monitoring and alerting for webhook endpoints; use load balancers and failover strategies to minimize downtime.  \n- **Validate and Synchronize Secrets:** Regularly audit webhook secret keys; automate secret rotation with coordinated updates on both Razorpay and endpoint configurations.  \n- **Maintain SSL Integrity:** Enforce automated SSL certificate renewal and validation; monitor SSL health continuously to prevent handshake failures.  \n- **Optimize Processing Performance:** Profile webhook handler logic; scale horizontally or optimize code paths to reduce processing latency and avoid timeouts.  \n- **Implement Retry-Safe Handlers:** Design idempotent webhook processing to handle retries gracefully without side effects or duplicate actions.  \n- **Continuous Monitoring:** Integrate webhook health dashboards and alerting systems to detect failures early and trigger\n\n## Incident Payload\n```json\n{\n  \"severity\": \"high\",\n  \"service\": \"webhook-service\",\n  \"incident_type\": \"webhook_failure\",\n  \"summary\": \"Repeated webhook retry or signature validation failures detected\",\n  \"recommended_action\": \"Validate webhook signature handling, retry processing, endpoint uptime, and idempotency controls\"\n}\n```\n\n## Validation\nPayload validation: valid\n\n## Microsoft Graph Status\nDemo mode / Skipped because Microsoft Graph credentials not configured",
-        "response_time": 11.07,
-        "frontend_time": 11.07,
-        "tokens": 1592,
-        "cost": 0.001558,
-        "llm_provider": "openai",
-        "model": "gpt-4.1-mini"
+        "answer": "## Enterprise Workflow Execution\n\u2713 Retrieved relevant Razorpay documentation\n\u2713 Analyzed webhook retry failure patterns\n\u2713 Generated AI-assisted RCA summary\n\u2713 Created enterprise incident workflow\n\u2713 Prepared Teams notification for human approval\n\n## RCA Summary\n# Razorpay Webhook Failures - RCA Summary\n\n## 1. Incident Summary\n\nRazorpay webhook delivery failures affecting critical transaction workflows including payment reconciliation, automated refund processing, invoice payment tracking, partner onboarding, and merchant product activation. Failures cascade across dependent systems, causing transaction state inconsistencies and delayed customer communications.\n\n**Impact Scope:**\n- Payment lifecycle notifications (authorized, captured, failed, disputed)\n- Refund and dispute event tracking\n- Partner onboarding automation\n- Invoice reconciliation workflows\n- Customer communication triggers\n\n---\n\n## 2. Probable Root Causes\n\n| Category | Root Cause | Likelihood |\n|----------|-----------|-----------|\n| **Endpoint Issues** | Receiving endpoint downtime or slow response times | High |\n| **Authentication** | Webhook secret mismatch or signature validation failures | High |\n| **Infrastructure** | Invalid/expired SSL certificates on HTTPS endpoints | Medium |\n| **Processing** | Endpoint timeout due to slow processing logic | Medium |\n| **Configuration** | Incorrect webhook URL or inactive event subscriptions | Medium |\n\n---\n\n## 3. Failure Pattern Analysis\n\n**Primary Indicators:**\n- Signature validation failures suggest secret key mismatch or payload tampering\n- Timeout patterns indicate endpoint performance degradation\n- SSL errors point to certificate expiration or misconfiguration\n- Retry exhaustion suggests permanent endpoint unavailability\n\n**Secondary Patterns:**\n- Clustered failures during peak transaction volumes\n- Selective event failures (e.g., only dispute events failing)\n- Intermittent failures indicating transient network/endpoint issues\n\n---\n\n## 4. Recommended Remediation\n\n**Immediate Actions (0-2 hours):**\n1. Verify webhook endpoint HTTPS accessibility and SSL certificate validity\n2. Validate webhook secret configuration matches Razorpay dashboard settings\n3. Check endpoint response times and error logs for processing bottlenecks\n4. Confirm active event subscriptions in Razorpay dashboard\n5. Review failed webhook delivery logs in Razorpay monitoring tools\n\n**Short-term (2-24 hours):**\n- Implement webhook signature verification in endpoint handler\n- Add structured logging for all webhook payloads and validation\n\n## Incident Payload\n```json\n{\n  \"severity\": \"high\",\n  \"service\": \"webhook-service\",\n  \"incident_type\": \"webhook_failure\",\n  \"summary\": \"Repeated webhook retry or signature validation failures detected\",\n  \"recommended_action\": \"Validate webhook signature handling, retry processing, endpoint uptime, and idempotency controls\"\n}\n```\n\n## Validation\nPayload validation: valid\n\n## HITL Approval Status\nStatus: Awaiting human approval\n\nNo external notification has been sent yet.\nReview the RCA and incident payload, then approve execution.\n\n## Notification Status\nMode: hitl\nStatus: awaiting_approval\nReason: Human approval required before enterprise notification execution",
+        "response_time": 6.71,
+        "frontend_time": 6.71,
+        "tokens": 927,
+        "cost": 0.003071,
+        "llm_provider": "claude",
+        "model": "claude-haiku-4-5-20251001",
+        "workflow_type": "enterprise_incident_workflow",
+        "workflow_status": "notification_skipped_demo_mode",
+        "hitl_required": true,
+        "approval_status": "approved",
+        "incident_payload": {
+          "severity": "high",
+          "service": "webhook-service",
+          "incident_type": "webhook_failure",
+          "summary": "Repeated webhook retry or signature validation failures detected",
+          "recommended_action": "Validate webhook signature handling, retry processing, endpoint uptime, and idempotency controls"
+        },
+        "notification_status": {
+          "posted": false,
+          "mode": "demo",
+          "status": "skipped",
+          "reason": "No Teams webhook or Microsoft Graph credentials configured",
+          "status_code": null,
+          "validation": {
+            "valid": true,
+            "missing_fields": []
+          }
+        }
+      },
+      {
+        "question": "Show latest evaluation metrics",
+        "answer": "# Latest Evaluation Metrics\n\n## OpenAI (gpt-4.1-mini)\n**Timestamp:** 2026-05-29 18:37:52  \n**Baseline:** `evaluation/baselines/evaluation_baseline_20260529_183752.json`  \n**Threshold:** 0.7\n\n| Metric | Average Score | Passed | Total |\n|--------|---------------|--------|-------|\n| AnswerRelevancyMetric | 0.9062 | 3/4 | 4 |\n| FaithfulnessMetric | 1.0 | 4/4 | 4 |\n\n## Claude (claude-haiku-4-5-20251001)\n**Status:** No baseline evaluation available yet",
+        "response_time": 3.39,
+        "frontend_time": 3.4,
+        "tokens": 72,
+        "cost": 0.00034,
+        "llm_provider": "claude",
+        "model": "claude-haiku-4-5-20251001"
       }
     ]
   },

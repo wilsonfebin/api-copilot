@@ -12,6 +12,7 @@ from backend.config import (
     SUPPORTED_MODELS,
     get_default_model,
 )
+from backend.enterprise.microsoft_graph import send_enterprise_notification
 from backend.services.rag_service import run_query
 from rag.vector_store import get_vector_stats
 from utils.styles import load_css
@@ -23,6 +24,14 @@ from utils.styles import load_css
 MAX_THREADS = 10
 THREAD_FILE = "data/threads.json"
 BASELINE_DIR = Path("evaluation/baselines")
+ENTERPRISE_METADATA_FIELDS = [
+    "workflow_type",
+    "workflow_status",
+    "hitl_required",
+    "approval_status",
+    "incident_payload",
+    "notification_status",
+]
 
 st.set_page_config(
     page_title="API Copilot",
@@ -262,6 +271,148 @@ def render_answer_html(answer):
         {clean_answer(answer)}
     </div>
     """
+
+
+def add_enterprise_metadata(payload, response):
+
+    for field in ENTERPRISE_METADATA_FIELDS:
+
+        if field in response:
+            payload[field] = response[field]
+
+    return payload
+
+
+def render_enterprise_status(message):
+
+    if not message.get("workflow_type"):
+        return
+
+    notification_status = message.get(
+        "notification_status",
+        {}
+    )
+
+    st.markdown(
+        f"""
+**Enterprise Workflow Status**
+
+Workflow: {message.get("workflow_type")}
+
+Approval: {message.get("approval_status", "-")}
+
+Notification: {notification_status.get("status", "-")}
+
+Mode: {notification_status.get("mode", "-")}
+"""
+    )
+
+
+def workflow_status_after_notification(result):
+
+    if result.get("status") == "validation_failed":
+        return "notification_validation_failed"
+
+    if result.get("posted"):
+        return "notification_executed"
+
+    if result.get("mode") == "demo":
+        return "notification_skipped_demo_mode"
+
+    return "notification_failed"
+
+
+def approve_enterprise_notification(
+    thread_index,
+    message_index,
+):
+
+    message = st.session_state.threads[
+        thread_index
+    ]["messages"][message_index]
+
+    result = send_enterprise_notification(
+        message.get("incident_payload", {}),
+        approved=True,
+    )
+
+    message["approval_status"] = "approved"
+    message["workflow_status"] = (
+        workflow_status_after_notification(
+            result
+        )
+    )
+    message["notification_status"] = result
+
+    st.session_state.threads[
+        thread_index
+    ]["updated_at"] = timestamp()
+
+    save_threads(
+        st.session_state.threads[:MAX_THREADS]
+    )
+
+    st.session_state.enterprise_notification_result = result
+
+    pending = st.session_state.get(
+        "pending_enterprise_approval"
+    )
+
+    if (
+        pending
+        and pending.get("thread_index") == thread_index
+        and pending.get("message_index") == message_index
+    ):
+        del st.session_state.pending_enterprise_approval
+
+
+def render_enterprise_approval_button(
+    message,
+    thread_index,
+    message_index,
+    key_suffix,
+):
+
+    if not (
+        message.get("hitl_required") is True
+        and message.get("approval_status") == "pending"
+        and message.get("incident_payload")
+    ):
+        return
+
+    if st.button(
+        "✅ Approve Teams Notification",
+        key=f"approve_teams_{key_suffix}",
+        use_container_width=True,
+    ):
+        approve_enterprise_notification(
+            thread_index,
+            message_index,
+        )
+        st.rerun()
+
+
+def render_notification_result():
+
+    result = st.session_state.pop(
+        "enterprise_notification_result",
+        None,
+    )
+
+    if not result:
+        return
+
+    message = (
+        f"{result.get('status')} via "
+        f"{result.get('mode')}: {result.get('reason')}"
+    )
+
+    if result.get("posted"):
+        st.success(message)
+    elif result.get("status") == "validation_failed":
+        st.error(message)
+    else:
+        st.warning(message)
 
 
 def should_show_baseline_download(question):
@@ -607,6 +758,8 @@ if "user_query" in st.session_state:
 
 
 rendered_current_response = False
+current_thread_index = None
+current_message_index = None
 
 
 if query:
@@ -659,6 +812,78 @@ if query:
 
         if res and "error" not in res:
 
+            payload = {
+                "question": res["question"],
+                "answer": res["answer"],
+                "response_time": res["response_time"],
+                "frontend_time": res["frontend_time"],
+                "tokens": res["tokens"],
+                "cost": res["cost"],
+                "llm_provider": res.get(
+                    "llm_provider",
+                    llm_provider
+                ),
+                "model": res.get(
+                    "model",
+                    model_name
+                )
+            }
+
+            payload = add_enterprise_metadata(
+                payload,
+                res,
+            )
+
+            if st.session_state.active_thread is not None:
+
+                current_thread_index = (
+                    st.session_state.active_thread
+                )
+
+                st.session_state.threads[
+                    current_thread_index
+                ]["messages"].append(payload)
+
+                current_message_index = (
+                    len(
+                        st.session_state.threads[
+                            current_thread_index
+                        ]["messages"]
+                    )
+                    - 1
+                )
+
+                st.session_state.threads[
+                    current_thread_index
+                ]["updated_at"] = timestamp()
+
+            else:
+
+                now = timestamp()
+
+                st.session_state.threads.insert(0, {
+                    "title": query,
+                    "created_at": now,
+                    "updated_at": now,
+                    "messages": [payload]
+                })
+
+                st.session_state.active_thread = 0
+                current_thread_index = 0
+                current_message_index = 0
+
+            save_threads(
+                st.session_state.threads[:MAX_THREADS]
+            )
+
+            if payload.get("approval_status") == "pending":
+                st.session_state.pending_enterprise_approval = {
+                    "thread_index": current_thread_index,
+                    "message_index": current_message_index,
+                }
+
+            rendered_current_response = True
+
             placeholder.markdown(
                 render_answer_html(
                     res["answer"]
@@ -683,6 +908,10 @@ if query:
                 f"${res['cost']:.5f}"
             )
 
+            render_enterprise_status(
+                payload
+            )
+
         else:
 
             st.error(
@@ -692,55 +921,34 @@ if query:
                 )
             )
 
-    if res and "error" not in res:
+render_notification_result()
 
-        payload = {
-            "question": res["question"],
-            "answer": res["answer"],
-            "response_time": res["response_time"],
-            "frontend_time": res["frontend_time"],
-            "tokens": res["tokens"],
-            "cost": res["cost"],
-            "llm_provider": res.get(
-                "llm_provider",
-                llm_provider
-            ),
-            "model": res.get(
-                "model",
-                model_name
-            )
-        }
+pending_approval = st.session_state.get(
+    "pending_enterprise_approval"
+)
 
-        if st.session_state.active_thread is not None:
+if pending_approval:
+    pending_thread_index = pending_approval.get(
+        "thread_index"
+    )
+    pending_message_index = pending_approval.get(
+        "message_index"
+    )
 
-            active_thread = st.session_state.active_thread
+    try:
+        pending_message = st.session_state.threads[
+            pending_thread_index
+        ]["messages"][pending_message_index]
 
-            st.session_state.threads[
-                active_thread
-            ]["messages"].append(payload)
-
-            st.session_state.threads[
-                active_thread
-            ]["updated_at"] = timestamp()
-
-        else:
-
-            now = timestamp()
-
-            st.session_state.threads.insert(0, {
-                "title": query,
-                "created_at": now,
-                "updated_at": now,
-                "messages": [payload]
-            })
-
-            st.session_state.active_thread = 0
-
-        save_threads(
-            st.session_state.threads[:MAX_THREADS]
+        render_enterprise_approval_button(
+            pending_message,
+            pending_thread_index,
+            pending_message_index,
+            "pending_current",
         )
 
-        rendered_current_response = True
+    except Exception:
+        del st.session_state.pending_enterprise_approval
 
 
 # ========================
@@ -753,7 +961,9 @@ if st.session_state.active_thread is not None:
     ]["messages"]
 
     visible_messages = list(
-        reversed(msgs)
+        reversed(
+            list(enumerate(msgs))
+        )
     )
 
     if (
@@ -762,7 +972,7 @@ if st.session_state.active_thread is not None:
     ):
         visible_messages = visible_messages[1:]
 
-    for chat in visible_messages:
+    for message_index, chat in visible_messages:
 
         with st.chat_message("user"):
             st.write(chat["question"])
@@ -794,4 +1004,19 @@ if st.session_state.active_thread is not None:
                 f"Frontend: {frontend_time}s • "
                 f"{chat['tokens']} tokens • "
                 f"${chat['cost']:.5f}"
+            )
+
+            render_enterprise_status(
+                chat
+            )
+
+            render_enterprise_approval_button(
+                chat,
+                st.session_state.active_thread,
+                message_index,
+                (
+                    "history_"
+                    f"{st.session_state.active_thread}_"
+                    f"{message_index}"
+                ),
             )

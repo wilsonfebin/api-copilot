@@ -2,7 +2,7 @@ import json
 import time
 
 from backend.config import DEFAULT_LLM_PROVIDER, get_default_model
-from backend.enterprise.microsoft_graph import post_teams_notification
+from backend.enterprise.microsoft_graph import send_enterprise_notification
 from backend.utils.logger import logger
 from llm.client import ask_llm, get_embedding
 from rag.vector_store import get_collection, query_chunks
@@ -14,6 +14,7 @@ MAX_CONTEXT_CHARS = 1800
 REQUIRED_PAYLOAD_FIELDS = [
     "severity",
     "service",
+    "incident_type",
     "summary",
     "recommended_action",
 ]
@@ -143,27 +144,8 @@ def format_answer(
     rca_summary: str,
     incident_payload: dict,
     validation: dict,
-    graph_status: dict,
+    notification_status: dict,
 ) -> str:
-    posted_line = (
-        "✓ Posted Teams notification via Microsoft Graph"
-        if graph_status.get("posted")
-        else "✓ Teams notification skipped: "
-        f"{graph_status.get('reason')}"
-    )
-
-    if graph_status.get("posted"):
-        graph_status_label = "Posted successfully"
-    elif graph_status.get("mode") == "demo":
-        graph_status_label = (
-            f"Demo mode / Skipped because "
-            f"{graph_status.get('reason')}"
-        )
-    else:
-        graph_status_label = (
-            f"Live mode post failed: {graph_status.get('reason')}"
-        )
-
     validation_status = (
         "valid"
         if validation["valid"]
@@ -177,7 +159,7 @@ def format_answer(
 ✓ Analyzed webhook retry failure patterns
 ✓ Generated AI-assisted RCA summary
 ✓ Created enterprise incident workflow
-{posted_line}
+✓ Prepared Teams notification for human approval
 
 ## RCA Summary
 {rca_summary}
@@ -190,8 +172,16 @@ def format_answer(
 ## Validation
 Payload validation: {validation_status}
 
-## Microsoft Graph Status
-{graph_status_label}
+## HITL Approval Status
+Status: Awaiting human approval
+
+No external notification has been sent yet.
+Review the RCA and incident payload, then approve execution.
+
+## Notification Status
+Mode: {notification_status.get("mode")}
+Status: {notification_status.get("status")}
+Reason: {notification_status.get("reason")}
 """
 
     return sanitize_answer(answer)
@@ -229,29 +219,19 @@ def run_enterprise_workflow(
     incident_payload = build_incident_payload()
     validation = validate_payload(incident_payload)
 
-    if validation["valid"]:
-        graph_status = post_teams_notification(
-            incident_payload
-        )
-    else:
-        graph_status = {
-            "posted": False,
-            "mode": "demo",
-            "reason": (
-                "Payload validation failed; Microsoft Graph post skipped"
-            ),
-            "status_code": None,
-        }
-        logger.info(
-            "MICROSOFT GRAPH POST SKIPPED | "
-            f"reason={graph_status['reason']}"
-        )
+    logger.info(
+        "HITL REQUIRED | workflow=enterprise_incident_workflow"
+    )
+    notification_status = send_enterprise_notification(
+        incident_payload,
+        approved=False,
+    )
 
     answer = format_answer(
         rca_summary=rca_summary,
         incident_payload=incident_payload,
         validation=validation,
-        graph_status=graph_status,
+        notification_status=notification_status,
     )
     elapsed = round(time.time() - start, 2)
 
@@ -263,11 +243,7 @@ def run_enterprise_workflow(
         answer,
         model=model,
     )
-    workflow_status = (
-        "completed"
-        if graph_status.get("posted")
-        else "completed_demo_mode"
-    )
+    workflow_status = "awaiting_human_approval"
 
     logger.info(
         f"ENTERPRISE WORKFLOW DONE | status={workflow_status}"
@@ -294,14 +270,17 @@ def run_enterprise_workflow(
         "llm_provider": llm_provider,
         "model": model,
         "workflow_type": "enterprise_incident_workflow",
-        "tool_used": "MicrosoftGraphTeamsTool",
+        "tool_used": "TeamsNotificationTool",
         "workflow_status": workflow_status,
-        "graph_status": graph_status,
+        "graph_status": notification_status,
+        "notification_status": notification_status,
         "incident_payload": incident_payload,
         "payload_validation": validation,
+        "hitl_required": True,
+        "approval_status": "pending",
         "intent": "ENTERPRISE_WORKFLOW",
         "tool": {
-            "name": "MicrosoftGraphTeamsTool",
-            "mode": graph_status.get("mode"),
+            "name": "TeamsNotificationTool",
+            "mode": notification_status.get("mode"),
         },
     }
