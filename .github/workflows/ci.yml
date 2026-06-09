@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/codex-dev
+      - feature/enterprise-workflow-graph
 
 jobs:
   streamlit-deploy-check:

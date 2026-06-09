@@ -725,7 +725,7 @@ with right:
 
 
 st.markdown(
-    "### 🏢 Enterprise Workflow Demo"
+    "### 🏢 Enterprise Workflow - Microsoft Graph Integration (HITL)"
 )
 
 if st.button(
