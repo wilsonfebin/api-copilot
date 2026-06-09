@@ -1,103 +1,110 @@
-2026-05-28 18:33:50,547 | INFO | EVALUATION START | model=gpt-4o-mini | threshold=0.7
-2026-05-28 18:33:53,332 | INFO | RAG START | intent=AUTH | question=How does Razorpay authentication work?
-2026-05-28 18:33:53,365 | INFO | LANGGRAPH NODE | IntentNode
-2026-05-28 18:33:53,366 | INFO | GRAPH STATE | intent=AUTH
-2026-05-28 18:33:53,366 | INFO | NODE TIME | IntentNode | 0.001s
-2026-05-28 18:33:53,369 | INFO | LANGGRAPH NODE | ToolNode
-2026-05-28 18:33:53,369 | INFO | MCP ROUTER | intent=AUTH | tool=retrieval
-2026-05-28 18:33:53,370 | INFO | MCP TOOL | RetrievalTool
-2026-05-28 18:33:53,370 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'AUTH', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
-2026-05-28 18:33:53,370 | INFO | NODE TIME | ToolNode | 0.001s
-2026-05-28 18:33:53,371 | INFO | LANGGRAPH NODE | RetrievalNode
-2026-05-28 18:33:54,547 | INFO | RETRIEVAL START | intent=AUTH | source_filter=razorpay_auth.txt
-2026-05-28 18:33:55,177 | INFO | RETRIEVAL SOURCES | ['razorpay_auth.txt', 'razorpay_auth.txt']
-2026-05-28 18:33:55,178 | INFO | GRAPH STATE | sources=['razorpay_auth.txt', 'razorpay_auth.txt']
-2026-05-28 18:33:55,178 | INFO | NODE TIME | RetrievalNode | 1.807s
-2026-05-28 18:33:55,180 | INFO | LANGGRAPH NODE | PromptNode
-2026-05-28 18:33:55,180 | INFO | NODE TIME | PromptNode | 0.0s
-2026-05-28 18:33:55,181 | INFO | LANGGRAPH NODE | ResponseNode
-2026-05-28 18:34:01,211 | INFO | NODE TIME | ResponseNode | 6.029s
-2026-05-28 18:34:01,726 | INFO | LANGGRAPH NODE | ValidationNode
-2026-05-28 18:34:01,762 | INFO | GUARDRAIL CHECK | passed=True
-2026-05-28 18:34:01,762 | INFO | NODE TIME | ValidationNode | 0.037s
-2026-05-28 18:34:04,992 | INFO | RAG DONE | intent=AUTH | 8.43s | tokens=268
-2026-05-28 18:34:33,173 | INFO | RAG START | intent=PAYMENTS | question=How do I capture payments?
-2026-05-28 18:34:33,196 | INFO | LANGGRAPH NODE | IntentNode
-2026-05-28 18:34:33,196 | INFO | GRAPH STATE | intent=PAYMENTS
-2026-05-28 18:34:33,197 | INFO | NODE TIME | IntentNode | 0.0s
-2026-05-28 18:34:33,198 | INFO | LANGGRAPH NODE | ToolNode
-2026-05-28 18:34:33,198 | INFO | MCP ROUTER | intent=PAYMENTS | tool=retrieval
-2026-05-28 18:34:33,198 | INFO | MCP TOOL | RetrievalTool
-2026-05-28 18:34:33,198 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'PAYMENTS', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
-2026-05-28 18:34:33,198 | INFO | NODE TIME | ToolNode | 0.001s
-2026-05-28 18:34:33,199 | INFO | LANGGRAPH NODE | RetrievalNode
-2026-05-28 18:34:33,689 | INFO | RETRIEVAL START | intent=PAYMENTS | source_filter=razorpay_payments.txt
-2026-05-28 18:34:33,775 | INFO | RETRIEVAL SOURCES | ['razorpay_payments.txt', 'razorpay_payments.txt']
-2026-05-28 18:34:33,775 | INFO | GRAPH STATE | sources=['razorpay_payments.txt', 'razorpay_payments.txt']
-2026-05-28 18:34:33,775 | INFO | NODE TIME | RetrievalNode | 0.576s
-2026-05-28 18:34:33,780 | INFO | LANGGRAPH NODE | PromptNode
-2026-05-28 18:34:33,780 | INFO | NODE TIME | PromptNode | 0.0s
-2026-05-28 18:34:33,780 | INFO | LANGGRAPH NODE | ResponseNode
-2026-05-28 18:34:38,936 | INFO | NODE TIME | ResponseNode | 5.156s
-2026-05-28 18:34:38,944 | INFO | LANGGRAPH NODE | ValidationNode
-2026-05-28 18:34:38,945 | INFO | GUARDRAIL CHECK | passed=True
-2026-05-28 18:34:38,945 | INFO | NODE TIME | ValidationNode | 0.001s
-2026-05-28 18:34:38,957 | INFO | RAG DONE | intent=PAYMENTS | 5.77s | tokens=253
-2026-05-28 18:35:07,697 | INFO | RAG START | intent=ERRORS | question=What causes invalid OTP errors?
-2026-05-28 18:35:07,706 | INFO | LANGGRAPH NODE | IntentNode
-2026-05-28 18:35:07,706 | INFO | GRAPH STATE | intent=ERRORS
-2026-05-28 18:35:07,706 | INFO | NODE TIME | IntentNode | 0.0s
-2026-05-28 18:35:07,707 | INFO | LANGGRAPH NODE | ToolNode
-2026-05-28 18:35:07,707 | INFO | MCP ROUTER | intent=ERRORS | tool=retrieval
-2026-05-28 18:35:07,707 | INFO | MCP TOOL | RetrievalTool
-2026-05-28 18:35:07,707 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'ERRORS', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
-2026-05-28 18:35:07,707 | INFO | NODE TIME | ToolNode | 0.0s
-2026-05-28 18:35:07,707 | INFO | LANGGRAPH NODE | RetrievalNode
-2026-05-28 18:35:08,015 | INFO | RETRIEVAL START | intent=ERRORS | source_filter=razorpay_errors.txt
-2026-05-28 18:35:08,089 | INFO | RETRIEVAL SOURCES | ['razorpay_errors.txt', 'razorpay_errors.txt']
-2026-05-28 18:35:08,089 | INFO | GRAPH STATE | sources=['razorpay_errors.txt', 'razorpay_errors.txt']
-2026-05-28 18:35:08,089 | INFO | NODE TIME | RetrievalNode | 0.382s
-2026-05-28 18:35:08,089 | INFO | LANGGRAPH NODE | PromptNode
-2026-05-28 18:35:08,089 | INFO | NODE TIME | PromptNode | 0.0s
-2026-05-28 18:35:08,090 | INFO | LANGGRAPH NODE | ResponseNode
-2026-05-28 18:35:17,306 | INFO | NODE TIME | ResponseNode | 9.216s
-2026-05-28 18:35:17,311 | INFO | LANGGRAPH NODE | ValidationNode
-2026-05-28 18:35:17,312 | INFO | GUARDRAIL CHECK | passed=True
-2026-05-28 18:35:17,312 | INFO | NODE TIME | ValidationNode | 0.002s
-2026-05-28 18:35:17,329 | INFO | RAG DONE | intent=ERRORS | 9.62s | tokens=328
-2026-05-28 18:36:00,875 | INFO | RAG START | intent=WEBHOOKS | question=How do Razorpay webhooks work?
-2026-05-28 18:36:00,881 | INFO | LANGGRAPH NODE | IntentNode
-2026-05-28 18:36:00,881 | INFO | GRAPH STATE | intent=WEBHOOKS
-2026-05-28 18:36:00,881 | INFO | NODE TIME | IntentNode | 0.0s
-2026-05-28 18:36:00,881 | INFO | LANGGRAPH NODE | ToolNode
-2026-05-28 18:36:00,882 | INFO | MCP ROUTER | intent=WEBHOOKS | tool=retrieval
-2026-05-28 18:36:00,882 | INFO | MCP TOOL | RetrievalTool
-2026-05-28 18:36:00,882 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'WEBHOOKS', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
-2026-05-28 18:36:00,882 | INFO | NODE TIME | ToolNode | 0.001s
-2026-05-28 18:36:00,882 | INFO | LANGGRAPH NODE | RetrievalNode
-2026-05-28 18:36:01,174 | INFO | RETRIEVAL START | intent=WEBHOOKS | source_filter=razorpay_webhooks.txt
-2026-05-28 18:36:01,241 | INFO | RETRIEVAL SOURCES | ['razorpay_webhooks.txt', 'razorpay_webhooks.txt']
-2026-05-28 18:36:01,241 | INFO | GRAPH STATE | sources=['razorpay_webhooks.txt', 'razorpay_webhooks.txt']
-2026-05-28 18:36:01,241 | INFO | NODE TIME | RetrievalNode | 0.359s
-2026-05-28 18:36:01,242 | INFO | LANGGRAPH NODE | PromptNode
-2026-05-28 18:36:01,242 | INFO | NODE TIME | PromptNode | 0.0s
-2026-05-28 18:36:01,242 | INFO | LANGGRAPH NODE | ResponseNode
-2026-05-28 18:36:09,260 | INFO | NODE TIME | ResponseNode | 8.017s
-2026-05-28 18:36:09,265 | INFO | LANGGRAPH NODE | ValidationNode
-2026-05-28 18:36:09,276 | INFO | GUARDRAIL CHECK | passed=True
-2026-05-28 18:36:09,276 | INFO | NODE TIME | ValidationNode | 0.011s
-2026-05-28 18:36:09,315 | INFO | RAG DONE | intent=WEBHOOKS | 8.4s | tokens=319
-2026-05-28 18:36:34,687 | INFO | EVALUATION DONE | cases=4
-2026-05-28 18:36:34,689 | INFO | BASELINE SAVED | evaluation/baselines/evaluation_baseline_20260528_183634.json
-BASELINE SAVED | evaluation/baselines/evaluation_baseline_20260528_183634.json
+2026-05-29 18:36:23,877 | INFO | EVALUATION START | provider=openai | model=gpt-4.1-mini | judge_provider=claude | judge_model=claude-haiku-4-5-20251001 | threshold=0.7
+2026-05-29 18:36:24,955 | INFO | RAG START | intent=AUTH | provider=openai | model=gpt-4.1-mini | question=How does Razorpay authentication work?
+2026-05-29 18:36:24,966 | INFO | LANGGRAPH NODE | IntentNode
+2026-05-29 18:36:24,966 | INFO | GRAPH STATE | intent=AUTH
+2026-05-29 18:36:24,966 | INFO | NODE TIME | IntentNode | 0.0s
+2026-05-29 18:36:24,966 | INFO | LANGGRAPH NODE | ToolNode
+2026-05-29 18:36:24,966 | INFO | MCP ROUTER | intent=AUTH | tool=retrieval
+2026-05-29 18:36:24,966 | INFO | MCP TOOL | RetrievalTool
+2026-05-29 18:36:24,966 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'AUTH', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
+2026-05-29 18:36:24,967 | INFO | NODE TIME | ToolNode | 0.0s
+2026-05-29 18:36:24,967 | INFO | LANGGRAPH NODE | RetrievalNode
+2026-05-29 18:36:25,635 | INFO | RETRIEVAL START | intent=AUTH | source_filter=razorpay_auth.txt
+2026-05-29 18:36:25,835 | INFO | RETRIEVAL SOURCES | ['razorpay_auth.txt', 'razorpay_auth.txt']
+2026-05-29 18:36:25,835 | INFO | GRAPH STATE | sources=['razorpay_auth.txt', 'razorpay_auth.txt']
+2026-05-29 18:36:25,835 | INFO | NODE TIME | RetrievalNode | 0.868s
+2026-05-29 18:36:25,836 | INFO | LANGGRAPH NODE | PromptNode
+2026-05-29 18:36:25,836 | INFO | NODE TIME | PromptNode | 0.0s
+2026-05-29 18:36:25,837 | INFO | LANGGRAPH NODE | ResponseNode
+2026-05-29 18:36:25,837 | INFO | LLM PROVIDER | provider=openai | model=gpt-4.1-mini
+2026-05-29 18:36:30,547 | INFO | NODE TIME | ResponseNode | 4.711s
+2026-05-29 18:36:30,550 | INFO | LANGGRAPH NODE | ValidationNode
+2026-05-29 18:36:30,551 | INFO | GUARDRAIL CHECK | passed=True
+2026-05-29 18:36:30,552 | INFO | NODE TIME | ValidationNode | 0.001s
+2026-05-29 18:36:30,552 | INFO | RAG DONE | intent=AUTH | provider=openai | model=gpt-4.1-mini | 5.6s | tokens=212
+2026-05-29 18:36:44,932 | INFO | RAG START | intent=PAYMENTS | provider=openai | model=gpt-4.1-mini | question=How do I capture payments?
+2026-05-29 18:36:44,938 | INFO | LANGGRAPH NODE | IntentNode
+2026-05-29 18:36:44,938 | INFO | GRAPH STATE | intent=PAYMENTS
+2026-05-29 18:36:44,938 | INFO | NODE TIME | IntentNode | 0.0s
+2026-05-29 18:36:44,939 | INFO | LANGGRAPH NODE | ToolNode
+2026-05-29 18:36:44,939 | INFO | MCP ROUTER | intent=PAYMENTS | tool=retrieval
+2026-05-29 18:36:44,939 | INFO | MCP TOOL | RetrievalTool
+2026-05-29 18:36:44,939 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'PAYMENTS', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
+2026-05-29 18:36:44,939 | INFO | NODE TIME | ToolNode | 0.001s
+2026-05-29 18:36:44,940 | INFO | LANGGRAPH NODE | RetrievalNode
+2026-05-29 18:36:45,736 | INFO | RETRIEVAL START | intent=PAYMENTS | source_filter=razorpay_payments.txt
+2026-05-29 18:36:45,755 | INFO | RETRIEVAL SOURCES | ['razorpay_payments.txt', 'razorpay_payments.txt']
+2026-05-29 18:36:45,755 | INFO | GRAPH STATE | sources=['razorpay_payments.txt', 'razorpay_payments.txt']
+2026-05-29 18:36:45,755 | INFO | NODE TIME | RetrievalNode | 0.815s
+2026-05-29 18:36:45,755 | INFO | LANGGRAPH NODE | PromptNode
+2026-05-29 18:36:45,756 | INFO | NODE TIME | PromptNode | 0.0s
+2026-05-29 18:36:45,756 | INFO | LANGGRAPH NODE | ResponseNode
+2026-05-29 18:36:45,756 | INFO | LLM PROVIDER | provider=openai | model=gpt-4.1-mini
+2026-05-29 18:36:51,522 | INFO | NODE TIME | ResponseNode | 5.766s
+2026-05-29 18:36:51,524 | INFO | LANGGRAPH NODE | ValidationNode
+2026-05-29 18:36:51,525 | INFO | GUARDRAIL CHECK | passed=True
+2026-05-29 18:36:51,525 | INFO | NODE TIME | ValidationNode | 0.001s
+2026-05-29 18:36:51,526 | INFO | RAG DONE | intent=PAYMENTS | provider=openai | model=gpt-4.1-mini | 6.59s | tokens=260
+2026-05-29 18:37:04,278 | INFO | RAG START | intent=ERRORS | provider=openai | model=gpt-4.1-mini | question=What causes invalid OTP errors?
+2026-05-29 18:37:04,292 | INFO | LANGGRAPH NODE | IntentNode
+2026-05-29 18:37:04,293 | INFO | GRAPH STATE | intent=ERRORS
+2026-05-29 18:37:04,293 | INFO | NODE TIME | IntentNode | 0.0s
+2026-05-29 18:37:04,293 | INFO | LANGGRAPH NODE | ToolNode
+2026-05-29 18:37:04,293 | INFO | MCP ROUTER | intent=ERRORS | tool=retrieval
+2026-05-29 18:37:04,294 | INFO | MCP TOOL | RetrievalTool
+2026-05-29 18:37:04,294 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'ERRORS', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
+2026-05-29 18:37:04,294 | INFO | NODE TIME | ToolNode | 0.0s
+2026-05-29 18:37:04,294 | INFO | LANGGRAPH NODE | RetrievalNode
+2026-05-29 18:37:04,593 | INFO | RETRIEVAL START | intent=ERRORS | source_filter=razorpay_errors.txt
+2026-05-29 18:37:04,623 | INFO | RETRIEVAL SOURCES | ['razorpay_errors.txt', 'razorpay_errors.txt']
+2026-05-29 18:37:04,623 | INFO | GRAPH STATE | sources=['razorpay_errors.txt', 'razorpay_errors.txt']
+2026-05-29 18:37:04,623 | INFO | NODE TIME | RetrievalNode | 0.329s
+2026-05-29 18:37:04,624 | INFO | LANGGRAPH NODE | PromptNode
+2026-05-29 18:37:04,624 | INFO | NODE TIME | PromptNode | 0.0s
+2026-05-29 18:37:04,624 | INFO | LANGGRAPH NODE | ResponseNode
+2026-05-29 18:37:04,624 | INFO | LLM PROVIDER | provider=openai | model=gpt-4.1-mini
+2026-05-29 18:37:12,686 | INFO | NODE TIME | ResponseNode | 8.061s
+2026-05-29 18:37:12,690 | INFO | LANGGRAPH NODE | ValidationNode
+2026-05-29 18:37:12,691 | INFO | GUARDRAIL CHECK | passed=True
+2026-05-29 18:37:12,691 | INFO | NODE TIME | ValidationNode | 0.001s
+2026-05-29 18:37:12,692 | INFO | RAG DONE | intent=ERRORS | provider=openai | model=gpt-4.1-mini | 8.41s | tokens=334
+2026-05-29 18:37:28,657 | INFO | RAG START | intent=WEBHOOKS | provider=openai | model=gpt-4.1-mini | question=How do Razorpay webhooks work?
+2026-05-29 18:37:28,669 | INFO | LANGGRAPH NODE | IntentNode
+2026-05-29 18:37:28,669 | INFO | GRAPH STATE | intent=WEBHOOKS
+2026-05-29 18:37:28,669 | INFO | NODE TIME | IntentNode | 0.0s
+2026-05-29 18:37:28,670 | INFO | LANGGRAPH NODE | ToolNode
+2026-05-29 18:37:28,670 | INFO | MCP ROUTER | intent=WEBHOOKS | tool=retrieval
+2026-05-29 18:37:28,671 | INFO | MCP TOOL | RetrievalTool
+2026-05-29 18:37:28,671 | INFO | MCP RESULT | {'tool_name': 'RetrievalTool', 'data': {'mode': 'rag_retrieval', 'intent': 'WEBHOOKS', 'message': 'Retrieval is handled by the LangGraph RetrievalNode using existing query_chunks logic.'}, 'error': None}
+2026-05-29 18:37:28,671 | INFO | NODE TIME | ToolNode | 0.001s
+2026-05-29 18:37:28,672 | INFO | LANGGRAPH NODE | RetrievalNode
+2026-05-29 18:37:29,115 | INFO | RETRIEVAL START | intent=WEBHOOKS | source_filter=razorpay_webhooks.txt
+2026-05-29 18:37:29,201 | INFO | RETRIEVAL SOURCES | ['razorpay_webhooks.txt', 'razorpay_webhooks.txt']
+2026-05-29 18:37:29,201 | INFO | GRAPH STATE | sources=['razorpay_webhooks.txt', 'razorpay_webhooks.txt']
+2026-05-29 18:37:29,201 | INFO | NODE TIME | RetrievalNode | 0.53s
+2026-05-29 18:37:29,202 | INFO | LANGGRAPH NODE | PromptNode
+2026-05-29 18:37:29,202 | INFO | NODE TIME | PromptNode | 0.0s
+2026-05-29 18:37:29,203 | INFO | LANGGRAPH NODE | ResponseNode
+2026-05-29 18:37:29,203 | INFO | LLM PROVIDER | provider=openai | model=gpt-4.1-mini
+2026-05-29 18:37:36,457 | INFO | NODE TIME | ResponseNode | 7.254s
+2026-05-29 18:37:36,465 | INFO | LANGGRAPH NODE | ValidationNode
+2026-05-29 18:37:36,466 | INFO | GUARDRAIL CHECK | passed=True
+2026-05-29 18:37:36,467 | INFO | NODE TIME | ValidationNode | 0.002s
+2026-05-29 18:37:36,469 | INFO | RAG DONE | intent=WEBHOOKS | provider=openai | model=gpt-4.1-mini | 7.81s | tokens=377
+2026-05-29 18:37:52,212 | INFO | EVALUATION DONE | cases=4
+2026-05-29 18:37:52,215 | INFO | BASELINE SAVED | evaluation/baselines/evaluation_baseline_20260529_183752.json
+BASELINE SAVED | evaluation/baselines/evaluation_baseline_20260529_183752.json
 {
-  "timestamp": "20260528_183634",
-  "model": "gpt-4o-mini",
+  "timestamp": "20260529_183752",
+  "provider": "openai",
+  "model": "gpt-4.1-mini",
+  "judge_provider": "claude",
+  "judge_model": "claude-haiku-4-5-20251001",
   "threshold": 0.7,
   "summary": {
     "AnswerRelevancyMetric": {
-      "average_score": 0.8796,
-      "passed": 4,
+      "average_score": 0.9062,
+      "passed": 3,
       "total": 4
     },
     "FaithfulnessMetric": {
@@ -110,104 +117,112 @@ BASELINE SAVED | evaluation/baselines/evaluation_baseline_20260528_183634.json
     {
       "name": "auth_basics",
       "question": "How does Razorpay authentication work?",
-      "answer": "## Summary\nRazorpay authentication utilizes **Basic Authentication** requiring a **Key ID** and **Key Secret** for each API request. The authorization header must be formatted correctly to ensure successful authentication.\n\n## Technical Steps\n1. **Prepare Credentials**: Obtain your **Key ID** and **Key Secret** from your Razorpay account.\n2. **Base64 Encode**: Format your credentials as `KEY_ID:KEY_SECRET` and encode this string in Base64.\n3. **Set Authorization Header**: Include the following header in your API request:\n   ```text\n   Authorization: Basic base64(KEY_ID:KEY_SECRET)\n   ```\n4. **Choose Mode**: Decide between **Test Mode** for integration testing or **Live Mode** for production.\n\n## Best Practices\n- **Strict Header Formatting**: Ensure the `Authorization` header follows the exact format without any variations (e.g., casing, extra quotes).\n- **Secure Key Management**: Store your keys securely and rotate them regularly.\n- **Environment Separation**: Use separate keys for test and live environments to avoid accidental real transactions.\n- **Log Failures**: Implement logging for authentication failures to assist in debugging.\n- **Least-Privilege Security**: Apply the principle of least privilege when managing API keys and permissions.",
+      "answer": "## Summary\n\nRazorpay authentication uses **Basic Authentication** with an API Key ID and Key Secret. Each API request must include an `Authorization` header formatted as `Basic base64(KEY_ID:KEY_SECRET)`. Proper casing, encoding, and key management are critical for successful authentication.\n\n## Technical Steps\n\n1. Obtain your **Key ID** and **Key Secret** from Razorpay dashboard (separate keys for Test and Live modes).\n2. Concatenate the Key ID and Key Secret with a colon:  \n   ```\n   KEY_ID:KEY_SECRET\n   ```\n3. Base64 encode the concatenated string.\n4. Set the HTTP request header:  \n   ```\n   Authorization: Basic <base64_encoded_string>\n   ```\n5. Send the API request with this header for authentication.\n\n## Best Practices\n\n- Use the exact header format: `Authorization: Basic base64(KEY_ID:KEY_SECRET)` (case-sensitive).\n- Avoid quotes, extra spaces, or incorrect casing in the header.\n- Separate Test and Live API keys and environments.\n- Rotate keys regularly and use least-privilege permissions.\n- Log authentication failures to diagnose issues.\n- Securely store and handle API keys; never expose them publicly.",
       "intent": "AUTH",
       "sources": [
         "razorpay_auth.txt"
       ],
-      "response_time": 8.43,
-      "tokens": 268,
-      "cost": 0.000158,
+      "response_time": 5.6,
+      "tokens": 212,
+      "cost": 0.000332,
+      "provider": "openai",
+      "model": "gpt-4.1-mini",
       "metrics": [
         {
           "name": "AnswerRelevancyMetric",
           "score": 1.0,
           "success": true,
-          "reason": "The score is 1.00 because the response directly addresses the question about Razorpay authentication without any irrelevant statements."
+          "reason": "Perfect score! The response directly addresses the question about Razorpay authentication with no irrelevant statements. Great job covering the topic comprehensively and staying on point!"
         },
         {
           "name": "FaithfulnessMetric",
           "score": 1.0,
           "success": true,
-          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+          "reason": "The score is 1.00 because the actual output contains no contradictions with the retrieval context. The information presented is entirely faithful and accurate!"
         }
       ]
     },
     {
       "name": "capture_payments",
       "question": "How do I capture payments?",
-      "answer": "## Summary\nTo capture payments using the Razorpay Payments API, you need to send a POST request to the appropriate endpoint with the payment ID of the authorized payment.\n\n## Technical Steps\n1. **Prepare the Request**:\n   - Ensure you have the payment ID of the authorized payment you wish to capture.\n\n2. **Send the Capture Request**:\n   - Make a POST request to the following endpoint:\n     ```\n     POST /v1/payments/:id/capture\n     ```\n   - Replace `:id` with the actual payment ID.\n\n3. **Handle the Response**:\n   - Check the response for success or failure.\n   - Log the payment ID for reconciliation and debugging.\n\n4. **Error Handling**:\n   - Implement error handling for:\n     - Unauthorized access\n     - Invalid payment IDs\n     - Capture failures\n     - Rate limits\n\n## Best Practices\n- Always verify the payment status before attempting to capture.\n- Avoid duplicate captures by ensuring that the payment has not already been captured.\n- Use webhook integrations to listen for payment events.\n- Implement retry logic carefully to handle transient errors.\n- Secure payment identifiers and customer data to protect sensitive information.\n- Monitor reconciliation workflows to ensure accurate transaction tracking.",
+      "answer": "## Summary\nTo capture payments using Razorpay Payments API, you must capture an authorized payment by calling the capture endpoint with the payment ID and amount. This transitions the payment state from `authorized` to `captured`, completing the transaction.\n\n## Technical Steps\n1. **Verify Payment Status**  \n   Retrieve the payment details and confirm the payment is in the `authorized` state.\n\n2. **Capture Payment**  \n   Make a POST request to the capture endpoint:  \n   ```\n   POST /v1/payments/:id/capture\n   ```  \n   Replace `:id` with the payment ID. Include the capture amount in the request body.\n\n3. **Handle API Response**  \n   - On success, the payment status changes to `captured`.  \n   - Handle errors such as unauthorized access, invalid payment IDs, capture failures, and rate limits.\n\n4. **Log Payment IDs**  \n   Log payment IDs and capture responses for reconciliation and debugging.\n\n## Best Practices\n- Always verify the payment status before attempting capture to avoid duplicate captures.  \n- Use webhook integrations to listen for payment events and update your system accordingly.  \n- Implement retry logic cautiously to handle transient failures without causing duplicate captures.  \n- Secure payment identifiers and customer data to comply with security standards.  \n- Monitor reconciliation workflows to ensure all authorized payments are captured correctly.",
       "intent": "PAYMENTS",
       "sources": [
         "razorpay_payments.txt"
       ],
-      "response_time": 5.77,
-      "tokens": 253,
-      "cost": 0.000149,
+      "response_time": 6.59,
+      "tokens": 260,
+      "cost": 0.000409,
+      "provider": "openai",
+      "model": "gpt-4.1-mini",
       "metrics": [
         {
           "name": "AnswerRelevancyMetric",
-          "score": 0.8125,
+          "score": 1.0,
           "success": true,
-          "reason": "The score is 0.81 because while the response provided some relevant information about capturing payments, it included several irrelevant statements about webhook integrations, securing payment identifiers, and monitoring reconciliation workflows that do not directly address the question. These irrelevant points detracted from the overall focus on the main topic, preventing a higher score."
+          "reason": "Perfect score! The response directly and comprehensively addresses the question about capturing payments with no irrelevant content. Great work!"
         },
         {
           "name": "FaithfulnessMetric",
           "score": 1.0,
           "success": true,
-          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+          "reason": "The score is 1.00 because the actual output contains no contradictions with the retrieval context. The information presented is entirely faithful and accurate!"
         }
       ]
     },
     {
       "name": "invalid_otp",
       "question": "What causes invalid OTP errors?",
-      "answer": "## Summary\nInvalid OTP (One-Time Password) errors typically occur when the OTP provided by the customer does not match the expected value. This can happen due to user input errors, expired OTPs, or issues with the OTP generation process.\n\n## Technical Steps\n1. **Inspect Request Payload**: Ensure that the OTP field in the request payload is correctly populated and matches the expected format.\n2. **Check OTP Validity**: Verify if the OTP has expired or if it has already been used. OTPs usually have a limited validity period.\n3. **Review Logs**: Log the following details for debugging:\n   - `payment_id`\n   - `order_id`\n   - `code` (e.g., `BAD_REQUEST_ERROR`)\n   - `reason` (e.g., `invalid_otp`)\n4. **Validate User Input**: Implement input validation to ensure that the OTP entered by the customer is in the correct format and length.\n5. **Monitor for Patterns**: Look for recurring invalid OTP errors in logs to identify potential issues with the OTP generation or delivery process.\n\n## Best Practices\n- **Notify Customers**: Inform customers immediately when an invalid OTP error occurs and prompt them to retry with the correct OTP.\n- **Preserve Payment Flow**: Ensure that the payment process can continue smoothly after an invalid OTP error by implementing retry mechanisms.\n- **Avoid Raw Error Exposure**: Do not expose internal error details to customers; instead, provide user-friendly messages.\n- **Implement Retry Logic**: Build robust retry mechanisms for recoverable failures to enhance user experience and reduce friction.",
+      "answer": "## Summary\nAn `invalid_otp` error occurs when the One-Time Password (OTP) provided during payment authentication is incorrect or does not match the expected value. This is typically caused by user input errors, expired OTPs, or synchronization issues between the client and authentication server.\n\n## Technical Steps\n1. **Inspect Request Payload**  \n   - Verify the OTP field is correctly captured and sent in the request.  \n   - Confirm the OTP format and length meet the expected criteria.\n\n2. **Validate Credentials and Session**  \n   - Ensure the OTP corresponds to the current payment session (`payment_id`, `order_id`).  \n   - Check if the OTP has expired or been invalidated by the backend.\n\n3. **Review Logs and Callbacks**  \n   - Log `payment_id`, `order_id`, `code`, and `reason` for each failure.  \n   - Correlate with backend authentication logs to identify mismatches or timing issues.\n\n4. **Retry Logic**  \n   - Implement retry mechanisms allowing customers to re-enter OTP without restarting the entire payment flow.  \n   - Limit retries to prevent brute force attempts.\n\n## Best Practices\n- **Parse `reason` field** programmatically to detect `invalid_otp` and trigger appropriate UI flows.  \n- **Display user-friendly messages** using the `description` field, e.g., \"Incorrect OTP, please try again.\"  \n- **Avoid exposing raw error codes** to customers to maintain security.  \n- **Monitor recurring invalid OTP patterns** to detect potential fraud or system issues.  \n- **Preserve payment flow continuity** by allowing OTP retries without restarting the payment.  \n- **Validate all request fields** to prevent malformed or missing OTP submissions.\n\n---\n\nFollowing these steps will help debug, remediate, and prevent invalid OTP errors in your payment integration.",
       "intent": "ERRORS",
       "sources": [
         "razorpay_errors.txt"
       ],
-      "response_time": 9.62,
-      "tokens": 328,
-      "cost": 0.000194,
+      "response_time": 8.41,
+      "tokens": 334,
+      "cost": 0.000527,
+      "provider": "openai",
+      "model": "gpt-4.1-mini",
       "metrics": [
         {
           "name": "AnswerRelevancyMetric",
-          "score": 0.7058823529411765,
-          "success": true,
-          "reason": "The score is 0.71 because while the response provided some relevant information, it included several irrelevant statements that did not address the causes of invalid OTP errors. These irrelevant points focused on solutions and best practices rather than the actual causes, which detracted from the overall relevance of the answer."
+          "score": 0.625,
+          "success": false,
+          "reason": "The score is 0.62 because while the output addresses important OTP-related topics, it focuses heavily on error handling, recovery, security measures, and UI flows rather than directly answering what causes invalid OTP errors. To improve, the response should prioritize root causes such as expired OTPs, incorrect entry, timing mismatches, or system issues before discussing downstream handling and recovery strategies."
         },
         {
           "name": "FaithfulnessMetric",
           "score": 1.0,
           "success": true,
-          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+          "reason": "The score is 1.00 because the actual output contains no contradictions with the retrieval context. The information presented is entirely faithful and accurate!"
         }
       ]
     },
     {
       "name": "webhook_flow",
       "question": "How do Razorpay webhooks work?",
-      "answer": "## Summary\nRazorpay Webhooks enable real-time notifications for specific events related to transactions and onboarding. They send payloads to a configured endpoint whenever subscribed events occur, allowing for automated handling of various payment-related processes.\n\n## Technical Steps\n1. **Setup Webhook:**\n   - Log in to the Razorpay Dashboard.\n   - Navigate to Partner Dashboard \u2192 Settings \u2192 Webhooks.\n   - Configure the following:\n     - **Webhook URL:** Use HTTPS for security.\n     - **Secret Key:** For signature validation.\n\n2. **Event Subscription:**\n   - Subscribe to relevant events such as payment status updates, order confirmations, and refund tracking.\n\n3. **Receive Payloads:**\n   - Implement an endpoint to receive and process incoming webhook payloads.\n\n4. **Signature Validation:**\n   - Validate the signature of incoming requests using the secret key to ensure authenticity.\n\n5. **Handle Events:**\n   - Implement logic to handle different event types (e.g., payment success, refund initiated).\n\n6. **Implement Retry Logic:**\n   - Ensure your system can handle retries in case of failures (e.g., endpoint downtime).\n\n## Best Practices\n- **Endpoint Reliability:** Ensure your endpoint is always up and can handle incoming requests.\n- **Monitor Webhook Health:** Continuously monitor the health of your webhook integrations to catch issues early.\n- **Idempotency:** Design your event handling to be idempotent to avoid processing the same event multiple times.\n- **Logging:** Maintain logs for received webhook events for troubleshooting and auditing purposes.",
+      "answer": "## Summary\nRazorpay webhooks deliver real-time event notifications to a configured HTTPS endpoint whenever subscribed payment, order, refund, or onboarding events occur. They enable automated workflows by pushing transaction lifecycle updates securely and reliably.\n\n## Technical Steps\n1. **Setup**  \n   - Configure webhook URL and secret key in Razorpay Partner Dashboard under Settings \u2192 Webhooks.  \n   - Subscribe to relevant event types (payments, refunds, onboarding, etc.).\n\n2. **Event Delivery Flow**  \n   - Razorpay sends a POST request with a JSON payload to your webhook URL on event trigger.  \n   - Each payload includes a signature header for authenticity verification.\n\n3. **Signature Validation & Security**  \n   - Use the configured secret key to validate the webhook signature to ensure payload integrity and source authenticity.  \n   - Serve the webhook endpoint over HTTPS to secure data in transit.\n\n4. **Handling & Persistence**  \n   - Parse and process the event payload idempotently to handle retries safely.  \n   - Persist event data for reconciliation and audit purposes.\n\n5. **Retry Behavior**  \n   - Razorpay retries webhook delivery on failures caused by downtime, signature mismatch, invalid SSL, or slow processing.  \n   - Design your endpoint to be highly available and performant to minimize retries.\n\n6. **Monitoring & Validation**  \n   - Continuously monitor webhook health and delivery success rates via dashboard or logs.  \n   - Implement alerting for failures or anomalies.\n\n## Best Practices\n- Validate signatures on every request before processing.  \n- Ensure your webhook endpoint is idempotent to handle duplicate events gracefully.  \n- Use HTTPS with valid SSL certificates to secure communication.  \n- Maintain high uptime and fast response times to avoid retries.  \n- Log all webhook events and responses for troubleshooting and reconciliation.  \n- Automate alerting on webhook failures or unusual patterns.  \n- Test webhook handling thoroughly in staging before production deployment.",
       "intent": "WEBHOOKS",
       "sources": [
         "razorpay_webhooks.txt"
       ],
-      "response_time": 8.4,
-      "tokens": 319,
-      "cost": 0.000188,
+      "response_time": 7.81,
+      "tokens": 377,
+      "cost": 0.000596,
+      "provider": "openai",
+      "model": "gpt-4.1-mini",
       "metrics": [
         {
           "name": "AnswerRelevancyMetric",
           "score": 1.0,
           "success": true,
-          "reason": "The score is 1.00 because the response directly addresses the question about how Razorpay webhooks work without any irrelevant statements."
+          "reason": "Perfect score! The response directly and comprehensively addresses the question about how Razorpay webhooks work with no irrelevant statements. Great job covering the topic thoroughly!"
         },
         {
           "name": "FaithfulnessMetric",
           "score": 1.0,
           "success": true,
-          "reason": "The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context."
+          "reason": "The score is 1.00 because the actual output contains no contradictions with the retrieval context. The information presented is entirely faithful and accurate!"
         }
       ]
     }
