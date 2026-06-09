@@ -573,6 +573,22 @@ with right:
             st.rerun()
 
 
+st.markdown(
+    "### 🏢 Enterprise Workflow Demo"
+)
+
+if st.button(
+    "Investigate Razorpay webhook failures",
+    key="enterprise_workflow_razorpay_webhooks",
+    use_container_width=True
+):
+
+    st.session_state.user_query = (
+        "Investigate Razorpay webhook failures"
+    )
+    st.rerun()
+
+
 render_top_download_buttons()
 
 

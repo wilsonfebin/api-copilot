@@ -1,6 +1,7 @@
 import time
 from functools import lru_cache
 
+from backend.enterprise.workflow import run_enterprise_workflow
 from backend.langgraph.router import run_rag_graph
 from backend.utils.logger import logger
 from backend.config import (
@@ -26,6 +27,21 @@ def normalize_intent(intent):
         return intent.split(".", 1)[1]
 
     return intent
+
+
+def is_enterprise_workflow_query(question: str) -> bool:
+    q = question.lower()
+
+    return (
+        (
+            "investigate" in q
+            and "webhook" in q
+            and "failure" in q
+        )
+        or "enterprise workflow" in q
+        or "rca" in q
+        or "incident" in q
+    )
 
 
 # ========================
@@ -93,6 +109,15 @@ def run_query(
         model = model or get_default_model(
             llm_provider
         )
+
+        if is_enterprise_workflow_query(
+            question
+        ):
+            return run_enterprise_workflow(
+                question=question,
+                llm_provider=llm_provider,
+                model=model,
+            )
 
         start = time.time()
 
