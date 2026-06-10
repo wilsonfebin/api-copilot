@@ -22,10 +22,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          
+
       - name: Compile check
         run: python -m compileall .
 
       - name: Deployment note
         run: |
-          echo "Streamlit Cloud will redeploy automatically if the app is configured to track feature/codex-dev."
+          echo "CI completed for $GITHUB_REF_NAME."
+          echo "Streamlit Cloud will redeploy automatically only if the app is configured to track this same branch."
